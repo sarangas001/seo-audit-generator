@@ -1,17 +1,19 @@
 import NavBar from './components/layout/NavBar'
 import Hero from './components/Hero'
-import Features from './components/Features'
-import FeaturesShowcase from './components/FeaturesShowcase'
-import OtherFeatures from './components/OtherFeatures'
+import StatsSection from './components/StateSection'
+import FeaturesSection from './components/FeatureSection'
+import ProblemStatement from './components/ProblemStatement'
+import FeaturesGrid from './components/FeaturesGrid'
 
 function App() {
   return (
     <div>
       <NavBar />
       <Hero />
-      <Features />
-      <FeaturesShowcase />
-      <OtherFeatures />
+      <StatsSection />
+      <FeaturesSection />
+      <ProblemStatement />
+      <FeaturesGrid />
     </div>
   )
 }
