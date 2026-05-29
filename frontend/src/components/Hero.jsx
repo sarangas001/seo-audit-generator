@@ -1,13 +1,11 @@
-import React from 'react';
-
 export default function Hero() {
   return (
-    <div className="min-h-140 bg-[#faf9ff] px-6 py-14 md:px-36 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ">
+    <div className="min-h-140 bg-[#faf9ff] px-6 py-14 md:px-36 grid grid-cols-1 lg:grid-cols-2 items-center ">
       
       {/* LEFT COLUMN: Copy & Form */}
       <div className="flex flex-col items-start">
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 border border-[#e0d8fb] bg-[#f8f5ff] rounded-full px-4 py-1.5 mb-6">
+        <div className="inline-flex items-center gap-2 border border-[#e0d8fb] bg-[#f8f5ff] rounded-full px-4 py-1 mb-4">
           <span className="text-[11px] font-bold tracking-wider color-[#5E2CED] text-[#5E2CED] uppercase">
             SEO Audit is your growth advantage
           </span>
@@ -26,38 +24,77 @@ export default function Hero() {
         </div>
 
         {/* Heading */}
-        <h1 className="text-4xl md:text-[44px] font-extrabold text-[#1a1a2e] leading-[1.1] tracking-[-1.5px] mb-4">
+        <h1 className="text-4xl md:text-[60px] font-extrabold text-[#1a1a2e] leading-[1.1] tracking-[-1.5px] mb-4">
           Uncover What's<br />
           <span className="text-[#5E2CED]">Holding Your</span><br />
           Website Back
         </h1>
 
         {/* Description */}
-        <p className="text-[15px] text-[#5a5a74] stroke-none leading-relaxed max-w-100 mb-7">
+        <p className="text-[15px] text-[#5a5a74] stroke-none leading-relaxed max-w-200 mb-4">
           Get a free, comprehensive SEO audit report — covering technical health, backlinks, on-page scores, competitor insights, and more. Delivered to your WhatsApp.
         </p>
 
         {/* Input Form Row */}
-        <div className="flex items-center w-full max-w-120 mb-6">
-          <div className="flex-1 flex items-center gap-2 bg-white border border-[#ddd8f0] rounded-l-10 rounded-l-xl px-3.5 h-12.5">
-            {/* Link Icon */}
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            <input 
-              type="text" 
-              placeholder="Enter your website URL" 
-              className="flex-1 border-none outline-none  text-sm text-[#1a1a2e] bg-transparent placeholder-[#b0aac4]"
+        <form className="w-full max-w-200 mb-6" onSubmit={(e) => e.preventDefault()}>
+          <div className="grid grid-cols-1 gap-3 rounded-2xl border border-[#ddd8f0] bg-white p-3 shadow-[0_8px_24px_rgba(94,44,237,0.08)] md:grid-cols-2">
+            <input
+              type="text"
+              name="name"
+              placeholder="Name"
+              autoComplete="name"
+              required
+              className="h-12 rounded-xl border border-[#e7e2f4] px-4 text-sm text-[#1a1a2e] outline-none transition-colors placeholder:text-[#b0aac4] focus:border-[#5E2CED]"
             />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              autoComplete="email"
+              required
+              className="h-12 rounded-xl border border-[#e7e2f4] px-4 text-sm text-[#1a1a2e] outline-none transition-colors placeholder:text-[#b0aac4] focus:border-[#5E2CED]"
+            />
+            <input
+              type="tel"
+              name="whatsapp"
+              placeholder="WhatsApp number"
+              autoComplete="tel"
+              required
+              className="h-12 rounded-xl border border-[#e7e2f4] px-4 text-sm text-[#1a1a2e] outline-none transition-colors placeholder:text-[#b0aac4] focus:border-[#5E2CED]"
+            />
+            <input
+              type="url"
+              name="websiteUrl"
+              placeholder="Website URL"
+              autoComplete="url"
+              required
+              className="h-12 rounded-xl border border-[#e7e2f4] px-4 text-sm text-[#1a1a2e] outline-none transition-colors placeholder:text-[#b0aac4] focus:border-[#5E2CED]"
+            />
+            <input
+              type="text"
+              name="mainKeywords"
+              placeholder="Main Keywords"
+              required
+              className="h-12 rounded-xl border border-[#e7e2f4] px-4 text-sm text-[#1a1a2e] outline-none transition-colors placeholder:text-[#b0aac4] focus:border-[#5E2CED]"
+            />
+            <input
+              type="text"
+              name="location"
+              defaultValue="Sri Lanka"
+              required
+              className="h-12 rounded-xl border border-[#e7e2f4] px-4 text-sm text-[#1a1a2e] outline-none transition-colors focus:border-[#5E2CED]"
+            />
+            <button
+              type="submit"
+              className="md:col-span-2 h-12.5 rounded-xl bg-[#5E2CED] px-5.5 text-sm font-bold text-white transition-colors hover:bg-[#4d21cc]"
+            >
+              Free Audit
+            </button>
           </div>
-          <button className="h-12.5 px-5.5 bg-[#5E2CED] text-white  text-sm font-bold border-none rounded-r-xl cursor-pointer whitespace-nowrap hover:bg-[#4d21cc] transition-colors">
-            Free Audit
-          </button>
-        </div>
+        </form>
 
         {/* Trust Badge */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <div className="flex">
             <div className="w-8.5 h-8.5 rounded-full border-2 border-white flex items-center justify-center text-[9px] font-extrabold relative bg-[#e0d8fb] text-[#5E2CED] z-5">AK</div>
             <div className="w-8.5 h-8.5 rounded-full border-2 border-white flex items-center justify-center text-[9px] font-extrabold relative bg-[#d8f5eb] text-[#0f6e56] z-4 -ml-2">SM</div>
