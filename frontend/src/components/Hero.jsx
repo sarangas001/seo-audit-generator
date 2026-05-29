@@ -1,9 +1,43 @@
 export default function Hero() {
   return (
-    <div className="min-h-140 bg-[#faf9ff] px-6 py-14 md:px-36 grid grid-cols-1 lg:grid-cols-2 items-center ">
+    <div className="relative min-h-140 bg-[#faf9ff] px-6 py-14 md:px-36 grid grid-cols-1 lg:grid-cols-2 items-center overflow-hidden">
+      {/* Geometric Background Pattern */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Large floating square - top left */}
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-[#f0ebff] rounded-3xl opacity-40 transform -rotate-12"></div>
+        
+        {/* Large floating square - bottom right */}
+        <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-[#e0d8fb] rounded-3xl opacity-30 transform rotate-45"></div>
+        
+        {/* Medium square - center right */}
+        <div className="absolute top-1/4 right-10 w-64 h-64 bg-[#f3f0fd] rounded-2xl opacity-50 transform rotate-12"></div>
+        
+        {/* Small square - top center */}
+        {/* <div className="absolute top-12 left-1/3 w-32 h-32 border-2 border-[#d8d0f5] rounded-lg opacity-40 transform -rotate-6"></div> */}
+        
+        {/* Diagonal line pattern - subtle */}
+        <svg className="absolute inset-0 w-full h-full opacity-10" preserveAspectRatio="none">
+          <defs>
+            <pattern id="diagonal-lines" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+              <line x1="0" y1="0" x2="40" y2="40" stroke="#d8d0f5" strokeWidth="1"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#diagonal-lines)"/>
+        </svg>
+
+        {/* Grid pattern - very subtle */}
+        <svg className="absolute inset-0 w-full h-full opacity-10" preserveAspectRatio="none">
+          <defs>
+            <pattern id="grid-squares" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+              <rect x="0" y="0" width="80" height="80" fill="none" stroke="#c4bfdb" strokeWidth="1"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grid-squares)"/>
+        </svg>
+      </div>
       
       {/* LEFT COLUMN: Copy & Form */}
-      <div className="flex flex-col items-start">
+      <div className="relative flex flex-col items-start">
         {/* Badge */}
         <div className="inline-flex items-center gap-2 border border-[#e0d8fb] bg-[#f8f5ff] rounded-full px-4 py-1 mb-4">
           <span className="text-[11px] font-bold tracking-wider color-[#5E2CED] text-[#5E2CED] uppercase">
