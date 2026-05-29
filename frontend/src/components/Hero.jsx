@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Hero() {
   return (
-    <div className="w-full min-h-[560px] bg-[#faf9ff] px-6 py-14 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="min-h-140 bg-[#faf9ff] px-6 py-14 md:px-36 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ">
       
       {/* LEFT COLUMN: Copy & Form */}
       <div className="flex flex-col items-start">
@@ -26,20 +26,20 @@ export default function Hero() {
         </div>
 
         {/* Heading */}
-        <h1 className="text-4xl md:text-[44px] font-extrabold text-[#1a1a2e] leading-[1.1] tracking-[-1.5px] mb-45 mb-4">
+        <h1 className="text-4xl md:text-[44px] font-extrabold text-[#1a1a2e] leading-[1.1] tracking-[-1.5px] mb-4">
           Uncover What's<br />
           <span className="text-[#5E2CED]">Holding Your</span><br />
           Website Back
         </h1>
 
         {/* Description */}
-        <p className="text-[15px] text-[#5a5a74] stroke-none leading-relaxed max-w-[400px] mb-7">
+        <p className="text-[15px] text-[#5a5a74] stroke-none leading-relaxed max-w-100 mb-7">
           Get a free, comprehensive SEO audit report — covering technical health, backlinks, on-page scores, competitor insights, and more. Delivered to your WhatsApp.
         </p>
 
         {/* Input Form Row */}
-        <div className="flex items-center w-full max-w-[480px] mb-6">
-          <div className="flex-1 flex items-center gap-2 bg-white border border-[#ddd8f0] rounded-l-10 rounded-l-xl px-3.5 h-[50px]">
+        <div className="flex items-center w-full max-w-120 mb-6">
+          <div className="flex-1 flex items-center gap-2 bg-white border border-[#ddd8f0] rounded-l-10 rounded-l-xl px-3.5 h-12.5">
             {/* Link Icon */}
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -48,10 +48,10 @@ export default function Hero() {
             <input 
               type="text" 
               placeholder="Enter your website URL" 
-              className="flex-1 border-none outline-none font-['Plus_Jakarta_Sans',sans-serif] text-sm text-[#1a1a2e] bg-transparent placeholder-[#b0aac4]"
+              className="flex-1 border-none outline-none  text-sm text-[#1a1a2e] bg-transparent placeholder-[#b0aac4]"
             />
           </div>
-          <button className="h-[50px] px-[22px] bg-[#5E2CED] text-white font-['Plus_Jakarta_Sans',sans-serif] text-sm font-bold border-none rounded-r-xl cursor-pointer whitespace-nowrap hover:bg-[#4d21cc] transition-colors">
+          <button className="h-12.5 px-5.5 bg-[#5E2CED] text-white  text-sm font-bold border-none rounded-r-xl cursor-pointer whitespace-nowrap hover:bg-[#4d21cc] transition-colors">
             Free Audit
           </button>
         </div>
@@ -59,14 +59,14 @@ export default function Hero() {
         {/* Trust Badge */}
         <div className="flex items-center gap-3">
           <div className="flex">
-            <div className="w-[34px] h-[34px] rounded-full border-2 border-white flex items-center justify-center text-[9px] font-extrabold relative bg-[#e0d8fb] text-[#5E2CED] z-[5]">AK</div>
-            <div className="w-[34px] h-[34px] rounded-full border-2 border-white flex items-center justify-center text-[9px] font-extrabold relative bg-[#d8f5eb] text-[#0f6e56] z-[4] -ml-2">SM</div>
-            <div className="w-[34px] h-[34px] rounded-full border-2 border-white flex items-center justify-center text-[9px] font-extrabold relative bg-[#fde8d8] text-[#993c1d] z-[3] -ml-2">NP</div>
-            <div className="w-[34px] h-[34px] rounded-full border-2 border-white flex items-center justify-center text-[9px] font-extrabold relative bg-[#fce4ef] text-[#99355a] z-[2] -ml-2">RJ</div>
-            <div className="w-[34px] h-[34px] rounded-full border-2 border-white flex items-center justify-center text-[9px] font-extrabold relative bg-[#dbeafe] text-[#1e40af] z-[1] -ml-2">DL</div>
+            <div className="w-8.5 h-8.5 rounded-full border-2 border-white flex items-center justify-center text-[9px] font-extrabold relative bg-[#e0d8fb] text-[#5E2CED] z-5">AK</div>
+            <div className="w-8.5 h-8.5 rounded-full border-2 border-white flex items-center justify-center text-[9px] font-extrabold relative bg-[#d8f5eb] text-[#0f6e56] z-4 -ml-2">SM</div>
+            <div className="w-8.5 h-8.5 rounded-full border-2 border-white flex items-center justify-center text-[9px] font-extrabold relative bg-[#fde8d8] text-[#993c1d] z-3 -ml-2">NP</div>
+            <div className="w-8.5 h-8.5 rounded-full border-2 border-white flex items-center justify-center text-[9px] font-extrabold relative bg-[#fce4ef] text-[#99355a] z-2 -ml-2">RJ</div>
+            <div className="w-8.5 h-8.5 rounded-full border-2 border-white flex items-center justify-center text-[9px] font-extrabold relative bg-[#dbeafe] text-[#1e40af] z-1 -ml-2">DL</div>
           </div>
           <div>
-            <div className="flex gap-[2px] mb-0.5 items-center">
+            <div className="flex gap-0.5 mb-0.5 items-center">
               {[...Array(5)].map((_, i) => (
                 <svg key={i} width="12" height="12" viewBox="0 0 16 16" fill="#5E2CED" aria-hidden="true">
                   <path d="M8 1l1.85 3.75L14 5.35l-3 2.92.71 4.13L8 10.25l-3.71 2.15L5 8.27 2 5.35l4.15-.6L8 1z"/>
@@ -82,20 +82,20 @@ export default function Hero() {
       {/* RIGHT COLUMN: Dashboard UI Mockup */}
       <div className="relative flex justify-center lg:justify-end w-full">
         {/* Glow effect */}
-        <div className="absolute -top-[30px] -right-[30px] w-[360px] height-[360px] rounded-full bg-[radial-gradient(circle,rgba(94,44,237,0.09)_0%,transparent_70%)] pointer-events-none"></div>
+        <div className="absolute -top-7.5 -right-7.5 w-90 height-[360px] rounded-full bg-[radial-gradient(circle,rgba(94,44,237,0.09)_0%,transparent_70%)] pointer-events-none"></div>
         
         {/* Main Dashboard Card */}
-        <div className="bg-white rounded-2xl border border-[#ede8fc] overflow-hidden w-full max-w-[520px] shadow-[0_8px_40px_rgba(94,44,237,0.12),0_2px_8px_rgba(0,0,0,0.05)] z-10">
+        <div className="bg-white rounded-2xl border border-[#ede8fc] overflow-hidden w-full max-w-130 shadow-[0_8px_40px_rgba(94,44,237,0.12),0_2px_8px_rgba(0,0,0,0.05)] z-10">
           
           {/* Top Bar */}
           <div className="bg-[#1e1b2e] p-[10px_14px] flex items-center gap-2">
-            <div className="flex gap-[5px]">
-              <div className="w-[9px] h-[9px] rounded-full bg-[#ff5f57]"></div>
-              <div className="w-[9px] h-[9px] rounded-full bg-[#febc2e]"></div>
-              <div className="w-[9px] h-[9px] rounded-full bg-[#28c840]"></div>
+            <div className="flex gap-1.25">
+              <div className="w-2.25 h-2.25 rounded-full bg-[#ff5f57]"></div>
+              <div className="w-2.25 h-2.25 rounded-full bg-[#febc2e]"></div>
+              <div className="w-2.25 h-2.25 rounded-full bg-[#28c840]"></div>
             </div>
             <div className="flex items-center gap-1.5 ml-1.5">
-              <div className="w-[18px] h-[18px] rounded bg-[#5E2CED] flex items-center justify-center">
+              <div className="w-4.5 h-4.5 rounded bg-[#5E2CED] flex items-center justify-center">
                 <svg width="10" height="10" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                   <path d="M3 13C4 11 6 9 8 10C10 11 11 7 13 5" stroke="white" strokeWidth="2" strokeLinecap="round"/>
                 </svg>
@@ -107,17 +107,17 @@ export default function Hero() {
           {/* Layout Body */}
           <div className="flex">
             {/* Sidebar */}
-            <div className="bg-[#1e1b2e] w-[38px] flex flex-col items-center py-3.5 gap-3 shrink-0">
-              <div className="w-[26px] h-[26px] rounded-[6px] bg-[#5E2CED] flex items-center justify-center cursor-pointer">
+            <div className="bg-[#1e1b2e] w-9.5 flex flex-col items-center py-3.5 gap-3 shrink-0">
+              <div className="w-6.5 h-6.5 rounded-md bg-[#5E2CED] flex items-center justify-center cursor-pointer">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" aria-hidden="true"><path d="M3 12h18M3 6h18M3 18h18" strokeLinecap="round"/></svg>
               </div>
-              <div className="w-[26px] h-[26px] rounded-[6px] flex items-center justify-center cursor-pointer">
+              <div className="w-6.5 h-6.5 rounded-md flex items-center justify-center cursor-pointer">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6b6888" strokeWidth="2" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 8v8M8 12h8"/></svg>
               </div>
-              <div className="w-[26px] h-[26px] rounded-[6px] flex items-center justify-center cursor-pointer">
+              <div className="w-6.5 h-6.5 rounded-mdflex items-center justify-center cursor-pointer">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6b6888" strokeWidth="2" aria-hidden="true"><path d="M3 12l3-4 3 2 3-5 3 3" strokeLinecap="round" strokeLinejoin="round"/></svg>
               </div>
-              <div className="w-[26px] h-[26px] rounded-[6px] flex items-center justify-center cursor-pointer">
+              <div className="w-6.5 h-6.5 rounded-mdflex items-center justify-center cursor-pointer">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6b6888" strokeWidth="2" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 20h8M12 18v2" strokeLinecap="round"/></svg>
               </div>
             </div>
@@ -130,7 +130,7 @@ export default function Hero() {
                   <p className="text-[10px] text-[#9090a8]">SEO Audit Summary</p>
                 </div>
                 {/* Score Radial Circle */}
-                <div className="relative w-[52px] h-[52px] shrink-0">
+                <div className="relative w-13 h-13 shrink-0">
                   <svg width="52" height="52" viewBox="0 0 52 52">
                     <circle cx="26" cy="26" r="20" fill="none" stroke="#ede8fc" strokeWidth="5"/>
                     <circle cx="26" cy="26" r="20" fill="none" stroke="#5E2CED" strokeWidth="5"
@@ -191,7 +191,7 @@ export default function Hero() {
             </div>
 
             {/* Right Side Panel Recommendations */}
-            <div className="w-[165px] shrink-0 bg-white border-l border-[#ede8f5] p-3">
+            <div className="w-41.25shrink-0 bg-white border-l border-[#ede8f5] p-3">
               <p className="text-[10.5px] font-bold text-[#1a1a2e] mb-0.5">Top Recommendations</p>
               <p className="text-[9.5px] text-[#9090a8] mb-2.5">Critical fixes for your site</p>
 
@@ -199,7 +199,7 @@ export default function Hero() {
               <div className="mb-3">
                 <p className="text-[10px] font-semibold text-[#1a1a2e] mb-0.5">Technical SEO</p>
                 <p className="text-[9px] text-[#9090a8] mb-1.5">SEO Score</p>
-                <div className="relative w-[38px] h-[38px] mb-2">
+                <div className="relative w-9.5 h-9.5 mb-2">
                   <svg width="38" height="38" viewBox="0 0 38 38">
                     <circle cx="19" cy="19" r="14" fill="none" stroke="#f0edf9" strokeWidth="4"/>
                     <circle cx="19" cy="19" r="14" fill="none" stroke="#f59e0b" strokeWidth="4"
@@ -227,7 +227,7 @@ export default function Hero() {
               <div>
                 <p className="text-[10px] font-semibold text-[#1a1a2e] mb-0.5">Content Quality</p>
                 <p className="text-[9px] text-[#9090a8] mb-1.5">SEO Score</p>
-                <div className="relative w-[38px] h-[38px] mb-2">
+                <div className="relative w-9.5 h-9.5 mb-2">
                   <svg width="38" height="38" viewBox="0 0 38 38">
                     <circle cx="19" cy="19" r="14" fill="none" stroke="#f0edf9" strokeWidth="4"/>
                     <circle cx="19" cy="19" r="14" fill="none" stroke="#5E2CED" strokeWidth="4"

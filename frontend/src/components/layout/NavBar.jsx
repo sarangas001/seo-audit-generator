@@ -59,14 +59,14 @@ const NavLinks = () => {
 const NavBar = () => {
   return (
     <nav
-      className="bg-white border-b border-[#f0edf9] px-12 h-[68px] flex items-center justify-between w-full"
+      className="bg-white border-b border-[#f0edf9] px-32 h-17 flex items-center justify-between w-full "
       role="navigation"
       aria-label="GrowDigitally main navigation"
       style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
     >
-      <img src={Logo} alt="GrowDigitally Logo" className="h-8 w-auto" />
+      <img src={Logo} alt="GrowDigitally Logo" className="w-30" />
       <NavLinks />
-      <div className="flex items-center gap-2.5 flex-shrink-0">
+      <div className="flex items-center gap-2.5 shrink-0">
         <button
           className="
             font-[Plus_Jakarta_Sans,sans-serif] text-sm font-semibold text-white
