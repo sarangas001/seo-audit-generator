@@ -40,7 +40,7 @@ export default function Hero() {
       <div className="relative flex flex-col items-start">
         {/* Badge */}
         <div className="inline-flex items-center gap-2 border border-[#e0d8fb] bg-[#f8f5ff] rounded-full px-4 py-1 mb-4">
-          <span className="text-[11px] font-bold tracking-wider color-[#5E2CED] text-[#5E2CED] uppercase">
+          <span className="text-[11.5px] font-bold tracking-wider color-[#5E2CED] text-[#5E2CED] uppercase">
             SEO Audit is your growth advantage
           </span>
           {/* Google Icon */}
@@ -58,7 +58,7 @@ export default function Hero() {
         </div>
 
         {/* Heading */}
-        <h1 className="text-4xl md:text-[60px] font-extrabold text-[#1a1a2e] leading-[1.1] tracking-[-1.5px] mb-4">
+        <h1 className="text-4xl md:text-[54px] font-extrabold text-[#1a1a2e] leading-[1.1] tracking-[-1.5px] mb-4">
           Uncover What's<br />
           <span className="text-[#5E2CED]">Holding Your</span><br />
           Website Back

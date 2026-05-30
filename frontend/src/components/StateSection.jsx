@@ -101,12 +101,12 @@ const StatsSection = () => {
           </div>
 
           {/* Headline */}
-          <h2 className="text-[40px] font-extrabold text-[#1a1a2e] leading-[1.12] tracking-[-1px] mb-5 max-w-145">
-            GrowDigitally helps you rank higher on Google and get found online.
+          <h2 className="text-4xl md:text-[54px] font-extrabold text-[#1a1a2e] leading-[1.12] tracking-[-1px] mb-5 max-w-145">
+            <span className="text-[#5E2CED]">GrowDigitally</span> helps you rank higher on Google and get found online.
           </h2>
 
           {/* Description */}
-          <p className="text-[15.5px] text-[#5a5a74] leading-[1.7] max-w-140 mb-10">
+          <p className="text-[15px] text-[#5a5a74] leading-[1.7] max-w-140 mb-10">
             Our automated SEO audit catches issues fast. Competitor intelligence shows exactly
             where you stand. A detailed report — covering 9 key SEO components — gets delivered
             straight to your WhatsApp after expert review.

@@ -246,20 +246,20 @@ const ProblemStatement = () => {
               <circle cx="8" cy="8" r="6" stroke="#5E2CED" strokeWidth="1.5" />
               <circle cx="8" cy="8" r="2" fill="#5E2CED" />
             </svg>
-            <span className="text-[11px] font-bold tracking-widest text-[#5E2CED] uppercase">
+            <span className="text-[11.5px] font-bold tracking-widest text-[#5E2CED] uppercase">
               The Problem You Don't Know You Have
             </span>
           </div>
 
           {/* Headline */}
           <h2
-            className="text-[40px] font-extrabold text-[#1a1a2e] leading-[1.1] tracking-[-1.5px] mb-5 max-w-130"
+            className="text-[54px] font-extrabold text-[#1a1a2e] leading-[1.1] tracking-[-1.5px] mb-5 max-w-130"
           >
-            Your website is losing traffic. And you can't see why.
+            Your website is <span className="text-[#5E2CED]">losing</span> traffic. And you can't see why.
           </h2>
 
           {/* Description */}
-          <p className="text-[15.5px] text-[#5a5a74] leading-[1.7] max-w-125 mb-10">
+          <p className="text-[15px] text-[#5a5a74] leading-[1.7] max-w-125 mb-10">
             Most Sri Lankan businesses are held back by the same invisible SEO problems. Your
             competitors are fixing them. You're still guessing. A GrowDigitally audit changes that.
           </p>

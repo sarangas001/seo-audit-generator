@@ -1,50 +1,60 @@
-/* ── SVG Icons for each card ── */
-const icons = {
-  executive: (
+/* ─────────────────────────────────────────────
+   FeaturesGrid.jsx  — Section 6
+   GrowDigitally · React + Tailwind CSS
+───────────────────────────────────────────── */
+
+/* ── Card Icons ── */
+const CardIcon = ({ type }) => {
+  const paths = {
+    executive: (
+      <>
+        <rect x="3" y="3" width="18" height="18" rx="3" stroke="#5E2CED" strokeWidth="1.8" />
+        <path d="M7 12h2l2-4 2 6 2-4h2" stroke="#5E2CED" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+      </>
+    ),
+    competitor: (
+      <>
+        <circle cx="9" cy="9" r="5" stroke="#5E2CED" strokeWidth="1.8" />
+        <circle cx="17" cy="15" r="4" stroke="#5E2CED" strokeWidth="1.8" strokeDasharray="2.5 2" />
+        <path d="M13 9h4M15 7v4" stroke="#5E2CED" strokeWidth="1.6" strokeLinecap="round" />
+      </>
+    ),
+    onpage: (
+      <>
+        <path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9l-6-6z" stroke="#5E2CED" strokeWidth="1.8" strokeLinejoin="round" />
+        <path d="M14 3v6h6M8 13h8M8 17h5" stroke="#5E2CED" strokeWidth="1.6" strokeLinecap="round" />
+      </>
+    ),
+    performance: (
+      <>
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="#5E2CED" strokeWidth="1.8" strokeLinejoin="round" />
+      </>
+    ),
+    backlinks: (
+      <>
+        <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke="#5E2CED" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="#5E2CED" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      </>
+    ),
+    technical: (
+      <>
+        <circle cx="12" cy="12" r="3" stroke="#5E2CED" strokeWidth="1.8" />
+        <path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12" stroke="#5E2CED" strokeWidth="1.6" strokeLinecap="round" />
+      </>
+    ),
+  };
+
+  return (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect x="3" y="3" width="18" height="18" rx="3" stroke="#5E2CED" strokeWidth="1.8" />
-      <path d="M7 12h2l2-4 2 6 2-4h2" stroke="#5E2CED" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+      {paths[type]}
     </svg>
-  ),
-  competitor: (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="9" cy="9" r="5" stroke="#5E2CED" strokeWidth="1.8" />
-      <circle cx="17" cy="15" r="4" stroke="#5E2CED" strokeWidth="1.8" strokeDasharray="2.5 2" />
-      <path d="M13 9h4M15 7v4" stroke="#5E2CED" strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
-  ),
-  onpage: (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9l-6-6z" stroke="#5E2CED" strokeWidth="1.8" strokeLinejoin="round" />
-      <path d="M14 3v6h6M8 13h8M8 17h5" stroke="#5E2CED" strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
-  ),
-  performance: (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="#5E2CED" strokeWidth="1.8" strokeLinejoin="round" />
-    </svg>
-  ),
-  backlinks: (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke="#5E2CED" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="#5E2CED" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  ),
-  technical: (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <circle cx="12" cy="12" r="3" stroke="#5E2CED" strokeWidth="1.8" />
-      <path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12" stroke="#5E2CED" strokeWidth="1.7" strokeLinecap="round" />
-    </svg>
-  ),
+  );
 };
 
-/* ── Check bullet ── */
+/* ── Green check bullet ── */
 const CheckItem = ({ text }) => (
   <li className="flex items-center gap-2.5">
-    <span
-      className="shrink-0 w-4 h-4 rounded-full flex items-center justify-center"
-      style={{ background: "#edf7f1" }}
-    >
+    <span className="shrink-0 w-4.5 h-4.5 rounded-full bg-[#edf7f1] flex items-center justify-center">
       <svg width="9" height="9" viewBox="0 0 12 12" fill="none" aria-hidden="true">
         <path
           d="M2 6l2.5 2.5 5.5-5"
@@ -56,7 +66,7 @@ const CheckItem = ({ text }) => (
       </svg>
     </span>
     <span
-      className="text-[13px] text-[#3a3a4a] font-medium"
+      className="text-[13.5px] text-[#3a3a4a] font-medium leading-snug"
       
     >
       {text}
@@ -64,16 +74,21 @@ const CheckItem = ({ text }) => (
   </li>
 );
 
-/* ── Single Feature Card ── */
-const FeatureCard = ({ icon, title, description, bullets, linkLabel }) => (
+/* ── Single card ── */
+const FeatureCard = ({ iconType, title, description, bullets, linkLabel }) => (
   <div
-    className="bg-white rounded-2xl border border-[#ede8f5] p-6 flex flex-col gap-4 hover:border-[#c4b5f7] hover:shadow-[0_4px_24px_rgba(94,44,237,0.08)] transition-all duration-200"
+    className="
+      bg-white rounded-2xl border border-[#ede8f5] p-6
+      flex flex-col
+      hover:border-[#c4b5f7] hover:shadow-[0_6px_28px_rgba(94,44,237,0.09)]
+      transition-all duration-200 cursor-default
+    "
     
   >
-    {/* Icon + Title */}
-    <div className="flex items-center gap-3">
+    {/* Icon + Title row */}
+    <div className="flex items-center gap-3 mb-3">
       <div className="w-9 h-9 rounded-xl bg-[#f5f0ff] flex items-center justify-center shrink-0">
-        {icon}
+        <CardIcon type={iconType} />
       </div>
       <h3 className="text-[15px] font-bold text-[#1a1a2e] leading-tight m-0">
         {title}
@@ -81,26 +96,32 @@ const FeatureCard = ({ icon, title, description, bullets, linkLabel }) => (
     </div>
 
     {/* Description */}
-    <p className="text-[13.5px] text-[#5a5a74] leading-[1.65] m-0">
+    <p className="text-[13.5px] text-[#5a5a74] leading-[1.65] m-0 mb-4">
       {description}
     </p>
 
     {/* Divider */}
-    <div className="border-t border-[#f0edf9]" />
+    <div className="border-t border-[#f0edf9] mb-4" />
 
     {/* Bullets */}
-    <ul className="flex flex-col gap-2.5 list-none p-0 m-0 flex-1">
+    <ul className="flex flex-col gap-2.5 list-none p-0 m-0 flex-1 mb-5">
       {bullets.map((b, i) => (
         <CheckItem key={i} text={b} />
       ))}
     </ul>
 
-    {/* More link */}
+    {/* More on link */}
     <button
-      className="flex items-center gap-1.5 text-[13px] font-semibold text-[#5E2CED] bg-transparent border-none cursor-pointer p-0 mt-1 group w-fit"
+      className="
+        group flex items-center gap-1 text-[13px] font-semibold text-[#5E2CED]
+        bg-transparent border-none cursor-pointer p-0 w-fit
+        transition-all duration-150
+      "
       
     >
-      <span className="group-hover:underline">More on {linkLabel}</span>
+      <span className="group-hover:underline underline-offset-2">
+        More on {linkLabel}
+      </span>
       <svg
         width="13" height="13" viewBox="0 0 16 16" fill="none"
         className="transition-transform duration-150 group-hover:translate-x-0.5"
@@ -121,70 +142,70 @@ const FeatureCard = ({ icon, title, description, bullets, linkLabel }) => (
 /* ── Features data ── */
 const features = [
   {
-    icon: icons.executive,
+    iconType: "executive",
     title: "Executive Summary",
     description:
-      "A clear, at-a-glance overview of your website's overall SEO health with an AI-driven visibility score.",
+      "A clear snapshot of your website's overall SEO health, AI-driven visibility index, and a full audit breakdown.",
     bullets: [
       "Overall SEO score out of 100",
-      "AI visibility index breakdown",
+      "AI-driven visibility index",
       "Passed, failed & warning counts",
     ],
     linkLabel: "Executive Summary",
   },
   {
-    icon: icons.competitor,
+    iconType: "competitor",
     title: "Competitor Intelligence",
     description:
-      "Automatically identify and analyse the top 5 competitors in your niche and see how you compare.",
+      "Automatically surface and analyse your top 5 competitors — where they win and where you can beat them.",
     bullets: [
+      "Top 5 competitor breakdown",
       "Domain authority comparison",
-      "Traffic & keyword gap analysis",
-      "Identify threats and opportunities",
+      "Keyword gap & traffic analysis",
     ],
     linkLabel: "Competitor Intelligence",
   },
   {
-    icon: icons.onpage,
+    iconType: "onpage",
     title: "On-Page Optimisation",
     description:
-      "Deep evaluation of your title tags, meta descriptions, heading structure, and internal linking.",
+      "Deep assessment of your title tags, meta descriptions, heading hierarchy, and internal link structure.",
     bullets: [
       "Title tag & meta description audit",
-      "Heading hierarchy analysis",
-      "Internal link structure review",
+      "Heading structure analysis",
+      "Internal linking review",
     ],
     linkLabel: "On-Page Optimisation",
   },
   {
-    icon: icons.performance,
+    iconType: "performance",
     title: "Performance Metrics",
     description:
-      "Measure real-world page speed and core web vitals for both mobile and desktop environments.",
+      "Real-world speed scores and Core Web Vitals for both mobile and desktop, with prioritised fixes.",
     bullets: [
       "Mobile & desktop speed scores",
       "Core Web Vitals assessment",
-      "Actionable speed improvement tips",
+      "Actionable speed improvements",
     ],
     linkLabel: "Performance Metrics",
   },
   {
-    icon: icons.backlinks,
+    iconType: "backlinks",
     title: "Backlink Profile",
     description:
-      "Evaluate your current backlink portfolio — quality, authority, and a comprehensive spam score check.",
+      "Full evaluation of your backlink portfolio — quantity, quality, referring domains, and spam score analysis.",
     bullets: [
       "Total backlinks & referring domains",
       "Domain authority evaluation",
-      "Spam score & toxic link detection",
+      "Spam & toxic link detection",
     ],
     linkLabel: "Backlink Profile",
   },
   {
-    icon: icons.technical,
+    iconType: "technical",
     title: "Technical SEO Audit",
     description:
-      "An in-depth scan of indexing, crawlability, structured data, and site architecture issues.",
+      "In-depth scan of crawlability, indexing health, structured data, sitemaps, and site architecture issues.",
     bullets: [
       "Crawlability & indexing check",
       "Schema / structured data scan",
@@ -200,19 +221,17 @@ const features = [
 const FeaturesGrid = () => {
   return (
     <section
-      className="w-full bg-[#faf9ff] py-20 px-36"
+      className="w-full bg-[#faf9ff] py-20 px-12"
       
     >
       <div className="max-w-7xl mx-auto">
 
-        {/* Section header */}
-        <div className="mb-12">
-          <h2 className="text-[32px] font-extrabold text-[#1a1a2e] tracking-[-0.8px] mb-0">
-            What's Inside Your Audit Report
-          </h2>
-        </div>
+        {/* Section heading */}
+        <h2 className="text-[54px] text-center font-extrabold text-[#1a1a2e] tracking-[-0.8px] mb-10">
+          What's Inside Your <span className="text-[#5E2CED]">SEO</span> Audit Report
+        </h2>
 
-        {/* 3×2 Card Grid */}
+        {/* 3 × 2 card grid */}
         <div className="grid grid-cols-3 gap-5">
           {features.map((f, i) => (
             <FeatureCard key={i} {...f} />

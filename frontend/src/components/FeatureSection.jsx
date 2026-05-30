@@ -413,15 +413,15 @@ const FeaturesSection = () => {
       <div className="text-center mb-16 px-6">
         <div className="inline-flex items-center gap-2 mb-4">
           <span className="w-5 border-t border-[#5E2CED]" />
-          <span className="text-[11px] font-bold tracking-widest text-[#5E2CED] uppercase">
+          <span className="text-[11.5px] font-bold tracking-widest text-[#5E2CED] uppercase">
             Find &amp; Fix SEO Issues in Minutes, Not Weeks
           </span>
           <span className="w-5 border-t border-[#5E2CED]" />
         </div>
-        <h2 className="text-[38px] font-extrabold text-[#1a1a2e] leading-[1.12] tracking-[-1px] mb-4">
+        <h2 className="text-4xl md:text-[54px] font-extrabold text-[#1a1a2e] leading-[1.12] tracking-[-1px] mb-4">
           GrowDigitally's Audit Features
         </h2>
-        <p className="text-[16px] text-[#5a5a74] leading-[1.7] max-w-150 mx-auto">
+        <p className="text-[15px] text-[#5a5a74] leading-[1.7] max-w-150 mx-auto">
           Complete SEO intelligence without the chaos. Audit 70+ technical factors, analyse your top competitors, score every page, and get a WhatsApp-delivered report reviewed by our experts.
         </p>
       </div>
