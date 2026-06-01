@@ -10,14 +10,12 @@ import FooterSection from './components/FooterSection'
 function App() {
   return (
     <div>
-      <NavBar />
       <Hero />
       <StatsSection />
       <FeaturesSection />
       <ProblemStatement />
       <FeaturesGrid />
       <CustomerReviews />
-      <FooterSection />
     </div>
   )
 }

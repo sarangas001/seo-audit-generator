@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Logo from "../../assets/logo.png";
+import { useNavigate } from "react-router-dom";
 
 const ChevronIcon = () => (
   <svg
@@ -30,6 +31,7 @@ const navItems = [
 
 const NavLinks = () => {
   const [activeItem, setActiveItem] = useState(null);
+  
 
   return (
     <ul className="flex items-center gap-1 list-none m-0 p-0">
@@ -57,6 +59,7 @@ const NavLinks = () => {
 };
 
 const NavBar = () => {
+  const navigate = useNavigate();
   return (
     <nav
       className="bg-white border-b border-[#f0edf9] px-32 h-17 flex items-center justify-between w-full "
@@ -64,7 +67,7 @@ const NavBar = () => {
       aria-label="GrowDigitally main navigation"
       style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
     >
-      <img src={Logo} alt="GrowDigitally Logo" className="w-30" />
+      <img src={Logo} alt="GrowDigitally Logo" onClick={() => navigate('/')} className="w-30 cursor-pointer" />
       <NavLinks />
       <div className="flex items-center gap-2.5 shrink-0">
         <button

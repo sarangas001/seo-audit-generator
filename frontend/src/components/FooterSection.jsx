@@ -232,14 +232,14 @@ const footerColumns = [
   {
     heading: "Audit Components",
     links: [
-      { label: "Executive Summary" },
-      { label: "Competitor Intelligence" },
-      { label: "On-Page Optimisation" },
-      { label: "Performance Metrics" },
-      { label: "Backlink Profile" },
-      { label: "Technical SEO Audit" },
-      { label: "Organic Insights" },
-      { label: "Actionable Recommendations" },
+      { label: "Executive Summary", href: "/services/executive-summary" },
+      { label: "Competitor Intelligence", href: "/services/competitor-intelligence" },
+      { label: "On-Page Optimisation", href: "/services/on-page-optimisation" },
+      { label: "Performance Metrics", href: "/services/performance-metrics" },
+      { label: "Backlink Profile", href: "/services/backlink-profile" },
+      { label: "Technical SEO Audit", href: "/services/technical-seo-audit" },
+      { label: "Organic Insights", href: "/services/organic-insights" },
+      { label: "Actionable Recommendations", href: "/services/actionable-recommendations" },
     ],
   },
   {
