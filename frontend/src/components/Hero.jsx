@@ -1,6 +1,6 @@
 export default function Hero() {
   return (
-    <div className="relative min-h-140 bg-[#faf9ff] px-6 py-14 md:px-36 grid grid-cols-1 lg:grid-cols-2 items-center overflow-hidden">
+    <div id="hero-section" className="relative min-h-140 bg-[#faf9ff] px-6 py-14 md:px-36 grid grid-cols-1 lg:grid-cols-2 items-center overflow-hidden">
       {/* Geometric Background Pattern */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Large floating square - top left */}

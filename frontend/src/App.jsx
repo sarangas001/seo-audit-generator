@@ -8,14 +8,26 @@ import CustomerReviews from './components/CustomerReviews'
 import FooterSection from './components/FooterSection'
 
 function App() {
+
+
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      window.scrollTo({
+        top: element.offsetTop - 60, // -60 accounts for the fixed nav bar height
+        behavior: 'smooth',
+      });
+    }
+  };
+
   return (
     <div>
       <Hero />
-      <StatsSection />
-      <FeaturesSection />
-      <ProblemStatement />
+      <StatsSection scrollToSection={(data) => scrollToSection(data)} />
+      <FeaturesSection scrollToSection={(data) => scrollToSection(data)} />
+      <ProblemStatement scrollToSection={(data) => scrollToSection(data)} />
       <FeaturesGrid />
-      <CustomerReviews />
+      <CustomerReviews  />
     </div>
   )
 }

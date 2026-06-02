@@ -230,7 +230,7 @@ const problems = [
   },
 ];
 
-const ProblemStatement = () => {
+const ProblemStatement = ({scrollToSection}) => {
   return (
     <section
       className="w-full bg-white py-20 px-36"
@@ -274,7 +274,7 @@ const ProblemStatement = () => {
           {/* CTA */}
           <button
             className="h-12 px-7 bg-[#5E2CED] hover:bg-[#4a1fd4] active:scale-[0.98] text-white font-semibold text-[14.5px] rounded-lg border-none cursor-pointer transition-all duration-150"
-            
+            onClick={() => scrollToSection('hero-section')}
           >
             Get Your Free SEO Audit
           </button>

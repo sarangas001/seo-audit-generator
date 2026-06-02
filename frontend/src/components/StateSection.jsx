@@ -80,7 +80,7 @@ const useCases = [
   },
 ];
 
-const StatsSection = () => {
+const StatsSection = ({scrollToSection}) => {
   return (
     <section
       className="w-full bg-white py-20 px-36"
@@ -141,16 +141,17 @@ const StatsSection = () => {
           <div className="flex items-center gap-3">
             <button
               className="h-11.5 px-6 bg-[#5E2CED] hover:bg-[#4a1fd4] active:scale-[0.98] text-white font-semibold text-[14px] rounded-lg border-none cursor-pointer transition-all duration-150"
-              
+              onClick={() => scrollToSection('hero-section')}
             >
               Get Free Audit
             </button>
-            <button
-              className="h-11.5 px-6 bg-white hover:bg-[#f5f0ff] text-[#1a1a2e] font-semibold text-[14px] rounded-lg border border-[#ddd8f0] cursor-pointer transition-all duration-150"
-              
-            >
-              Learn More
-            </button>
+            <a href="https://growdigitally.lk/" target="_blank" rel="noopener noreferrer">
+              <button
+                className="h-11.5 px-6 bg-white hover:bg-[#f5f0ff] text-[#1a1a2e] font-semibold text-[14px] rounded-lg border border-[#ddd8f0] cursor-pointer transition-all duration-150"
+              >
+                Learn More
+              </button>
+            </a>
           </div>
         </div>
 

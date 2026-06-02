@@ -3,6 +3,8 @@
    GrowDigitally · React + Tailwind CSS
 ───────────────────────────────────────────── */
 
+import { useNavigate } from "react-router-dom";
+
 /* ── Shared: Check bullet ── */
 const CheckItem = ({ text }) => (
   <li className="flex items-center gap-3">
@@ -22,17 +24,17 @@ const CheckItem = ({ text }) => (
 );
 
 /* ── Shared: CTA pair ── */
-const CtaPair = ({ primary, secondary }) => (
+const CtaPair = ({ primary, secondary, scrollToSection , navigate, slug}) => (
   <div className="flex items-center gap-3 mt-8">
     <button
       className="h-11.5 px-6 bg-[#5E2CED] hover:bg-[#4a1fd4] active:scale-[0.98] text-white font-semibold text-[14px] rounded-lg border-none cursor-pointer transition-all duration-150 whitespace-nowrap"
-      
+      onClick={() => scrollToSection('hero-section')}
     >
       {primary}
     </button>
     <button
       className="h-11.5 px-5 bg-white hover:bg-[#f5f0ff] text-[#1a1a2e] font-semibold text-[14px] rounded-lg border border-[#ddd8f0] cursor-pointer transition-all duration-150"
-      
+      onClick={() => navigate(`${slug}`)}
     >
       {secondary}
     </button>
@@ -355,7 +357,10 @@ const OnPageMockup = () => {
 /* ══════════════════════════════════════════
    FEATURES SECTION — Full Component
 ══════════════════════════════════════════ */
-const FeaturesSection = () => {
+const FeaturesSection = ({scrollToSection}) => {
+
+  const navigate = useNavigate();
+
   const features = [
     {
       layout: "text-left",
@@ -369,6 +374,7 @@ const FeaturesSection = () => {
         "Detect missing structured data and schema gaps",
       ],
       primaryCta: "Run Your Audit",
+      link: "technical-seo-audit",
       secondaryCta: "Learn more",
       mockup: <TechnicalAuditMockup />,
     },
@@ -384,6 +390,7 @@ const FeaturesSection = () => {
         "Uncover keyword gaps and traffic opportunities",
       ],
       primaryCta: "Analyse Competitors",
+      link: "competitor-intelligence",
       secondaryCta: "Learn more",
       mockup: <CompetitorMockup />,
     },
@@ -399,6 +406,7 @@ const FeaturesSection = () => {
         "Identify top-performing pages and link opportunities",
       ],
       primaryCta: "Check Your Pages",
+      link: "on-page-optimisation",
       secondaryCta: "Learn more",
       mockup: <OnPageMockup />,
     },
@@ -449,7 +457,7 @@ const FeaturesSection = () => {
                   <ul className="flex flex-col gap-3 list-none p-0 m-0">
                     {f.bullets.map((b, j) => <CheckItem key={j} text={b} />)}
                   </ul>
-                  <CtaPair primary={f.primaryCta} secondary={f.secondaryCta} />
+                  <CtaPair primary={f.primaryCta} secondary={f.secondaryCta} scrollToSection={scrollToSection} slug={f.link} navigate={(link) => navigate(`/services/${link}`)} />
                 </div>
                 <div className="relative">
                   <div
@@ -482,7 +490,7 @@ const FeaturesSection = () => {
                   <ul className="flex flex-col gap-3 list-none p-0 m-0">
                     {f.bullets.map((b, j) => <CheckItem key={j} text={b} />)}
                   </ul>
-                  <CtaPair primary={f.primaryCta} secondary={f.secondaryCta} />
+                  <CtaPair primary={f.primaryCta} secondary={f.secondaryCta} scrollToSection={(data) => scrollToSection(data)} navigate={(link) => navigate(`/services/${link}`)} slug={f.link} />
                 </div>
               </>
             )}

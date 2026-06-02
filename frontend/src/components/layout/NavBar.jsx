@@ -58,7 +58,7 @@ const NavLinks = () => {
   );
 };
 
-const NavBar = () => {
+const NavBar = ({scrollToSection}) => {
   const navigate = useNavigate();
   return (
     <nav
@@ -76,6 +76,7 @@ const NavBar = () => {
             bg-[#5E2CED] border-none rounded-lg px-5 py-2.5 cursor-pointer whitespace-nowrap
             transition-all duration-150 hover:bg-[#4a1fd4] active:scale-[0.98]
           "
+          onClick={() => scrollToSection('hero-section')}
         >
           Get Free Audit
         </button>

@@ -5,7 +5,7 @@ import { useState } from "react";
 /* ══════════════════════════════════════════
    PRE-FOOTER — Dark CTA banner with mockup
 ══════════════════════════════════════════ */
-const PreFooterBanner = () => {
+const PreFooterBanner = ({ scrollToSection }) => {
   const metrics = [
     { label: "On-Page Score", value: "84/100", trend: "up", color: "#16a34a" },
     { label: "Backlinks", value: "142", trend: "up", color: "#16a34a" },
@@ -55,16 +55,16 @@ const PreFooterBanner = () => {
             <div className="flex items-center gap-3">
               <button
                 className="h-11.5 px-7 bg-[#5E2CED] hover:bg-[#4a1fd4] active:scale-[0.98] text-white font-semibold text-[14px] rounded-lg border-none cursor-pointer transition-all duration-150"
-                
+                onClick={() => scrollToSection('hero-section')}
               >
                 Get Free Audit
               </button>
-              <button
+              {/* <button
                 className="h-11.5 px-6 bg-white/10 hover:bg-white/20 text-white font-semibold text-[14px] rounded-lg border border-white/20 cursor-pointer transition-all duration-150"
                 
               >
                 See Pricing
-              </button>
+              </button> */}
             </div>
           </div>
 
@@ -382,9 +382,9 @@ const MainFooter = () => {
 /* ══════════════════════════════════════════
    COMBINED EXPORT
 ══════════════════════════════════════════ */
-const FooterSection = () => (
+const FooterSection = ({ scrollToSection }) => (
   <>
-    <PreFooterBanner />
+    <PreFooterBanner scrollToSection={(data) => scrollToSection(data)} />
     <MainFooter />
   </>
 );

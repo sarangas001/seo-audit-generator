@@ -3,6 +3,8 @@
    GrowDigitally · React + Tailwind CSS
 ───────────────────────────────────────────── */
 
+import { useNavigate } from "react-router-dom";
+
 /* ── Card Icons ── */
 const CardIcon = ({ type }) => {
   const paths = {
@@ -75,7 +77,7 @@ const CheckItem = ({ text }) => (
 );
 
 /* ── Single card ── */
-const FeatureCard = ({ iconType, title, description, bullets, linkLabel }) => (
+const FeatureCard = ({ iconType, title, description, bullets, linkLabel, slug, navigate }) => (
   <div
     className="
       bg-white rounded-2xl border border-[#ede8f5] p-6
@@ -117,7 +119,7 @@ const FeatureCard = ({ iconType, title, description, bullets, linkLabel }) => (
         bg-transparent border-none cursor-pointer p-0 w-fit
         transition-all duration-150
       "
-      
+      onClick={() => navigate(`/services/${slug}`)}
     >
       <span className="group-hover:underline underline-offset-2">
         More on {linkLabel}
@@ -144,6 +146,7 @@ const features = [
   {
     iconType: "executive",
     title: "Executive Summary",
+    slug: "executive-summary",
     description:
       "A clear snapshot of your website's overall SEO health, AI-driven visibility index, and a full audit breakdown.",
     bullets: [
@@ -156,6 +159,7 @@ const features = [
   {
     iconType: "competitor",
     title: "Competitor Intelligence",
+    slug: "competitor-intelligence",
     description:
       "Automatically surface and analyse your top 5 competitors — where they win and where you can beat them.",
     bullets: [
@@ -168,6 +172,7 @@ const features = [
   {
     iconType: "onpage",
     title: "On-Page Optimisation",
+    slug: "on-page-optimisation",
     description:
       "Deep assessment of your title tags, meta descriptions, heading hierarchy, and internal link structure.",
     bullets: [
@@ -180,6 +185,7 @@ const features = [
   {
     iconType: "performance",
     title: "Performance Metrics",
+    slug: "performance-metrics",
     description:
       "Real-world speed scores and Core Web Vitals for both mobile and desktop, with prioritised fixes.",
     bullets: [
@@ -192,6 +198,7 @@ const features = [
   {
     iconType: "backlinks",
     title: "Backlink Profile",
+    slug: "backlink-profile",
     description:
       "Full evaluation of your backlink portfolio — quantity, quality, referring domains, and spam score analysis.",
     bullets: [
@@ -204,6 +211,7 @@ const features = [
   {
     iconType: "technical",
     title: "Technical SEO Audit",
+    slug: "technical-seo-audit",
     description:
       "In-depth scan of crawlability, indexing health, structured data, sitemaps, and site architecture issues.",
     bullets: [
@@ -219,6 +227,9 @@ const features = [
    FEATURES GRID SECTION
 ══════════════════════════════════════════ */
 const FeaturesGrid = () => {
+
+  const navigate = useNavigate();
+
   return (
     <section
       className="w-full bg-[#faf9ff] py-20 px-12"
@@ -234,7 +245,7 @@ const FeaturesGrid = () => {
         {/* 3 × 2 card grid */}
         <div className="grid grid-cols-3 gap-5">
           {features.map((f, i) => (
-            <FeatureCard key={i} {...f} />
+            <FeatureCard key={i} {...f} navigate={navigate} />
           ))}
         </div>
 
