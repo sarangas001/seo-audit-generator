@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getServiceBySlug } from '../util/ServiceData.js';
 
 /* ══════════════════════════════════════════════════════
@@ -157,7 +157,7 @@ const HeroDashboardMockup = ({ service }) => {
 ══════════════════════════════════════════════════════ */
 
 /* ── 1. HERO ── */
-const HeroSection = ({ service }) => (
+const HeroSection = ({ service, navigate }) => (
   <section
     className="w-full bg-[#faf9ff] pt-16 pb-10 md:px-36"
     
@@ -193,6 +193,7 @@ const HeroSection = ({ service }) => (
         <div className="flex items-center justify-center gap-3 mb-6">
           <button
             className="h-12.5 px-8 bg-[#5E2CED] hover:bg-[#4a1fd4] active:scale-[0.98] text-white font-bold text-[15px] rounded-xl border-none cursor-pointer transition-all duration-150"
+            onClick={() => navigate('/')}
           >
             {service.heroPrimaryCta}
           </button>
@@ -344,7 +345,7 @@ const UseCasesSection = ({ service }) => (
 );
 
 /* ── 5. CTA BANNER ── */
-const CtaBanner = ({ service }) => (
+const CtaBanner = ({ service, navigate }) => (
   <section className="w-full px-12 py-10 bg-[#faf9ff]" >
     <div
       className="max-w-7xl mx-auto rounded-2xl flex flex-col items-center justify-center text-center py-14 px-8 relative overflow-hidden"
@@ -360,6 +361,7 @@ const CtaBanner = ({ service }) => (
       </h2>
       <button
         className="relative h-12.5 px-8 bg-[#5E2CED] hover:bg-[#4a1fd4] active:scale-[0.98] text-white font-bold text-[15px] rounded-xl border-none cursor-pointer transition-all duration-150"
+        onClick={() => navigate('/')}
       >
         {service.ctaButtonLabel}
       </button>
@@ -404,7 +406,8 @@ const ReviewsSection = ({ service }) => (
 ══════════════════════════════════════════════════════ */
 const ServiceDetailPage = () => {
     const { slug: routeSlug } = useParams();
-  const service = getServiceBySlug(routeSlug);
+    const service = getServiceBySlug(routeSlug);
+    const navigate = useNavigate();
 
   /* ── 404 fallback ── */
   if (!service) {
@@ -432,11 +435,11 @@ const ServiceDetailPage = () => {
 
   return (
     <div className="w-full min-h-screen bg-[#faf9ff]" >
-      <HeroSection service={service} />
+      <HeroSection service={service} navigate={(data) => navigate(data)} />
       <ProblemSection service={service} />
       <WhatWeGiveSection service={service} />
       <UseCasesSection service={service} />
-      <CtaBanner service={service} />
+      <CtaBanner service={service} navigate={(data) => navigate(data)} />
       <ReviewsSection service={service} />
     </div>
   );

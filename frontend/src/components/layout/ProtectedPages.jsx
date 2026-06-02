@@ -1,6 +1,7 @@
 import React, { useRef } from 'react'
 import NavBar from './NavBar'
 import FooterSection from '../FooterSection'
+import ScrollToTop from '../../util/ScrollToTop';
 
 export const ProtectedPages = ({ children }) => {
 
@@ -17,6 +18,7 @@ export const ProtectedPages = ({ children }) => {
   return (
     <div>
         <NavBar scrollToSection={(elementRef) => scrollToSection(elementRef)}/>
+          <ScrollToTop />
         {children}
         <FooterSection scrollToSection={(data) => scrollToSection(data)} />
     </div>

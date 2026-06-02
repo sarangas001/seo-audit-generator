@@ -6,6 +6,8 @@ import { useState } from "react";
    PRE-FOOTER — Dark CTA banner with mockup
 ══════════════════════════════════════════ */
 const PreFooterBanner = ({ scrollToSection }) => {
+
+  
   const metrics = [
     { label: "On-Page Score", value: "84/100", trend: "up", color: "#16a34a" },
     { label: "Backlinks", value: "142", trend: "up", color: "#16a34a" },
@@ -55,7 +57,7 @@ const PreFooterBanner = ({ scrollToSection }) => {
             <div className="flex items-center gap-3">
               <button
                 className="h-11.5 px-7 bg-[#5E2CED] hover:bg-[#4a1fd4] active:scale-[0.98] text-white font-semibold text-[14px] rounded-lg border-none cursor-pointer transition-all duration-150"
-                onClick={() => scrollToSection('hero-section')}
+                onClick={() => { scrollToSection('hero-section')}}
               >
                 Get Free Audit
               </button>
