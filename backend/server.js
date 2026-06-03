@@ -3,7 +3,7 @@ require('dotenv').config();
 
 const PORT = process.env.PORT || 3001;
 
-(async () => {
+const server = () => {
     try {
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
@@ -11,4 +11,7 @@ const PORT = process.env.PORT || 3001;
     } catch (error) {
         console.error("Error starting the server:", error);
     }
-});
+};
+
+
+server();

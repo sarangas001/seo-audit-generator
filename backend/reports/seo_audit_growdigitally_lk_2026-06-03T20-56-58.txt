@@ -1,0 +1,201 @@
+══════════════════════════════════════════════════════════════════════
+  GROWDIGITALLY — TECHNICAL SEO AUDIT REPORT
+══════════════════════════════════════════════════════════════════════
+
+CUSTOMER INFORMATION
+──────────────────────────────────────────────────────────────────────
+Name        : saranga
+Email       : saranga@gmail.com
+WhatsApp    : 0763361385
+Generated   : 2026-06-03T20:56:25.913Z
+
+WEBSITE INFORMATION
+──────────────────────────────────────────────────────────────────────
+URL         : https://growdigitally.lk
+Domain      : growdigitally.lk
+Keywords    : Best Seo Company
+Location    : Sri Lanka
+HTTPS       : ✅
+Reachable   : ✅ (HTTP 200)
+
+ISSUES SUMMARY
+──────────────────────────────────────────────────────────────────────
+Total Issues Found : 6
+🔴 Critical        : 2
+🟠 High            : 0
+🟡 Medium          : 3
+🔵 Low             : 1
+
+TOP 3 QUICK SEO FIXES
+──────────────────────────────────────────────────────────────────────
+1. [CRITICAL] [Crawlability]
+   robots.txt is blocking all crawlers — Google cannot index your site
+
+2. [CRITICAL] [Robots.txt]
+   robots.txt blocks all
+
+3. [MEDIUM] [Meta Title]
+   Meta title is 61 chars (recommended: max 60)
+
+1. CRAWLABILITY & INDEXABILITY
+──────────────────────────────────────────────────────────────────────
+Reachable         : ✅
+HTTP Status       : 200
+Indexable         : ❌
+Robots Blocking   : ❌ (BLOCKING)
+Noindex Tag       : ✅ Not found
+Issues:
+  🔴 CRITICAL: robots.txt is blocking all crawlers — Google cannot index your site
+
+2. HTTPS & SECURITY
+──────────────────────────────────────────────────────────────────────
+HTTPS Enabled     : ✅
+HTTP → HTTPS Redirect : ✅
+
+3. ROBOTS.TXT
+──────────────────────────────────────────────────────────────────────
+Exists            : ✅
+HTTP Status       : 200
+Has Disallow Rules: Yes
+Blocks All Bots   : 🔴 YES — CRITICAL
+Sitemap Referenced: ✅
+
+Content Preview:
+User-agent: *
+Allow: /
+
+# Disallow admin & system paths
+Disallow: /wp-admin/
+Allow: /wp-admin/admin-ajax.php
+
+# Disallow unnecessary files
+Disallow: /wp-includes/
+Disallow: /xmlrpc.php
+Disallow: /readme.html
+
+# Allow important assets
+Allow: /wp-content/uploads/
+
+# Sitemap
+Sitemap: https://growdigitally.lk/sitemap_index.xml
+
+4. XML SITEMAP
+──────────────────────────────────────────────────────────────────────
+URL               : https://growdigitally.lk/sitemap_index.xml
+Exists            : ✅
+HTTP Status       : 200
+URLs in Sitemap   : 2
+In Robots.txt     : ✅
+Sample URLs:
+  • https://growdigitally.lk/post-sitemap.xml
+  • https://growdigitally.lk/page-sitemap.xml
+
+5. META TITLE
+──────────────────────────────────────────────────────────────────────
+Content           : "Best Web Design & SEO Company in Sri Lanka | GrowDigitally.lk"
+Length            : 61 chars ⚠️ Needs fix
+Keyword Present   : ❌
+  🟡 TOO LONG: Meta title is 61 chars (recommended: max 60)
+  🟡 KEYWORD MISSING: Main keyword not found in title
+
+6. META DESCRIPTION
+──────────────────────────────────────────────────────────────────────
+Content           : "GrowDigitally.lk is a leading Web Design & SEO Company in Sri Lanka. We Build Websites That Rank & Generate Leads. Get s..."
+Length            : 133 chars ✅ Good
+Keyword Present   : ❌
+  🟡 KEYWORD MISSING: Main keyword not found in meta description
+
+7. CANONICAL TAGS
+──────────────────────────────────────────────────────────────────────
+Canonical URL     : https://growdigitally.lk/
+Self-Referencing  : ⚠️ No or missing
+
+8. VIEWPORT / MOBILE USABILITY
+──────────────────────────────────────────────────────────────────────
+Viewport Tag      : width=device-width, initial-scale=1.0
+Mobile Ready      : ✅
+
+9. HEADING STRUCTURE
+──────────────────────────────────────────────────────────────────────
+H1 Count          : 1 ✅
+H1 Content        : "Best Web Design & SEO Company in Sri Lanka"
+H2 Count          : 11
+H3 Count          : 13
+H2 Samples        :
+  • "Web Design, SEO & Digital Marketing Services in Sri Lanka That Drive Real Growth"
+  • "Digital Growth Journey in 3 Easy Steps"
+  • "What We Do"
+
+10. IMAGE ALT TEXT
+──────────────────────────────────────────────────────────────────────
+Total Images      : 19
+Missing Alt Text  : 4 🟠
+Missing Alt Examples:
+  • https://growdigitally.lk/wp-content/uploads/2026/05/20286044_6206964-9-1.webp
+  • data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjA1IiBoZWlnaHQ9IjEwMTkiIHZpZXdCb3g9IjAgMCAxMjA1IDEwMTkiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHN0eWxlPSJmaWxsOiNmNGRiZmY7ZmlsbC1vcGFjaXR5OiAwLjE7Ii8+PC9zdmc+
+  • data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjA1IiBoZWlnaHQ9IjEwMTciIHZpZXdCb3g9IjAgMCAxMjA1IDEwMTciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHN0eWxlPSJmaWxsOiNmNGRiZmY7ZmlsbC1vcGFjaXR5OiAwLjE7Ii8+PC9zdmc+
+  🔵 MISSING ALT TEXT: 4 image(s) are missing alt attributes
+
+11. SCHEMA MARKUP
+──────────────────────────────────────────────────────────────────────
+Schema Present    : ✅
+Schema Types      : Unknown, Unknown
+
+12. INTERNAL LINKING
+──────────────────────────────────────────────────────────────────────
+Total Links Found : 53
+Internal Links    : 46
+External Links    : 7
+Internal Link Samples:
+  • https://growdigitally.lk/
+  • https://growdigitally.lk/ ("Home")
+  • https://growdigitally.lk/web-developers-in-sri-lanka/ ("Web Design & Development")
+  • https://growdigitally.lk/seo-specialist-sri-lanka/ ("Search Engine Optimization")
+  • https://growdigitally.lk/social-media-marketing/ ("Social Media Marketing")
+
+13. CONTENT
+──────────────────────────────────────────────────────────────────────
+Word Count        : ~2104 words
+Thin Content      : ✅ No
+
+14. OPEN GRAPH TAGS
+──────────────────────────────────────────────────────────────────────
+OG Title          : Best Web Design & SEO Company in Sri Lanka | GrowDigitally.lk
+OG Description    : GrowDigitally.lk is a leading Web Design & SEO Company in Sri Lanka. We Build We...
+OG Image          : https://growdigitally.lk/wp-content/uploads/2025/09/Logo-002-1.jpg
+
+15. BROKEN LINKS & REDIRECTS
+──────────────────────────────────────────────────────────────────────
+Links Checked     : 20
+Broken Links      : 0 ✅
+Redirects Found   : 0
+
+16. GOOGLE PAGESPEED INSIGHTS
+──────────────────────────────────────────────────────────────────────
+
+ALL ISSUES BY PRIORITY
+══════════════════════════════════════════════════════════════════════
+
+🔴 CRITICAL ISSUES (2)
+──────────────────────────────────────────────────────────────────────
+  1. [Crawlability] CRITICAL: robots.txt is blocking all crawlers — Google cannot index your site
+  2. [Robots.txt] CRITICAL: robots.txt blocks all
+
+🟠 HIGH ISSUES (0)
+──────────────────────────────────────────────────────────────────────
+  None found ✅
+
+🟡 MEDIUM ISSUES (3)
+──────────────────────────────────────────────────────────────────────
+  1. [Meta Title] TOO LONG: Meta title is 61 chars (recommended: max 60)
+  2. [Meta Title] KEYWORD MISSING: Main keyword not found in title
+  3. [Meta Description] KEYWORD MISSING: Main keyword not found in meta description
+
+🔵 LOW ISSUES (1)
+──────────────────────────────────────────────────────────────────────
+  1. [Image Optimisation] MISSING ALT TEXT: 4 image(s) are missing alt attributes
+
+══════════════════════════════════════════════════════════════════════
+  END OF TECHNICAL SEO AUDIT — GrowDigitally
+  Generated: 6/4/2026, 2:26:58 AM
+══════════════════════════════════════════════════════════════════════

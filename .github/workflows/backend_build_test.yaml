@@ -1,0 +1,28 @@
+name: SEO Audit Generation Backend Build and Test
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+        - 'docker/app1-hello/node'
+
+jobs:
+    build-test:
+        runs-on: ubuntu-latest
+    
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+            
+            - name: Setup Node.js
+              uses: actions/setup-node@v6
+              with:
+                    node-version: '25'
+
+            - name: Install dependencies
+              working-directory: docker/app1-hello/node
+              run: npm ci
+            
+            - name: Run tests (If any)
+              working-directory: docker/app1-hello/node
+              run: npm test --if-present
