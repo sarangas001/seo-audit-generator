@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-        - 'docker/app1-hello/node'
+        - 'backend/**'
 
 jobs:
     build-test:
@@ -12,7 +12,7 @@ jobs:
     
         steps:
             - name: Checkout code
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
             
             - name: Setup Node.js
               uses: actions/setup-node@v6
@@ -20,9 +20,9 @@ jobs:
                     node-version: '25'
 
             - name: Install dependencies
-              working-directory: docker/app1-hello/node
+              working-directory: backend
               run: npm ci
             
             - name: Run tests (If any)
-              working-directory: docker/app1-hello/node
+              working-directory: backend
               run: npm test --if-present
