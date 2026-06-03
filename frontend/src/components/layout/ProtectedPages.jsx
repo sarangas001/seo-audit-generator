@@ -1,4 +1,3 @@
-import React, { useRef } from 'react'
 import NavBar from './NavBar'
 import FooterSection from '../FooterSection'
 import ScrollToTop from '../../util/ScrollToTop';

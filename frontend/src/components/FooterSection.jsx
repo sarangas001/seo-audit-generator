@@ -198,29 +198,29 @@ const FooterColumn = ({ heading, links }) => (
   </div>
 );
 
-const ServiceFooterColumn = ({ heading, links }) => (
-  <div>
-    <p
-      className="text-[11px] font-bold tracking-widest text-[#1a1a2e] uppercase mb-4"
+// const ServiceFooterColumn = ({ heading, links }) => (
+//   <div>
+//     <p
+//       className="text-[11px] font-bold tracking-widest text-[#1a1a2e] uppercase mb-4"
       
-    >
-      {heading}
-    </p>
-    <ul className="list-none p-0 m-0 flex flex-col gap-2.5">
-      {links.map((link, i) => (
-        <li key={i}>
-          <a
-            href={link.href || "#"}
-            className="text-[13.5px] text-[#5a5a74] hover:text-[#5E2CED] transition-colors duration-150 no-underline font-medium"
+//     >
+//       {heading}
+//     </p>
+//     <ul className="list-none p-0 m-0 flex flex-col gap-2.5">
+//       {links.map((link, i) => (
+//         <li key={i}>
+//           <a
+//             href={link.href || "#"}
+//             className="text-[13.5px] text-[#5a5a74] hover:text-[#5E2CED] transition-colors duration-150 no-underline font-medium"
             
-          >
-            {link.label}
-          </a>
-        </li>
-      ))}
-    </ul>
-  </div>
-);
+//           >
+//             {link.label}
+//           </a>
+//         </li>
+//       ))}
+//     </ul>
+//   </div>
+// );
 
 const footerColumns = [
   {
@@ -247,10 +247,10 @@ const footerColumns = [
   {
     heading: "Use Cases",
     links: [
-      { label: "Small Businesses" },
-      { label: "E-commerce Brands" },
-      { label: "Digital Agencies" },
-      { label: "Startups" },
+      { label: "Small Businesses" , href: "/usecases/small-businesses"},
+      { label: "E-commerce Brands", href: "/usecases/ecommerce-brands" },
+      { label: "Digital Agencies", href: "/usecases/digital-agencies" },
+      { label: "Startups", href: "/usecases/startups" },
     ],
   },
   {

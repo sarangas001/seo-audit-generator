@@ -423,7 +423,7 @@ const ServiceDetailPage = () => {
           </svg>
         </div>
         <h1 className="text-[28px] font-extrabold text-[#1a1a2e] tracking-tight">Service not found</h1>
-        <p className="text-[15px] text-[#5a5a74]">The slug "{slug}" doesn't match any service.</p>
+        <p className="text-[15px] text-[#5a5a74]">The slug "{routeSlug}" doesn't match any service.</p>
         <a href="/"
           className="mt-2 h-11 px-6 bg-[#5E2CED] text-white font-semibold text-[14px] rounded-lg flex items-center no-underline"
         >
