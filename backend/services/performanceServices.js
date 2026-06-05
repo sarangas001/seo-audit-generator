@@ -67,6 +67,50 @@ const vitalRating = (auditId, numericValue) => {
   return "poor";
 };
 
+/**
+ * Normalise a URL so downstream services always receive a valid absolute URL.
+ */
+const normaliseUrl = (url) => {
+  if (typeof url !== "string") return "";
+  const trimmed = url.trim();
+  if (!trimmed) return "";
+  if (!trimmed.startsWith("http://") && !trimmed.startsWith("https://")) {
+    return `https://${trimmed}`;
+  }
+  return trimmed;
+};
+
+/**
+ * Resolve the final reachable URL before sending it to PageSpeed.
+ * This helps when users enter a URL without protocol or the site redirects.
+ */
+const resolveAuditUrl = async (url) => {
+  const normalized = normaliseUrl(url);
+  if (!normalized) return "";
+
+  const res = await safeGet(normalized, { maxRedirects: 10, validateStatus: () => true });
+  return res.finalUrl || normalized;
+};
+
+/**
+ * PageSpeed can be slow on some URLs, so we allow a longer timeout and one retry.
+ */
+const fetchPageSpeedApi = async (endpoint, strategy) => {
+  const timeoutMs = 60000;
+  for (let i = 0; i < 2; i += 1) {
+    const res = await safeGet(endpoint, { timeout: timeoutMs });
+    if (res.data && !res.data.error) return res;
+
+    const msg = (res.error || res.data?.error?.message || "").toLowerCase();
+    const isTimeout = msg.includes("timeout") || msg.includes("etimedout") || msg.includes("aborted");
+    if (i === 1 || !isTimeout) return res;
+
+    console.warn(`[Performance] PageSpeed timeout (${strategy}) on attempt ${i + 1}; retrying once...`);
+  }
+
+  return { data: null, status: 0, headers: {}, error: "Unknown PageSpeed failure" };
+};
+
 // ─────────────────────────────────────────────────────────────────────────────
 //  fetchOneStrategy
 //  Calls the PageSpeed API for a single strategy (mobile or desktop)
@@ -75,23 +119,34 @@ const vitalRating = (auditId, numericValue) => {
 
 const fetchOneStrategy = async (url, strategy) => {
   try {
+    const resolvedUrl = await resolveAuditUrl(url);
+    if (!resolvedUrl) {
+      const errMsg = "Invalid or empty website URL";
+      console.error(`[Performance] PageSpeed API error (${strategy}): ${errMsg}`);
+      return { strategy, error: errMsg };
+    }
+
     const apiKey   = process.env.PAGESPEED_API_KEY
       ? `&key=${process.env.PAGESPEED_API_KEY}`
       : "";
     const endpoint = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed`
-      + `?url=${encodeURIComponent(url)}`
+      + `?url=${encodeURIComponent(resolvedUrl)}`
       + `&strategy=${strategy}`
       + `${apiKey}`
       + `&locale=en`;
 
     console.log(`[Performance] Fetching PageSpeed — ${strategy.toUpperCase()}...`);
-    const res = await safeGet(endpoint);
+    console.log(`[Performance] Using resolved URL: ${resolvedUrl}`);
+    const res = await fetchPageSpeedApi(endpoint, strategy);
 
     // API returned an error object
     if (!res.data || res.data.error) {
-      const errMsg = res.data?.error?.message || res.error || "Unknown API error";
-      console.error(`[Performance] PageSpeed API error (${strategy}): ${errMsg}`);
-      return { strategy, error: errMsg };
+      const apiError = res.data?.error;
+      const errMsg = apiError?.message || res.error || "Unknown API error";
+      const details = apiError?.details?.map((d) => d?.message).filter(Boolean).join("; ");
+      const fullMsg = details ? `${errMsg} (${details})` : errMsg;
+      console.error(`[Performance] PageSpeed API error (${strategy}): ${fullMsg}`);
+      return { strategy, error: fullMsg, resolvedUrl };
     }
 
     const lhr    = res.data.lighthouseResult;
@@ -195,6 +250,7 @@ const fetchOneStrategy = async (url, strategy) => {
 
     return {
       strategy,
+      resolvedUrl,
       fetchedAt: new Date().toISOString(),
       scores,
       coreWebVitals,
@@ -221,10 +277,8 @@ const fetchOneStrategy = async (url, strategy) => {
 const runPerformanceScores = async (url) => {
   console.log(`[Performance] Starting performance scores for: ${url}`);
 
-  const [mobile, desktop] = await Promise.all([
-    fetchOneStrategy(url, "mobile"),
-    fetchOneStrategy(url, "desktop"),
-  ]);
+  const mobile = await fetchOneStrategy(url, "mobile");
+  const desktop = await fetchOneStrategy(url, "desktop");
 
   console.log(`[Performance] Done — Mobile: ${mobile.error ? "ERROR" : `Performance ${mobile.scores?.performance?.score}/100`} | Desktop: ${desktop.error ? "ERROR" : `Performance ${desktop.scores?.performance?.score}/100`}`);
 

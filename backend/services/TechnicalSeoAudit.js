@@ -175,7 +175,7 @@ const fetchPageSpeed = async (url, strategy = "mobile") => {
     const apiKey    = process.env.PAGESPEED_API_KEY || "";
     const keyParam  = apiKey ? `&key=${apiKey}` : "";
     const endpoint  = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&strategy=${strategy}${keyParam}`;
-    const res       = await safeGet(endpoint);
+    const res       = await safeGet(endpoint, { timeout: 60000 });
     if (!res.data) return null;
 
     const lhr       = res.data.lighthouseResult;
