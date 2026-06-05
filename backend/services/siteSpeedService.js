@@ -108,6 +108,30 @@ const extractMetric = (audits, auditId) => {
   };
 };
 
+/**
+ * Ensure PageSpeed receives a valid absolute URL.
+ */
+const normaliseUrl = (url) => {
+  if (typeof url !== "string") return "";
+  const trimmed = url.trim();
+  if (!trimmed) return "";
+  if (!trimmed.startsWith("http://") && !trimmed.startsWith("https://")) {
+    return `https://${trimmed}`;
+  }
+  return trimmed;
+};
+
+/**
+ * Resolve redirects before calling PageSpeed.
+ */
+const resolveAuditUrl = async (url) => {
+  const normalized = normaliseUrl(url);
+  if (!normalized) return "";
+
+  const res = await safeGet(normalized, { maxRedirects: 10, validateStatus: () => true });
+  return res.finalUrl || normalized;
+};
+
 // ─────────────────────────────────────────────────────────────────────────────
 //  fetchSpeedData
 //  Calls PageSpeed API for one strategy and extracts speed-specific data only.
@@ -115,22 +139,33 @@ const extractMetric = (audits, auditId) => {
 
 const fetchSpeedData = async (url, strategy) => {
   try {
+    const resolvedUrl = await resolveAuditUrl(url);
+    if (!resolvedUrl) {
+      const errMsg = "Invalid or empty website URL";
+      console.error(`[Site Speed] API error (${strategy}): ${errMsg}`);
+      return { strategy, error: errMsg };
+    }
+
     const apiKey   = process.env.PAGESPEED_API_KEY
       ? `&key=${process.env.PAGESPEED_API_KEY}`
       : "";
     const endpoint = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed`
-      + `?url=${encodeURIComponent(url)}`
+      + `?url=${encodeURIComponent(resolvedUrl)}`
       + `&strategy=${strategy}`
       + `${apiKey}`
       + `&locale=en`;
 
     console.log(`[Site Speed] Fetching speed data — ${strategy.toUpperCase()}...`);
-    const res = await safeGet(endpoint);
+    console.log(`[Site Speed] Using resolved URL: ${resolvedUrl}`);
+    const res = await safeGet(endpoint, { timeout: 60000 });
 
     if (!res.data || res.data.error) {
-      const errMsg = res.data?.error?.message || res.error || "Unknown API error";
-      console.error(`[Site Speed] API error (${strategy}): ${errMsg}`);
-      return { strategy, error: errMsg };
+      const apiError = res.data?.error;
+      const errMsg = apiError?.message || res.error || "Unknown API error";
+      const details = apiError?.details?.map((d) => d?.message).filter(Boolean).join("; ");
+      const fullMsg = details ? `${errMsg} (${details})` : errMsg;
+      console.error(`[Site Speed] API error (${strategy}): ${fullMsg}`);
+      return { strategy, error: fullMsg, resolvedUrl };
     }
 
     const lhr    = res.data.lighthouseResult;
@@ -205,6 +240,7 @@ const fetchSpeedData = async (url, strategy) => {
 
     return {
       strategy,
+      resolvedUrl,
       fetchedAt:        new Date().toISOString(),
       performanceScore,
       speedGrade,
@@ -249,10 +285,8 @@ const fetchSpeedData = async (url, strategy) => {
 const runSiteSpeedTest = async (url) => {
   console.log(`[Site Speed] Starting site speed test for: ${url}`);
 
-  const [mobile, desktop] = await Promise.all([
-    fetchSpeedData(url, "mobile"),
-    fetchSpeedData(url, "desktop"),
-  ]);
+  const mobile = await fetchSpeedData(url, "mobile");
+  const desktop = await fetchSpeedData(url, "desktop");
 
   // ── Cross-strategy summary ──────────────────────────────────────────────────
   const summary = {

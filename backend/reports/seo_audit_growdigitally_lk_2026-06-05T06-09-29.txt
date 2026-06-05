@@ -7,7 +7,7 @@ CUSTOMER INFORMATION
 Name        : saranga
 Email       : saranga@gmail.com
 WhatsApp    : 0763361385
-Generated   : 2026-06-05T04:57:07.110Z
+Generated   : 2026-06-05T06:08:15.085Z
 
 WEBSITE INFORMATION
 ──────────────────────────────────────────────────────────────────────
@@ -29,7 +29,7 @@ Total Issues Found : 6
 TOP 3 QUICK SEO FIXES
 ──────────────────────────────────────────────────────────────────────
 1. [HIGH] [Page Speed]
-   Score is 45/100 — needs significant improvement
+   Score is 49/100 — needs significant improvement
 
 2. [HIGH] [Page Speed]
    Score is 0/100
@@ -173,31 +173,31 @@ Redirects Found   : 0
 16. GOOGLE PAGESPEED INSIGHTS
 ──────────────────────────────────────────────────────────────────────
 📱 MOBILE Scores:
-  Performance    : 45/100
+  Performance    : 49/100
   Accessibility  : 0/100
   Best Practices : 0/100
   SEO            : 0/100
   Core Web Vitals:
-    LCP (Largest Contentful Paint) : 17.3 s
-    FCP (First Contentful Paint)   : 13.2 s
-    TBT (Total Blocking Time)      : 430 ms
+    LCP (Largest Contentful Paint) : 21.1 s
+    FCP (First Contentful Paint)   : 15.5 s
+    TBT (Total Blocking Time)      : 280 ms
     CLS (Cumulative Layout Shift)  : 0
-    Speed Index                    : 13.2 s
-    Time to Interactive            : 32.5 s
+    Speed Index                    : 15.5 s
+    Time to Interactive            : 33.0 s
 🖥️  DESKTOP Scores:
-  Performance    : 81/100
+  Performance    : 73/100
   Accessibility  : 0/100
   Best Practices : 0/100
   SEO            : 0/100
   Core Web Vitals:
     LCP (Largest Contentful Paint) : 0.9 s
     FCP (First Contentful Paint)   : 0.8 s
-    TBT (Total Blocking Time)      : 400 ms
+    TBT (Total Blocking Time)      : 660 ms
     CLS (Cumulative Layout Shift)  : 0.009
-    Speed Index                    : 0.8 s
-    Time to Interactive            : 6.7 s
+    Speed Index                    : 1.2 s
+    Time to Interactive            : 7.0 s
 Issues:
-  🟠 LOW MOBILE PERFORMANCE: Score is 45/100 — needs significant improvement
+  🟠 LOW MOBILE PERFORMANCE: Score is 49/100 — needs significant improvement
   🟠 LOW MOBILE SEO SCORE: Score is 0/100
 
 ALL ISSUES BY PRIORITY
@@ -209,7 +209,7 @@ ALL ISSUES BY PRIORITY
 
 🟠 HIGH ISSUES (2)
 ──────────────────────────────────────────────────────────────────────
-  1. [Page Speed] LOW MOBILE PERFORMANCE: Score is 45/100 — needs significant improvement
+  1. [Page Speed] LOW MOBILE PERFORMANCE: Score is 49/100 — needs significant improvement
   2. [Page Speed] LOW MOBILE SEO SCORE: Score is 0/100
 
 🟡 MEDIUM ISSUES (3)
@@ -233,73 +233,73 @@ Name       : saranga
 Email      : saranga@gmail.com
 WhatsApp   : 0763361385
 Website    : growdigitally.lk
-Generated  : 2026-06-05T04:58:31.093Z
+Generated  : 2026-06-05T06:09:29.756Z
 
 SCORE OVERVIEW
 ──────────────────────────────────────────────────────────────────────
 Area                     Mobile                   Desktop
 --------------------------------------------------------------------
-Performance              34/100 (Poor)            73/100 (Needs Improvement)
+Performance              53/100 (Needs Improvement) 70/100 (Needs Improvement)
 Accessibility            0/100 (Poor)             0/100 (Poor)
 Best Practices           0/100 (Poor)             0/100 (Poor)
 SEO                      0/100 (Poor)             0/100 (Poor)
 
 📱 MOBILE — SCORES
 ──────────────────────────────────────────────────────────────────────
-  🔴 Performance             34/100  — Poor
+  🟡 Performance             53/100  — Needs Improvement
   🔴 Accessibility            0/100  — Poor
   🔴 Best Practices           0/100  — Poor
   🔴 SEO                      0/100  — Poor
 
 📱 MOBILE — CORE WEB VITALS
 ──────────────────────────────────────────────────────────────────────
-  🔴 Largest Contentful Paint         11.0 s
-  🔴 First Contentful Paint           9.1 s
-  🔴 Total Blocking Time              1,080 ms
+  🔴 Largest Contentful Paint         13.8 s
+  🔴 First Contentful Paint           10.7 s
+  ✅ Total Blocking Time              180 ms
   ✅ Cumulative Layout Shift          0
-  🔴 Speed Index                      9.1 s
-  🔴 Time to Interactive              33.6 s
-  🔴 Max Potential FID                400 ms
+  🔴 Speed Index                      10.7 s
+  🔴 Time to Interactive              32.8 s
+  🟡 Max Potential FID                190 ms
 
 📱 MOBILE — EXPERIENCE LABELS
 ──────────────────────────────────────────────────────────────────────
   Loading Speed      : Slow
   Interactivity      : Sluggish
   Visual Stability   : Stable
-  Overall Experience : Poor
+  Overall Experience : Needs Improvement
 
 📱 MOBILE — OPPORTUNITIES (Potential Time Savings)
 ──────────────────────────────────────────────────────────────────────
   1. Reduce unused JavaScript
-     Potential saving : ~3530ms  |  Current: Est savings of 1,510 KiB
+     Potential saving : ~3910ms  |  Current: Est savings of 1,510 KiB
      Note: Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activit...
 
   2. Reduce unused CSS
-     Potential saving : ~750ms  |  Current: Est savings of 200 KiB
+     Potential saving : ~1650ms  |  Current: Est savings of 349 KiB
      Note: Reduce unused rules from stylesheets and defer CSS not used for above-the-fold content to decrease bytes consumed by net...
 
 📱 MOBILE — DIAGNOSTICS
 ──────────────────────────────────────────────────────────────────────
-  1. Improve image delivery  (Est savings of 16 KiB)
-     Reducing the download time of images can improve the perceived load time of the page and LCP.
-  2. Avoid enormous network payloads  (Total size was 5,928 KiB)
+  1. Reduce JavaScript execution time  (2.7 s)
+     Consider reducing the time spent parsing, compiling, and executing JS. You may find delivering smaller JS payloads helps...
+  2. Avoid enormous network payloads  (Total size was 6,083 KiB)
      Large network payloads cost users real money and are highly correlated with long load times. .
   3. Use efficient cache lifetimes  (Est savings of 354 KiB)
      A long cache lifetime can speed up repeat visits to your page. .
-  4. Reduce JavaScript execution time  (5.6 s)
-     Consider reducing the time spent parsing, compiling, and executing JS. You may find delivering smaller JS payloads helps...
-  5. Render-blocking requests  (Est savings of 1,950 ms)
-     Requests are blocking the page's initial render, which may delay LCP.  can move these network requests out of the critic...
-  6. Image elements do not have explicit `width` and `height`
+  4. Image elements do not have explicit `width` and `height`
      Set an explicit width and height on image elements to reduce layout shifts and improve CLS.
-  7. Minimize main-thread work  (7.6 s)
+  5. Minimize main-thread work  (4.2 s)
      Consider reducing the time spent parsing, compiling and executing JS. You may find delivering smaller JS payloads helps ...
+  6. Improve image delivery  (Est savings of 16 KiB)
+     Reducing the download time of images can improve the perceived load time of the page and LCP.
+  7. Render-blocking requests  (Est savings of 2,890 ms)
+     Requests are blocking the page's initial render, which may delay LCP.  can move these network requests out of the critic...
 
   ✅ Passed Audits: 27
 
 🖥️  DESKTOP — SCORES
 ──────────────────────────────────────────────────────────────────────
-  🟡 Performance             73/100  — Needs Improvement
+  🟡 Performance             70/100  — Needs Improvement
   🔴 Accessibility            0/100  — Poor
   🔴 Best Practices           0/100  — Poor
   🔴 SEO                      0/100  — Poor
@@ -308,11 +308,11 @@ SEO                      0/100 (Poor)             0/100 (Poor)
 ──────────────────────────────────────────────────────────────────────
   ✅ Largest Contentful Paint         0.9 s
   ✅ First Contentful Paint           0.8 s
-  🔴 Total Blocking Time              670 ms
+  🔴 Total Blocking Time              700 ms
   ✅ Cumulative Layout Shift          0.009
-  ✅ Speed Index                      1.1 s
-  🟡 Time to Interactive              6.9 s
-  🔴 Max Potential FID                370 ms
+  ✅ Speed Index                      1.8 s
+  🟡 Time to Interactive              6.2 s
+  🟡 Max Potential FID                200 ms
 
 🖥️  DESKTOP — EXPERIENCE LABELS
 ──────────────────────────────────────────────────────────────────────
@@ -324,23 +324,23 @@ SEO                      0/100 (Poor)             0/100 (Poor)
 🖥️  DESKTOP — OPPORTUNITIES (Potential Time Savings)
 ──────────────────────────────────────────────────────────────────────
   1. Reduce unused CSS
-     Potential saving : ~200ms  |  Current: Est savings of 228 KiB
+     Potential saving : ~200ms  |  Current: Est savings of 202 KiB
      Note: Reduce unused rules from stylesheets and defer CSS not used for above-the-fold content to decrease bytes consumed by net...
 
 🖥️  DESKTOP — DIAGNOSTICS
 ──────────────────────────────────────────────────────────────────────
-  1. Image elements do not have explicit `width` and `height`
-     Set an explicit width and height on image elements to reduce layout shifts and improve CLS.
-  2. Minimize main-thread work  (4.2 s)
+  1. Minimize main-thread work  (4.5 s)
      Consider reducing the time spent parsing, compiling and executing JS. You may find delivering smaller JS payloads helps ...
-  3. Avoid enormous network payloads  (Total size was 5,926 KiB)
-     Large network payloads cost users real money and are highly correlated with long load times. .
-  4. Render-blocking requests  (Est savings of 440 ms)
+  2. Render-blocking requests  (Est savings of 450 ms)
      Requests are blocking the page's initial render, which may delay LCP.  can move these network requests out of the critic...
-  5. Use efficient cache lifetimes  (Est savings of 354 KiB)
+  3. Use efficient cache lifetimes  (Est savings of 355 KiB)
      A long cache lifetime can speed up repeat visits to your page. .
-  6. Reduce JavaScript execution time  (2.9 s)
+  4. Avoid enormous network payloads  (Total size was 5,928 KiB)
+     Large network payloads cost users real money and are highly correlated with long load times. .
+  5. Reduce JavaScript execution time  (2.9 s)
      Consider reducing the time spent parsing, compiling, and executing JS. You may find delivering smaller JS payloads helps...
+  6. Image elements do not have explicit `width` and `height`
+     Set an explicit width and height on image elements to reduce layout shifts and improve CLS.
 
   ✅ Passed Audits: 30
 
@@ -349,7 +349,7 @@ SEO                      0/100 (Poor)             0/100 (Poor)
 ══════════════════════════════════════════════════════════════════════
 ══════════════════════════════════════════════════════════════════════
   END OF TECHNICAL SEO AUDIT — GrowDigitally
-  Generated: 6/5/2026, 10:28:31 AM
+  Generated: 6/5/2026, 11:39:29 AM
 ══════════════════════════════════════════════════════════════════════
 
 ══════════════════════════════════════════════════════════════════════
@@ -362,33 +362,96 @@ Name       : saranga
 Email      : saranga@gmail.com
 WhatsApp   : 0763361385
 Website    : growdigitally.lk
-Generated  : 2026-06-05T04:58:31.106Z
+Generated  : 2026-06-05T06:09:29.771Z
 
 SPEED SUMMARY
 ──────────────────────────────────────────────────────────────────────
                              Mobile               Desktop
 ------------------------------------------------------------------
-Performance Score            N/A                  N/A
-Speed Grade                  N/A                  N/A
-Loading Speed                Unknown              Error
-Interactivity                Unknown              Error
-Visual Stability             Unknown              Error
+Performance Score            53                   70
+Speed Grade                  D                    C
+Loading Speed                Moderate             Moderate
+Interactivity                Sluggish             Moderate
+Visual Stability             Stable               Stable
 
 USER-FRIENDLY EXPERIENCE LABELS
 ──────────────────────────────────────────────────────────────────────
-  Loading Speed      : Unknown
-  Interactivity      : Unknown
-  Visual Stability   : Unknown
-  Mobile Experience  : Error
-  Desktop Experience : Error
+  Loading Speed      : Moderate
+  Interactivity      : Sluggish
+  Visual Stability   : Stable
+  Mobile Experience  : Moderate
+  Desktop Experience : Moderate
 
-📱 MOBILE
+📱 MOBILE — SPEED OVERVIEW
 ──────────────────────────────────────────────────────────────────────
-  ❌ Could not fetch speed data: Request failed with status code 400
+  Performance Score : 53/100
+  Speed Grade       : 🟠 D
+  Speed Label       : Moderate
 
-🖥️  DESKTOP
+📱 MOBILE — SPEED METRICS
 ──────────────────────────────────────────────────────────────────────
-  ❌ Could not fetch speed data: Request failed with status code 400
+Metric                           Value                Rating
+------------------------------------------------------------------
+🔴 Load Time (Speed Index)          10.7 s               Poor
+🔴 Largest Contentful Paint (LCP)   13.8 s               Poor
+🔴 First Contentful Paint (FCP)     10.7 s               Poor
+✅ Total Blocking Time (TBT)        180 ms               Good
+✅ Cumulative Layout Shift (CLS)    0                    Good
+🔴 Time to Interactive (TTI)        32.8 s               Poor
+
+📱 MOBILE — VITAL COUNTS
+──────────────────────────────────────────────────────────────────────
+  ✅ Passing : 2 / 6
+  🟡 Warning : 0 / 6
+  🔴 Failing : 4 / 6
+
+📱 MOBILE — EXPERIENCE LABELS
+──────────────────────────────────────────────────────────────────────
+  Loading Speed   : Moderate
+  Interactivity   : Sluggish
+  Visual Stability: Stable
+  Mobile Experience : Moderate
+
+📱 MOBILE — SPEED ISSUES
+──────────────────────────────────────────────────────────────────────
+  🔴 LCP is 13.8 s — content loads too slowly (target: under 2.5s)
+  🔴 FCP is 10.7 s — first content appears too late (target: under 1.8s)
+  🔴 TTI is 32.8 s — page takes too long to become interactive (target: under 3.8s)
+
+🖥️  DESKTOP — SPEED OVERVIEW
+──────────────────────────────────────────────────────────────────────
+  Performance Score : 70/100
+  Speed Grade       : 🟡 C
+  Speed Label       : Moderate
+
+🖥️  DESKTOP — SPEED METRICS
+──────────────────────────────────────────────────────────────────────
+Metric                           Value                Rating
+------------------------------------------------------------------
+✅ Load Time (Speed Index)          1.8 s                Good
+✅ Largest Contentful Paint (LCP)   0.9 s                Good
+✅ First Contentful Paint (FCP)     0.8 s                Good
+🔴 Total Blocking Time (TBT)        700 ms               Poor
+✅ Cumulative Layout Shift (CLS)    0.009                Good
+🟡 Time to Interactive (TTI)        6.2 s                Needs Improvement
+
+🖥️  DESKTOP — VITAL COUNTS
+──────────────────────────────────────────────────────────────────────
+  ✅ Passing : 4 / 6
+  🟡 Warning : 1 / 6
+  🔴 Failing : 1 / 6
+
+🖥️  DESKTOP — EXPERIENCE LABELS
+──────────────────────────────────────────────────────────────────────
+  Loading Speed   : Moderate
+  Interactivity   : Moderate
+  Visual Stability: Stable
+  Desktop Experience: Moderate
+
+🖥️  DESKTOP — SPEED ISSUES
+──────────────────────────────────────────────────────────────────────
+  🔴 TBT is 700 ms — page is blocking user interaction (target: under 200ms)
+  🟡 TTI is 6.2 s — interactivity could be improved (target: under 3.8s)
 
 ══════════════════════════════════════════════════════════════════════
   END OF SERVICE 3 — SITE SPEED TEST
