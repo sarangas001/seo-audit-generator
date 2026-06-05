@@ -7,6 +7,7 @@ const {runPerformanceScores} = require("../services/performanceServices");
 const { formatSiteSpeedAsText, runSiteSpeedTest } = require("../services/siteSpeedService");
 const { runOnPageSEO, formatOnPageAsText } = require("../services/onPageService");
 const { runOrganicTraffic, formatOrganicTrafficAsText } = require("../services/organicTrafficService");
+const { runBacklinksOverview, formatBacklinksAsText } = require("../services/backLinkService");
 require("dotenv").config();
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -456,12 +457,13 @@ const getSEOData = async (req, res) => {
     console.log(`[GrowDigitally] Location : ${location}`);
 
     // ── Run the technical audit ───────────────────────────────────────────────
-    const [auditData, performanceData, siteSpeedData, onPageData, organicTrafficData] = await Promise.all([
+    const [auditData, performanceData, siteSpeedData, onPageData, organicTrafficData, backlinksData] = await Promise.all([
       technicalSeoAduit.runTechnicalSEOAudit(websiteUrl, mainKeywords, location),
       runPerformanceScores(websiteUrl),
       runSiteSpeedTest(websiteUrl),
       runOnPageSEO(websiteUrl, mainKeywords),
       runOrganicTraffic(websiteUrl, mainKeywords, location),
+      runBacklinksOverview(websiteUrl, mainKeywords),
     ]);
 
 
@@ -469,7 +471,8 @@ const getSEOData = async (req, res) => {
     let auditText  = formatAuditAsText(auditData, performanceData, { name, email, whatsAppNum, websiteUrl }) 
                    + formatSiteSpeedAsText(siteSpeedData, { name, email, whatsAppNum, websiteUrl })
                    + formatOnPageAsText(onPageData, { name, email, whatsAppNum, websiteUrl })
-                   + formatOrganicTrafficAsText(organicTrafficData, { name, email, whatsAppNum, websiteUrl });
+                   + formatOrganicTrafficAsText(organicTrafficData, { name, email, whatsAppNum, websiteUrl }) 
+                   + formatBacklinksAsText(backlinksData, { name, email, whatsAppNum, websiteUrl });
 
     // ── Save to .txt file ─────────────────────────────────────────────────────
     const { filename, filepath } = saveAuditToFile(auditText, { websiteUrl });
@@ -487,6 +490,14 @@ const getSEOData = async (req, res) => {
         mediumCount:   auditData.issuesSummary.mediumCount,
         lowCount:      auditData.issuesSummary.lowCount,
         top3QuickFixes: auditData.top3QuickFixes,
+        backlinks: {
+          source: backlinksData.source,
+          totalBacklinks: backlinksData.totalBacklinks,
+          referringDomains: backlinksData.referringDomains,
+          domainAuthority: backlinksData.domainAuthority,
+          spamScore: backlinksData.spamScore,
+          toxicWarning: backlinksData.toxicWarning,
+        },
       },
       reportFile: {
         filename,
