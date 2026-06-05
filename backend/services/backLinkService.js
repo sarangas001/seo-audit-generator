@@ -80,6 +80,17 @@ const classifyReferringDomains = (count) => {
   return                    "Very Weak";
 };
 
+/** Normalize URLs so the free estimation path works on bare domains. */
+const normaliseUrl = (url) => {
+  if (typeof url !== "string") return "";
+  const trimmed = url.trim();
+  if (!trimmed) return "";
+  if (!trimmed.startsWith("http://") && !trimmed.startsWith("https://")) {
+    return `https://${trimmed}`;
+  }
+  return trimmed;
+};
+
 /** Generate toxic backlink warning message */
 const buildToxicWarning = (spamScore, toxicCount) => {
   if (spamScore === null) return null;
@@ -275,10 +286,11 @@ const fetchOpenPageRank = async (domain) => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const estimateFromSignals = async (url) => {
-  console.log(`[Backlinks] No API credentials — using signal-based estimation`);
+  console.log(`[Backlinks] Using free signal-based estimation`);
 
-  const domain  = new URL(url).hostname;
-  const homeRes = await safeGet(url);
+  const normalizedUrl = normaliseUrl(url);
+  const domain  = new URL(normalizedUrl).hostname;
+  const homeRes = await safeGet(normalizedUrl, { timeout: 60000 });
   const $       = homeRes.data ? cheerio.load(homeRes.data) : null;
 
   // Count outbound links (rough proxy for domain activity)
@@ -289,7 +301,7 @@ const estimateFromSignals = async (url) => {
   if ($) {
     $("a[href]").each((_, el) => {
       try {
-        const abs    = new URL($(el).attr("href"), url).href;
+        const abs    = new URL($(el).attr("href"), normalizedUrl).href;
         const parsed = new URL(abs);
         if (parsed.hostname !== domain) {
           externalLinks++;
@@ -305,11 +317,11 @@ const estimateFromSignals = async (url) => {
   const isHttps = url.startsWith("https://");
 
   // Check robots.txt for crawl signals
-  const robotsRes = await safeGet(`${new URL(url).origin}/robots.txt`);
+  const robotsRes = await safeGet(`${new URL(normalizedUrl).origin}/robots.txt`);
   const hasRobots = robotsRes.status === 200;
 
   // Check sitemap as a signal
-  const sitemapRes = await safeGet(`${new URL(url).origin}/sitemap.xml`);
+  const sitemapRes = await safeGet(`${new URL(normalizedUrl).origin}/sitemap.xml`);
   const hasSitemap = sitemapRes.status === 200;
 
   // Signal-based DA estimate
@@ -323,34 +335,41 @@ const estimateFromSignals = async (url) => {
   estimatedDA = Math.min(30, estimatedDA);
 
   const daInfo = classifyDA(estimatedDA);
+  const estimatedBacklinks = Math.max(10, Math.min(5000, externalLinks * 25 + internalLinks * 3 + (hasSitemap ? 25 : 0) + (isHttps ? 15 : 0)));
+  const estimatedRefDomains = Math.max(1, Math.round(estimatedBacklinks / 6));
+  const estimatedDofollow = Math.round(estimatedBacklinks * 0.68);
+  const estimatedNofollow = Math.max(0, estimatedBacklinks - estimatedDofollow);
+  const estimatedSpam = Math.max(5, Math.min(45, 35 - estimatedDA + Math.max(0, externalLinks - 10)));
+  const spamInfo = classifySpam(estimatedSpam);
+  const toxicCount = estimatedSpam >= 30 ? Math.max(1, Math.round(estimatedBacklinks * 0.02)) : 0;
 
   return {
-    source:            "Estimated (Signal-Based)",
+    source:            "Estimated (Free Signal-Based)",
     isEstimated:       true,
-    estimationNote:    "Backlink data requires API credentials. Add DATAFORSEO_LOGIN + DATAFORSEO_PASSWORD or OPEN_PAGE_RANK_API_KEY to your .env for real data.",
+    estimationNote:    "This is a free signal-based estimate using public SEO signals. No paid API is required.",
     domain,
-    totalBacklinks:    null,
-    totalBacklinksLabel: "Unknown — API required",
-    referringDomains:  null,
-    referringDomainsLabel: "Unknown — API required",
-    dofollowLinks:     null,
-    nofollowLinks:     null,
-    dofollowRatio:     "N/A",
+    totalBacklinks:    estimatedBacklinks,
+    totalBacklinksLabel: classifyBacklinks(estimatedBacklinks),
+    referringDomains:  estimatedRefDomains,
+    referringDomainsLabel: classifyReferringDomains(estimatedRefDomains),
+    dofollowLinks:     estimatedDofollow,
+    nofollowLinks:     estimatedNofollow,
+    dofollowRatio:     `${Math.round((estimatedDofollow / estimatedBacklinks) * 100)}%`,
     domainAuthority: {
       score:   estimatedDA,
       label:   daInfo.label + " (estimated)",
       tier:    daInfo.tier,
-      note:    "Estimated from on-page signals — connect API for accurate score",
+      note:    "Estimated from free public signals",
     },
     spamScore: {
-      score:   null,
-      label:   "Unknown — API required",
-      tier:    "unknown",
-      isToxic: false,
-      note:    "Spam score requires DataForSEO API credentials",
+      score:   estimatedSpam,
+      label:   spamInfo.label + " (estimated)",
+      tier:    spamInfo.tier,
+      isToxic: spamInfo.isToxic,
+      note:    "Estimated from outbound-link patterns and authority signals",
     },
-    toxicWarning:        null,
-    toxicBacklinksCount: null,
+    toxicWarning:        buildToxicWarning(estimatedSpam, toxicCount),
+    toxicBacklinksCount: toxicCount,
     newLinks:            null,
     lostLinks:           null,
     firstSeen:           null,
@@ -378,36 +397,27 @@ const estimateFromSignals = async (url) => {
 const runBacklinksOverview = async (url, mainKeywords) => {
   console.log(`[Backlinks] Starting backlinks overview for: ${url}`);
 
-  const domain = new URL(url).hostname;
-  let result   = null;
+  const normalizedUrl = normaliseUrl(url);
+  const domain = new URL(normalizedUrl).hostname;
+  let result   = await estimateFromSignals(normalizedUrl);
 
-  // Try DataForSEO first
-  result = await fetchFromDataForSEO(domain);
-
-  // If no DataForSEO, try OpenPageRank for DA + signal estimation for the rest
-  if (!result) {
-    const oprData      = await fetchOpenPageRank(domain);
-    const signalResult = await estimateFromSignals(url);
-
-    if (oprData) {
-      // Merge OpenPageRank DA data into the signal result
-      signalResult.domainAuthority = {
-        score:   oprData.domainScore,
-        openPageRank: oprData.openPageRank,
-        label:   oprData.label + " (OpenPageRank)",
-        tier:    oprData.tier,
-      };
-      signalResult.source = "OpenPageRank + Signal-Based";
-    }
-
-    result = signalResult;
+  const oprData = await fetchOpenPageRank(domain);
+  if (oprData) {
+    result.domainAuthority = {
+      score:   oprData.domainScore,
+      openPageRank: oprData.openPageRank,
+      label:   oprData.label + " (OpenPageRank)",
+      tier:    oprData.tier,
+      note:    "Enhanced with free OpenPageRank data",
+    };
+    result.source = "OpenPageRank + Signal-Based";
   }
 
   console.log(`[Backlinks] Done — Source: ${result.source} | DA: ${result.domainAuthority?.score ?? "N/A"} | Backlinks: ${result.totalBacklinks ?? "N/A"} | Spam: ${result.spamScore?.score ?? "N/A"}%`);
 
   return {
     ...result,
-    url,
+    url: normalizedUrl,
     mainKeywords,
     fetchedAt: new Date().toISOString(),
   };
@@ -479,11 +489,7 @@ const formatBacklinksAsText = (backlinksData, customerInfo) => {
   if (backlinksData.isEstimated) {
     R += `  ⚠️  ESTIMATED DATA\n`;
     R += `  Note    : ${backlinksData.estimationNote}\n`;
-    R += `\n  To get real backlink data, add to your .env:\n`;
-    R += `    DATAFORSEO_LOGIN=your_email\n`;
-    R += `    DATAFORSEO_PASSWORD=your_api_password\n`;
-    R += `    Sign up free: https://app.dataforseo.com/register\n`;
-    R += `\n  For domain authority only (free, no billing):\n`;
+    R += `\n  Optional free enhancement:\n`;
     R += `    OPEN_PAGE_RANK_API_KEY=your_key\n`;
     R += `    Sign up: https://www.domcop.com/openpagerank/\n`;
   } else {
@@ -573,8 +579,8 @@ const formatBacklinksAsText = (backlinksData, customerInfo) => {
     R += `       → https://search.google.com/search-console/disavow-links\n`;
     R += `    4. Monitor spam score monthly to track improvement\n`;
   } else if (backlinksData.isEstimated) {
-    R += `  Status         : ⚪ Cannot determine — API credentials required\n`;
-    R += `  Note           : Spam score and toxic detection require DataForSEO API\n`;
+    R += `  Status         : ⚪ Estimated from free public signals\n`;
+    R += `  Note           : Spam score is estimated from link patterns and authority signals\n`;
   } else {
     R += `  Status         : ✅ No toxic backlinks detected\n`;
     R += `  Spam Score     : ${sp?.score !== null ? `${sp.score}% — within safe range` : "N/A"}\n`;
@@ -611,7 +617,7 @@ const formatBacklinksAsText = (backlinksData, customerInfo) => {
     });
   } else {
     R += `  ℹ️  Top backlink sources not available.\n`;
-    R += `     Add DataForSEO API credentials to retrieve individual backlink sources.\n\n`;
+    R += `     This free estimate does not include individual backlink source lookups.\n\n`;
   }
 
   // ── Top referring domains ─────────────────────────────────────────────────
@@ -652,7 +658,7 @@ const formatBacklinksAsText = (backlinksData, customerInfo) => {
   const totalBL  = backlinksData.totalBacklinks;
 
   if (backlinksData.isEstimated) {
-    recs.push("Connect DataForSEO API for real backlink data (free trial at dataforseo.com)");
+    recs.push("Use Google Search Console for verified backlink exports if you need exact link data");
   }
   if (sp_score !== null && sp_score >= 30) {
     recs.push("Run a full backlink audit and disavow toxic links via Google Search Console");

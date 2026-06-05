@@ -20,6 +20,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 require("dotenv").config();
+const cheerio = require("cheerio");
 const { safeGet } = require("./TechnicalSeoAudit");
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -132,6 +133,105 @@ const resolveAuditUrl = async (url) => {
   return res.finalUrl || normalized;
 };
 
+/**
+ * Free fallback when PageSpeed fails: estimate speed from public HTML signals.
+ */
+const estimateFromSignals = async (url, strategy, resolvedUrl) => {
+  const targetUrl = resolvedUrl || normaliseUrl(url);
+  const homeRes = await safeGet(targetUrl, {
+    timeout: 60000,
+    headers: {
+      "User-Agent": "Mozilla/5.0 (compatible; GrowDigitallyBot/1.0; +https://growdigitally.lk)",
+      Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "Accept-Language": "en-US,en;q=0.9",
+      "Cache-Control": "no-cache",
+      Pragma: "no-cache",
+    },
+  });
+
+  const html = typeof homeRes.data === "string" ? homeRes.data : "";
+  const $ = html ? cheerio.load(html) : null;
+
+  const htmlSizeKb = Math.round(Buffer.byteLength(html || "", "utf8") / 1024);
+  const imgCount = $ ? $("img").length : 0;
+  const scriptCount = $ ? $("script").length : 0;
+  const cssCount = $ ? $('link[rel="stylesheet"]').length : 0;
+  const externalScriptCount = $ ? $("script[src]").filter((_, el) => {
+    try {
+      return new URL($(el).attr("src"), targetUrl).hostname !== new URL(targetUrl).hostname;
+    } catch (_) {
+      return false;
+    }
+  }).length : 0;
+
+  let performanceScore = 90;
+  if (htmlSizeKb > 250) performanceScore -= 20;
+  else if (htmlSizeKb > 150) performanceScore -= 12;
+  else if (htmlSizeKb > 80) performanceScore -= 8;
+
+  performanceScore -= Math.min(20, Math.max(0, imgCount - 10) * 2);
+  performanceScore -= Math.min(15, Math.max(0, scriptCount - 8) * 2);
+  performanceScore -= Math.min(10, cssCount > 6 ? (cssCount - 6) * 2 : 0);
+  performanceScore -= Math.min(15, externalScriptCount * 3);
+  if (!homeRes.data) performanceScore -= 10;
+  performanceScore = Math.max(15, Math.min(95, performanceScore));
+
+  const makeMetric = (label, value, rating) => ({
+    displayValue: value,
+    numericValue: null,
+    unit: "ms",
+    rating,
+    label,
+  });
+
+  const speedLabel = performanceScore >= 90 ? "Fast" : performanceScore >= 50 ? "Moderate" : "Slow";
+  const interactivity = performanceScore >= 85 ? "Smooth" : performanceScore >= 60 ? "Moderate" : "Sluggish";
+  const stability = performanceScore >= 85 ? "Stable" : performanceScore >= 60 ? "Some Layout Shift" : "Unstable";
+
+  const rating = performanceScore >= 90 ? "good" : performanceScore >= 60 ? "needs-improvement" : "poor";
+  const displayValue = `Estimated (${htmlSizeKb}KB HTML, ${imgCount} imgs, ${scriptCount} scripts)`;
+
+  const speedIssues = [];
+  if (performanceScore < 60) {
+    speedIssues.push(`🟠 Estimated page complexity is high (${htmlSizeKb}KB HTML, ${scriptCount} scripts, ${imgCount} images)`);
+  } else {
+    speedIssues.push("✅ No critical speed issues detected from free signal-based estimation");
+  }
+
+  return {
+    strategy,
+    resolvedUrl: targetUrl,
+    isEstimated: true,
+    estimationNote: "PageSpeed was unavailable, so this is a free signal-based estimate from the homepage HTML.",
+    fetchedAt: new Date().toISOString(),
+    performanceScore,
+    speedGrade: scoreToGrade(performanceScore),
+    speedLabel: speedLabel,
+    metrics: {
+      loadTime: makeMetric(speedLabel, displayValue, rating),
+      lcp: makeMetric(speedLabel, displayValue, rating),
+      fcp: makeMetric(speedLabel, displayValue, rating),
+      tbt: makeMetric(interactivity, displayValue, rating),
+      cls: makeMetric(stability, displayValue, rating),
+      tti: makeMetric(interactivity, displayValue, rating),
+    },
+    vitalSummary: {
+      passing: rating === "good" ? 6 : rating === "needs-improvement" ? 2 : 0,
+      warning: rating === "needs-improvement" ? 4 : rating === "poor" ? 2 : 0,
+      failing: rating === "poor" ? 6 : 0,
+      total: 6,
+    },
+    userFriendlyLabels: {
+      loadingSpeed: speedLabel,
+      interactivity,
+      visualStability: stability,
+      mobileExperience: strategy === "mobile" ? speedLabel : null,
+      desktopExperience: strategy === "desktop" ? speedLabel : null,
+    },
+    speedIssues,
+  };
+};
+
 // ─────────────────────────────────────────────────────────────────────────────
 //  fetchSpeedData
 //  Calls PageSpeed API for one strategy and extracts speed-specific data only.
@@ -165,7 +265,7 @@ const fetchSpeedData = async (url, strategy) => {
       const details = apiError?.details?.map((d) => d?.message).filter(Boolean).join("; ");
       const fullMsg = details ? `${errMsg} (${details})` : errMsg;
       console.error(`[Site Speed] API error (${strategy}): ${fullMsg}`);
-      return { strategy, error: fullMsg, resolvedUrl };
+      return estimateFromSignals(url, strategy, resolvedUrl);
     }
 
     const lhr    = res.data.lighthouseResult;
@@ -270,7 +370,7 @@ const fetchSpeedData = async (url, strategy) => {
 
   } catch (err) {
     console.error(`[Site Speed] Unexpected error (${strategy}):`, err.message);
-    return { strategy, error: err.message };
+    return estimateFromSignals(url, strategy, await resolveAuditUrl(url));
   }
 };
 
@@ -396,6 +496,10 @@ const formatSiteSpeedAsText = (siteSpeedData, customerInfo) => {
 
     // ── Speed grade + score ───────────────────────────────────────────────────
     R += `${strategyLabel} — SPEED OVERVIEW\n${LINE}\n`;
+    if (result.isEstimated) {
+      R += `  ⚠️  Estimated from free public signals\n`;
+      R += `  Note: ${result.estimationNote}\n\n`;
+    }
     R += `  Performance Score : ${result.performanceScore}/100\n`;
     R += `  Speed Grade       : ${gradeIcon(result.speedGrade)} ${result.speedGrade}\n`;
     R += `  Speed Label       : ${result.speedLabel}\n\n`;
