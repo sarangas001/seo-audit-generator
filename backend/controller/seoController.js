@@ -6,6 +6,7 @@ const technicalSeoAduit = require("../services/TechnicalSeoAudit")
 const {runPerformanceScores} = require("../services/performanceServices");
 const { formatSiteSpeedAsText, runSiteSpeedTest } = require("../services/siteSpeedService");
 const { runOnPageSEO, formatOnPageAsText } = require("../services/onPageService");
+const { runOrganicTraffic, formatOrganicTrafficAsText } = require("../services/organicTrafficService");
 require("dotenv").config();
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -455,18 +456,20 @@ const getSEOData = async (req, res) => {
     console.log(`[GrowDigitally] Location : ${location}`);
 
     // ── Run the technical audit ───────────────────────────────────────────────
-    const [auditData, performanceData, siteSpeedData, onPageData] = await Promise.all([
+    const [auditData, performanceData, siteSpeedData, onPageData, organicTrafficData] = await Promise.all([
       technicalSeoAduit.runTechnicalSEOAudit(websiteUrl, mainKeywords, location),
       runPerformanceScores(websiteUrl),
       runSiteSpeedTest(websiteUrl),
       runOnPageSEO(websiteUrl, mainKeywords),
+      runOrganicTraffic(websiteUrl, mainKeywords, location),
     ]);
 
 
     // ── Format as readable text ───────────────────────────────────────────────
     let auditText  = formatAuditAsText(auditData, performanceData, { name, email, whatsAppNum, websiteUrl }) 
                    + formatSiteSpeedAsText(siteSpeedData, { name, email, whatsAppNum, websiteUrl })
-                   + formatOnPageAsText(onPageData, { name, email, whatsAppNum, websiteUrl });
+                   + formatOnPageAsText(onPageData, { name, email, whatsAppNum, websiteUrl })
+                   + formatOrganicTrafficAsText(organicTrafficData, { name, email, whatsAppNum, websiteUrl });
 
     // ── Save to .txt file ─────────────────────────────────────────────────────
     const { filename, filepath } = saveAuditToFile(auditText, { websiteUrl });

@@ -7,7 +7,7 @@ CUSTOMER INFORMATION
 Name        : saranga
 Email       : saranga@gmail.com
 WhatsApp    : 0763361385
-Generated   : 2026-06-05T10:10:53.179Z
+Generated   : 2026-06-05T10:21:10.421Z
 
 WEBSITE INFORMATION
 ──────────────────────────────────────────────────────────────────────
@@ -22,20 +22,20 @@ ISSUES SUMMARY
 ──────────────────────────────────────────────────────────────────────
 Total Issues Found : 6
 🔴 Critical        : 0
-🟠 High            : 2
-🟡 Medium          : 3
+🟠 High            : 1
+🟡 Medium          : 4
 🔵 Low             : 1
 
 TOP 3 QUICK SEO FIXES
 ──────────────────────────────────────────────────────────────────────
 1. [HIGH] [Page Speed]
-   Score is 43/100 — needs significant improvement
-
-2. [HIGH] [Page Speed]
    Score is 0/100
 
-3. [MEDIUM] [Meta Title]
+2. [MEDIUM] [Meta Title]
    Meta title is 61 chars (recommended: max 60)
+
+3. [MEDIUM] [Meta Title]
+   Main keyword not found in title
 
 1. CRAWLABILITY & INDEXABILITY
 ──────────────────────────────────────────────────────────────────────
@@ -173,16 +173,16 @@ Redirects Found   : 0
 16. GOOGLE PAGESPEED INSIGHTS
 ──────────────────────────────────────────────────────────────────────
 📱 MOBILE Scores:
-  Performance    : 43/100
+  Performance    : 73/100
   Accessibility  : 0/100
   Best Practices : 0/100
   SEO            : 0/100
   Core Web Vitals:
-    LCP (Largest Contentful Paint) : 10.7 s
-    FCP (First Contentful Paint)   : 8.8 s
-    TBT (Total Blocking Time)      : 530 ms
-    CLS (Cumulative Layout Shift)  : 0.03
-    Speed Index                    : 8.8 s
+    LCP (Largest Contentful Paint) : 3.5 s
+    FCP (First Contentful Paint)   : 2.9 s
+    TBT (Total Blocking Time)      : 330 ms
+    CLS (Cumulative Layout Shift)  : 0.021
+    Speed Index                    : 6.6 s
     Time to Interactive            : 33.9 s
 🖥️  DESKTOP Scores:
   Performance    : 72/100
@@ -190,14 +190,14 @@ Redirects Found   : 0
   Best Practices : 0/100
   SEO            : 0/100
   Core Web Vitals:
-    LCP (Largest Contentful Paint) : 0.9 s
-    FCP (First Contentful Paint)   : 0.8 s
-    TBT (Total Blocking Time)      : 800 ms
-    CLS (Cumulative Layout Shift)  : 0.009
-    Speed Index                    : 1.0 s
-    Time to Interactive            : 6.5 s
+    LCP (Largest Contentful Paint) : 0.7 s
+    FCP (First Contentful Paint)   : 0.7 s
+    TBT (Total Blocking Time)      : 590 ms
+    CLS (Cumulative Layout Shift)  : 0.024
+    Speed Index                    : 1.9 s
+    Time to Interactive            : 7.1 s
 Issues:
-  🟠 LOW MOBILE PERFORMANCE: Score is 43/100 — needs significant improvement
+  🟡 MEDIUM MOBILE PERFORMANCE: Score is 73/100 — room to improve
   🟠 LOW MOBILE SEO SCORE: Score is 0/100
 
 ALL ISSUES BY PRIORITY
@@ -207,16 +207,16 @@ ALL ISSUES BY PRIORITY
 ──────────────────────────────────────────────────────────────────────
   None found ✅
 
-🟠 HIGH ISSUES (2)
+🟠 HIGH ISSUES (1)
 ──────────────────────────────────────────────────────────────────────
-  1. [Page Speed] LOW MOBILE PERFORMANCE: Score is 43/100 — needs significant improvement
-  2. [Page Speed] LOW MOBILE SEO SCORE: Score is 0/100
+  1. [Page Speed] LOW MOBILE SEO SCORE: Score is 0/100
 
-🟡 MEDIUM ISSUES (3)
+🟡 MEDIUM ISSUES (4)
 ──────────────────────────────────────────────────────────────────────
   1. [Meta Title] TOO LONG: Meta title is 61 chars (recommended: max 60)
   2. [Meta Title] KEYWORD MISSING: Main keyword not found in title
   3. [Meta Description] KEYWORD MISSING: Main keyword not found in meta description
+  4. [Page Speed] MEDIUM MOBILE PERFORMANCE: Score is 73/100 — room to improve
 
 🔵 LOW ISSUES (1)
 ──────────────────────────────────────────────────────────────────────
@@ -233,33 +233,33 @@ Name       : saranga
 Email      : saranga@gmail.com
 WhatsApp   : 0763361385
 Website    : https://growdigitally.lk/
-Generated  : 2026-06-05T10:12:32.469Z
+Generated  : 2026-06-05T10:22:00.284Z
 
 SCORE OVERVIEW
 ──────────────────────────────────────────────────────────────────────
 Area                     Mobile                   Desktop
 --------------------------------------------------------------------
-Performance              36/100 (Poor)            66/100 (Needs Improvement)
+Performance              33/100 (Poor)            68/100 (Needs Improvement)
 Accessibility            0/100 (Poor)             0/100 (Poor)
 Best Practices           0/100 (Poor)             0/100 (Poor)
 SEO                      0/100 (Poor)             0/100 (Poor)
 
 📱 MOBILE — SCORES
 ──────────────────────────────────────────────────────────────────────
-  🔴 Performance             36/100  — Poor
+  🔴 Performance             33/100  — Poor
   🔴 Accessibility            0/100  — Poor
   🔴 Best Practices           0/100  — Poor
   🔴 SEO                      0/100  — Poor
 
 📱 MOBILE — CORE WEB VITALS
 ──────────────────────────────────────────────────────────────────────
-  🔴 Largest Contentful Paint         20.1 s
-  🔴 First Contentful Paint           11.9 s
-  🔴 Total Blocking Time              810 ms
+  🔴 Largest Contentful Paint         10.8 s
+  🔴 First Contentful Paint           9.0 s
+  🔴 Total Blocking Time              1,190 ms
   ✅ Cumulative Layout Shift          0
-  🔴 Speed Index                      11.9 s
-  🔴 Time to Interactive              34.6 s
-  🔴 Max Potential FID                560 ms
+  🔴 Speed Index                      9.0 s
+  🔴 Time to Interactive              35.2 s
+  🔴 Max Potential FID                580 ms
 
 📱 MOBILE — EXPERIENCE LABELS
 ──────────────────────────────────────────────────────────────────────
@@ -271,48 +271,48 @@ SEO                      0/100 (Poor)             0/100 (Poor)
 📱 MOBILE — OPPORTUNITIES (Potential Time Savings)
 ──────────────────────────────────────────────────────────────────────
   1. Reduce unused JavaScript
-     Potential saving : ~3900ms  |  Current: Est savings of 1,738 KiB
+     Potential saving : ~3400ms  |  Current: Est savings of 1,738 KiB
      Note: Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activit...
 
   2. Reduce unused CSS
-     Potential saving : ~1050ms  |  Current: Est savings of 200 KiB
+     Potential saving : ~1050ms  |  Current: Est savings of 227 KiB
      Note: Reduce unused rules from stylesheets and defer CSS not used for above-the-fold content to decrease bytes consumed by net...
 
 📱 MOBILE — DIAGNOSTICS
 ──────────────────────────────────────────────────────────────────────
-  1. Use efficient cache lifetimes  (Est savings of 354 KiB)
+  1. Use efficient cache lifetimes  (Est savings of 355 KiB)
      A long cache lifetime can speed up repeat visits to your page. .
-  2. Minimize main-thread work  (6.2 s)
-     Consider reducing the time spent parsing, compiling and executing JS. You may find delivering smaller JS payloads helps ...
-  3. Image elements do not have explicit `width` and `height`
-     Set an explicit width and height on image elements to reduce layout shifts and improve CLS.
-  4. Improve image delivery  (Est savings of 16 KiB)
-     Reducing the download time of images can improve the perceived load time of the page and LCP.
-  5. Render-blocking requests  (Est savings of 1,500 ms)
-     Requests are blocking the page's initial render, which may delay LCP.  can move these network requests out of the critic...
-  6. Avoid enormous network payloads  (Total size was 6,222 KiB)
+  2. Avoid enormous network payloads  (Total size was 6,221 KiB)
      Large network payloads cost users real money and are highly correlated with long load times. .
-  7. Reduce JavaScript execution time  (4.3 s)
+  3. Reduce JavaScript execution time  (4.5 s)
      Consider reducing the time spent parsing, compiling, and executing JS. You may find delivering smaller JS payloads helps...
+  4. Image elements do not have explicit `width` and `height`
+     Set an explicit width and height on image elements to reduce layout shifts and improve CLS.
+  5. Minimize main-thread work  (6.5 s)
+     Consider reducing the time spent parsing, compiling and executing JS. You may find delivering smaller JS payloads helps ...
+  6. Render-blocking requests  (Est savings of 2,230 ms)
+     Requests are blocking the page's initial render, which may delay LCP.  can move these network requests out of the critic...
+  7. Improve image delivery  (Est savings of 16 KiB)
+     Reducing the download time of images can improve the perceived load time of the page and LCP.
 
   ✅ Passed Audits: 28
 
 🖥️  DESKTOP — SCORES
 ──────────────────────────────────────────────────────────────────────
-  🟡 Performance             66/100  — Needs Improvement
+  🟡 Performance             68/100  — Needs Improvement
   🔴 Accessibility            0/100  — Poor
   🔴 Best Practices           0/100  — Poor
   🔴 SEO                      0/100  — Poor
 
 🖥️  DESKTOP — CORE WEB VITALS
 ──────────────────────────────────────────────────────────────────────
-  ✅ Largest Contentful Paint         0.9 s
-  ✅ First Contentful Paint           0.8 s
-  🔴 Total Blocking Time              2,840 ms
-  ✅ Cumulative Layout Shift          0.009
-  ✅ Speed Index                      1.7 s
-  🔴 Time to Interactive              9.1 s
-  🔴 Max Potential FID                660 ms
+  ✅ Largest Contentful Paint         0.8 s
+  ✅ First Contentful Paint           0.7 s
+  🔴 Total Blocking Time              800 ms
+  ✅ Cumulative Layout Shift          0.006
+  ✅ Speed Index                      2.2 s
+  🔴 Time to Interactive              7.5 s
+  🟡 Max Potential FID                260 ms
 
 🖥️  DESKTOP — EXPERIENCE LABELS
 ──────────────────────────────────────────────────────────────────────
@@ -324,32 +324,32 @@ SEO                      0/100 (Poor)             0/100 (Poor)
 🖥️  DESKTOP — OPPORTUNITIES (Potential Time Savings)
 ──────────────────────────────────────────────────────────────────────
   1. Reduce unused CSS
-     Potential saving : ~150ms  |  Current: Est savings of 229 KiB
+     Potential saving : ~200ms  |  Current: Est savings of 202 KiB
      Note: Reduce unused rules from stylesheets and defer CSS not used for above-the-fold content to decrease bytes consumed by net...
 
 🖥️  DESKTOP — DIAGNOSTICS
 ──────────────────────────────────────────────────────────────────────
-  1. Use efficient cache lifetimes  (Est savings of 354 KiB)
-     A long cache lifetime can speed up repeat visits to your page. .
-  2. Minimize main-thread work  (10.0 s)
-     Consider reducing the time spent parsing, compiling and executing JS. You may find delivering smaller JS payloads helps ...
-  3. Render-blocking requests  (Est savings of 280 ms)
+  1. Render-blocking requests  (Est savings of 900 ms)
      Requests are blocking the page's initial render, which may delay LCP.  can move these network requests out of the critic...
-  4. Image elements do not have explicit `width` and `height`
-     Set an explicit width and height on image elements to reduce layout shifts and improve CLS.
-  5. Avoid enormous network payloads  (Total size was 6,223 KiB)
-     Large network payloads cost users real money and are highly correlated with long load times. .
-  6. Reduce JavaScript execution time  (6.6 s)
+  2. Use efficient cache lifetimes  (Est savings of 356 KiB)
+     A long cache lifetime can speed up repeat visits to your page. .
+  3. Minimize main-thread work  (5.0 s)
+     Consider reducing the time spent parsing, compiling and executing JS. You may find delivering smaller JS payloads helps ...
+  4. Reduce JavaScript execution time  (3.5 s)
      Consider reducing the time spent parsing, compiling, and executing JS. You may find delivering smaller JS payloads helps...
+  5. Image elements do not have explicit `width` and `height`
+     Set an explicit width and height on image elements to reduce layout shifts and improve CLS.
+  6. Avoid enormous network payloads  (Total size was 6,227 KiB)
+     Large network payloads cost users real money and are highly correlated with long load times. .
 
-  ✅ Passed Audits: 30
+  ✅ Passed Audits: 29
 
 ══════════════════════════════════════════════════════════════════════
   END OF SERVICE 2 — WEBSITE PERFORMANCE SCORES
 ══════════════════════════════════════════════════════════════════════
 ══════════════════════════════════════════════════════════════════════
   END OF TECHNICAL SEO AUDIT — GrowDigitally
-  Generated: 6/5/2026, 3:42:32 PM
+  Generated: 6/5/2026, 3:52:00 PM
 ══════════════════════════════════════════════════════════════════════
 
 ══════════════════════════════════════════════════════════════════════
@@ -362,13 +362,13 @@ Name       : saranga
 Email      : saranga@gmail.com
 WhatsApp   : 0763361385
 Website    : https://growdigitally.lk/
-Generated  : 2026-06-05T10:12:32.481Z
+Generated  : 2026-06-05T10:22:00.288Z
 
 SPEED SUMMARY
 ──────────────────────────────────────────────────────────────────────
                              Mobile               Desktop
 ------------------------------------------------------------------
-Performance Score            36                   66
+Performance Score            33                   68
 Speed Grade                  F                    D
 Loading Speed                Slow                 Moderate
 Interactivity                Sluggish             Sluggish
@@ -384,7 +384,7 @@ USER-FRIENDLY EXPERIENCE LABELS
 
 📱 MOBILE — SPEED OVERVIEW
 ──────────────────────────────────────────────────────────────────────
-  Performance Score : 36/100
+  Performance Score : 33/100
   Speed Grade       : 🔴 F
   Speed Label       : Slow
 
@@ -392,12 +392,12 @@ USER-FRIENDLY EXPERIENCE LABELS
 ──────────────────────────────────────────────────────────────────────
 Metric                           Value                Rating
 ------------------------------------------------------------------
-🔴 Load Time (Speed Index)          11.9 s               Poor
-🔴 Largest Contentful Paint (LCP)   20.1 s               Poor
-🔴 First Contentful Paint (FCP)     11.9 s               Poor
-🔴 Total Blocking Time (TBT)        810 ms               Poor
+🔴 Load Time (Speed Index)          9.0 s                Poor
+🔴 Largest Contentful Paint (LCP)   10.8 s               Poor
+🔴 First Contentful Paint (FCP)     9.0 s                Poor
+🔴 Total Blocking Time (TBT)        1,190 ms             Poor
 ✅ Cumulative Layout Shift (CLS)    0                    Good
-🔴 Time to Interactive (TTI)        34.6 s               Poor
+🔴 Time to Interactive (TTI)        35.2 s               Poor
 
 📱 MOBILE — VITAL COUNTS
 ──────────────────────────────────────────────────────────────────────
@@ -414,14 +414,14 @@ Metric                           Value                Rating
 
 📱 MOBILE — SPEED ISSUES
 ──────────────────────────────────────────────────────────────────────
-  🔴 LCP is 20.1 s — content loads too slowly (target: under 2.5s)
-  🔴 FCP is 11.9 s — first content appears too late (target: under 1.8s)
-  🔴 TBT is 810 ms — page is blocking user interaction (target: under 200ms)
-  🔴 TTI is 34.6 s — page takes too long to become interactive (target: under 3.8s)
+  🔴 LCP is 10.8 s — content loads too slowly (target: under 2.5s)
+  🔴 FCP is 9.0 s — first content appears too late (target: under 1.8s)
+  🔴 TBT is 1,190 ms — page is blocking user interaction (target: under 200ms)
+  🔴 TTI is 35.2 s — page takes too long to become interactive (target: under 3.8s)
 
 🖥️  DESKTOP — SPEED OVERVIEW
 ──────────────────────────────────────────────────────────────────────
-  Performance Score : 66/100
+  Performance Score : 68/100
   Speed Grade       : 🟠 D
   Speed Label       : Moderate
 
@@ -429,12 +429,12 @@ Metric                           Value                Rating
 ──────────────────────────────────────────────────────────────────────
 Metric                           Value                Rating
 ------------------------------------------------------------------
-✅ Load Time (Speed Index)          1.7 s                Good
-✅ Largest Contentful Paint (LCP)   0.9 s                Good
-✅ First Contentful Paint (FCP)     0.8 s                Good
-🔴 Total Blocking Time (TBT)        2,840 ms             Poor
-✅ Cumulative Layout Shift (CLS)    0.009                Good
-🔴 Time to Interactive (TTI)        9.1 s                Poor
+✅ Load Time (Speed Index)          2.2 s                Good
+✅ Largest Contentful Paint (LCP)   0.8 s                Good
+✅ First Contentful Paint (FCP)     0.7 s                Good
+🔴 Total Blocking Time (TBT)        800 ms               Poor
+✅ Cumulative Layout Shift (CLS)    0.006                Good
+🔴 Time to Interactive (TTI)        7.5 s                Poor
 
 🖥️  DESKTOP — VITAL COUNTS
 ──────────────────────────────────────────────────────────────────────
@@ -451,8 +451,8 @@ Metric                           Value                Rating
 
 🖥️  DESKTOP — SPEED ISSUES
 ──────────────────────────────────────────────────────────────────────
-  🔴 TBT is 2,840 ms — page is blocking user interaction (target: under 200ms)
-  🔴 TTI is 9.1 s — page takes too long to become interactive (target: under 3.8s)
+  🔴 TBT is 800 ms — page is blocking user interaction (target: under 200ms)
+  🔴 TTI is 7.5 s — page takes too long to become interactive (target: under 3.8s)
 
 ══════════════════════════════════════════════════════════════════════
   END OF SERVICE 3 — SITE SPEED TEST
@@ -468,7 +468,7 @@ Name       : saranga
 Email      : saranga@gmail.com
 WhatsApp   : 0763361385
 Website    : https://growdigitally.lk/
-Generated  : 2026-06-05T10:12:32.481Z
+Generated  : 2026-06-05T10:22:00.289Z
 
 OVERALL ON-PAGE SEO SCORE
 ──────────────────────────────────────────────────────────────────────
@@ -662,4 +662,80 @@ ALL ON-PAGE ISSUES (20 total)
 
 ══════════════════════════════════════════════════════════════════════
   END OF SERVICE 4 — ON-PAGE SEO SCORE
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  SERVICE 5 — ORGANIC MONTHLY TRAFFIC
+══════════════════════════════════════════════════════════════════════
+
+CUSTOMER INFORMATION
+──────────────────────────────────────────────────────────────────────
+Name       : saranga
+Email      : saranga@gmail.com
+WhatsApp   : 0763361385
+Website    : https://growdigitally.lk/
+Generated  : 2026-06-05T10:22:00.289Z
+
+DATA SOURCE
+──────────────────────────────────────────────────────────────────────
+  Source    : Estimated (Signal-Based)
+  ⚠️  ESTIMATED DATA — This is a signal-based estimate. For precise data, add DataForSEO API credentials (DATAFORSEO_LOGIN + DATAFORSEO_PASSWORD) to your .env file.
+  Domain    : growdigitally.lk
+  Location  : Sri Lanka
+  Keywords  : Best Interior Company
+
+ORGANIC TRAFFIC OVERVIEW
+──────────────────────────────────────────────────────────────────────
+  🟠 Estimated Monthly Traffic : 500 visits
+  Traffic Range              : 200 – 1,000 visits/month
+  Traffic Tier               : Low Traffic
+
+SEARCH VISIBILITY
+──────────────────────────────────────────────────────────────────────
+  🟠 Visibility Level : Low
+  Note: Estimated from on-page signals — connect DataForSEO API for precise visibility data
+
+TRAFFIC OPPORTUNITY
+──────────────────────────────────────────────────────────────────────
+  🔥 Opportunity Level : High
+  Assessment         : Low SEO signal strength detected — fixing technical issues and creating optimised content could dramatically increase organic traffic.
+
+SIGNAL-BASED ESTIMATION DETAILS
+──────────────────────────────────────────────────────────────────────
+  Overall Signal Score       : 45/100
+  PageSpeed SEO Score        : 50/100
+  Indexed Pages (Sitemap)    : 2
+
+  SEO Signals Detected:
+    ✅       XML Sitemap found
+    ✅   Schema markup present
+    ✅       Meta description set
+    ✅      Correct H1 usage
+    ✅ Internal links (46 found)
+    PageSpeed SEO Score: 50/100
+
+  ℹ️  To get real traffic data, add these to your .env file:
+     DATAFORSEO_LOGIN=your_email
+     DATAFORSEO_PASSWORD=your_api_password
+     Sign up free: https://app.dataforseo.com/register
+
+TOP TRAFFIC-DRIVING PAGES
+──────────────────────────────────────────────────────────────────────
+  1. https://growdigitally.lk/post-sitemap.xml
+     Note         : From sitemap — traffic data unavailable without DataForSEO API
+
+  2. https://growdigitally.lk/page-sitemap.xml
+     Note         : From sitemap — traffic data unavailable without DataForSEO API
+
+TRAFFIC GROWTH RECOMMENDATIONS
+──────────────────────────────────────────────────────────────────────
+  1. Connect DataForSEO API for accurate traffic data (free trial available)
+  2. Traffic is low — prioritise fixing technical SEO issues identified in Service 1
+  3. Create SEO-optimised content targeting your main keywords with 1,000+ words per page
+  4. Build backlinks from local Sri Lankan business directories and industry sites
+  5. Improve PageSpeed SEO score — it directly impacts organic search rankings
+  6. Search visibility is low — focus on ranking for long-tail, low-competition keywords first
+
+══════════════════════════════════════════════════════════════════════
+  END OF SERVICE 5 — ORGANIC MONTHLY TRAFFIC
 ══════════════════════════════════════════════════════════════════════
