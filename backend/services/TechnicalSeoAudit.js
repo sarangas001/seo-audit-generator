@@ -28,10 +28,66 @@ require("dotenv").config();
  * Normalise a URL — ensure it has a protocol.
  */
 const normaliseUrl = (url) => {
-  if (!url.startsWith("http://") && !url.startsWith("https://")) {
-    return `https://${url}`;
+  if (typeof url !== "string") return "";
+  const trimmed = url.trim();
+  if (!trimmed) return "";
+  if (!trimmed.startsWith("http://") && !trimmed.startsWith("https://")) {
+    return `https://${trimmed}`;
   }
-  return url;
+  return trimmed;
+};
+
+/**
+ * Resolve redirects before crawling the page.
+ */
+const resolveAuditUrl = async (url) => {
+  const normalized = normaliseUrl(url);
+  if (!normalized) return "";
+
+  const res = await safeGet(normalized, { maxRedirects: 10, validateStatus: () => true });
+  return res.finalUrl || normalized;
+};
+
+/**
+ * Fetch HTML with a fallback scheme and a longer timeout.
+ */
+const fetchHomepageHtml = async (websiteUrl) => {
+  const normalized = normaliseUrl(websiteUrl);
+  if (!normalized) return { html: "", res: { status: 0, finalUrl: "" } };
+
+  const candidates = [];
+  const resolved = await resolveAuditUrl(normalized);
+  if (resolved) candidates.push(resolved);
+  candidates.push(normalized);
+
+  if (normalized.startsWith("https://")) {
+    candidates.push(normalized.replace("https://", "http://"));
+  } else if (normalized.startsWith("http://")) {
+    candidates.push(normalized.replace("http://", "https://"));
+  }
+
+  const seen = new Set();
+  for (const candidate of candidates) {
+    if (!candidate || seen.has(candidate)) continue;
+    seen.add(candidate);
+
+    const res = await safeGet(candidate, {
+      timeout: 60000,
+      headers: {
+        "User-Agent": "Mozilla/5.0 (compatible; GrowDigitallyBot/1.0; +https://growdigitally.lk)",
+        Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Cache-Control": "no-cache",
+        Pragma: "no-cache",
+      },
+    });
+
+    if (typeof res.data === "string" && res.data.trim()) {
+      return { html: res.data, res };
+    }
+  }
+
+  return { html: "", res: { status: 0, finalUrl: resolved || normalized } };
 };
 
 /**
