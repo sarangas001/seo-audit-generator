@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 const stats = [
   { value: "+500", label: "BUSINESSES AUDITED" },
   { value: "+5", label: "YEARS OF SEO EXCELLENCE" },
@@ -19,6 +21,7 @@ const useCases = [
     description:
       "Identify quick wins, fix critical SEO gaps, and grow organic traffic without a dedicated marketing team.",
     link: "About Small Businesses",
+    href: "/small-businesses"
   },
   {
     icon: (
@@ -37,6 +40,7 @@ const useCases = [
     description:
       "Deliver branded SEO audit reports to clients. Multi-site management with white-label ready outputs.",
     link: "About Digital Agencies",
+    href: "/digital-agencies"
   },
   {
     icon: (
@@ -54,6 +58,7 @@ const useCases = [
     description:
       "Audit product pages, fix indexing issues, track ranking keywords and outperform competitors in search.",
     link: "About E-commerce Brands",
+    href: "/ecommerce-brands"
   },
   {
     icon: (
@@ -77,10 +82,14 @@ const useCases = [
     description:
       "Get a full SEO health check from day one. Build on a solid foundation and rank faster from launch.",
     link: "About Startups",
+    href: "/startups"
   },
 ];
 
 const StatsSection = ({scrollToSection}) => {
+
+  const navigate = useNavigate();
+
   return (
     <section
       className="w-full bg-white py-20 px-36"
@@ -173,7 +182,7 @@ const StatsSection = ({scrollToSection}) => {
               </div>
               <button
                 className="ml-12 flex items-center gap-1 text-[12.5px] font-semibold text-[#5E2CED] bg-transparent border-none cursor-pointer p-0 hover:gap-2 transition-all duration-150"
-                
+                onClick={() => navigate("/usecases/" + item.href)}
               >
                 {item.link}
                 <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">

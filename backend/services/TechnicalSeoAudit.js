@@ -55,6 +55,67 @@ const safeGet = async (url, options = {}) => {
 };
 
 /**
+ * Parse robots.txt content to detect broad crawl blocking and sitemap references.
+ */
+const parseRobotsTxt = (robotsTxt) => {
+  const lines = typeof robotsTxt === "string" ? robotsTxt.split(/\r?\n/) : [];
+  const groups = [];
+  let currentGroup = [];
+
+  const flushGroup = () => {
+    if (currentGroup.length > 0) groups.push(currentGroup);
+    currentGroup = [];
+  };
+
+  lines.forEach((rawLine) => {
+    const trimmed = rawLine.replace(/#.*/, "").trim();
+    if (!trimmed) {
+      flushGroup();
+      return;
+    }
+
+    currentGroup.push(trimmed);
+  });
+  flushGroup();
+
+  let hasDisallow = false;
+  let hasSitemapRef = false;
+  let blockingAll = false;
+
+  groups.forEach((group) => {
+    const userAgents = [];
+    const disallowValues = [];
+
+    group.forEach((line) => {
+      const separatorIndex = line.indexOf(":");
+      if (separatorIndex === -1) return;
+
+      const directive = line.slice(0, separatorIndex).trim().toLowerCase();
+      const value = line.slice(separatorIndex + 1).trim();
+
+      if (directive === "user-agent") {
+        userAgents.push(value.toLowerCase());
+      }
+
+      if (directive === "disallow") {
+        hasDisallow = true;
+        if (value) disallowValues.push(value);
+      }
+
+      if (directive === "sitemap") {
+        hasSitemapRef = true;
+      }
+    });
+
+    const hasWildcardAgent = userAgents.includes("*");
+    const blocksAllAgents = hasWildcardAgent && disallowValues.some((value) => value === "/" || value === "/*");
+    if (blocksAllAgents) blockingAll = true;
+  });
+
+  return { hasDisallow, hasSitemapRef, blockingAll };
+};
+
+/**
  * Extract all absolute URLs from anchor tags.
  */
 const extractLinks = ($, baseUrl) => {
@@ -182,15 +243,19 @@ const runTechnicalSEOAudit = async (websiteUrl, mainKeywords, location) => {
   console.log(`[SEO Audit] Checking robots.txt...`);
   const robotsUrl = `${baseUrl.origin}/robots.txt`;
   const robotsRes = await safeGet(robotsUrl);
-  const robotsTxt = robotsRes.data || "";
+  const robotsTxt = typeof robotsRes.data === "string" ? robotsRes.data : "";
+  const robotsAccessBlocked = [401, 403, 407, 408, 425, 429, 451].includes(robotsRes.status);
+  const robotsParse = parseRobotsTxt(robotsTxt);
   audit.robotsTxt = {
     url:          robotsUrl,
-    exists:       robotsRes.status === 200 && !!robotsTxt,
+    exists:       robotsRes.status === 200 && !!robotsTxt.trim(),
+    accessible:   robotsRes.status === 200 && !!robotsTxt.trim(),
+    accessBlocked: robotsAccessBlocked,
     status:       robotsRes.status,
     content:      typeof robotsTxt === "string" ? robotsTxt.substring(0, 2000) : "Binary/unavailable",
-    hasDisallow:  typeof robotsTxt === "string" && robotsTxt.toLowerCase().includes("disallow"),
-    blockingAll:  typeof robotsTxt === "string" && /disallow:\s*\//i.test(robotsTxt),
-    hasSitemapRef: typeof robotsTxt === "string" && robotsTxt.toLowerCase().includes("sitemap"),
+    hasDisallow:  robotsParse.hasDisallow,
+    blockingAll:  robotsAccessBlocked || robotsParse.blockingAll,
+    hasSitemapRef: robotsParse.hasSitemapRef,
   };
 
   // ── 3. XML SITEMAP ────────────────────────────────────────────────────────
@@ -482,12 +547,14 @@ const runTechnicalSEOAudit = async (websiteUrl, mainKeywords, location) => {
   audit.crawlability = {
     isReachable:         isReachable,
     httpStatus:          homepageRes.status,
-    isIndexable:         isReachable && !audit.robotsTxt.blockingAll,
+    isIndexable:         isReachable && !audit.robotsTxt.blockingAll && !($ && ($('meta[name="robots"]').attr("content") || "").toLowerCase().includes("noindex")),
     robotsBlockingAll:   audit.robotsTxt.blockingAll,
+    robotsAccessBlocked: audit.robotsTxt.accessBlocked,
     hasNoindex:          $ ? !!($('meta[name="robots"]').attr("content") || "").toLowerCase().includes("noindex") : false,
     issues: [
       !isReachable                            && "CRITICAL: Website is unreachable — check if the domain is live",
       homepageRes.status >= 400               && `CRITICAL: Homepage returned status ${homepageRes.status}`,
+      audit.robotsTxt.accessBlocked           && `CRITICAL: robots.txt returned HTTP ${audit.robotsTxt.status} - crawlers cannot access crawl rules; allow public GET access to /robots.txt`,
       audit.robotsTxt.blockingAll             && "CRITICAL: robots.txt is blocking all crawlers — Google cannot index your site",
       $ && ($('meta[name="robots"]').attr("content") || "").toLowerCase().includes("noindex")
                                               && "CRITICAL: Noindex meta tag found — this page is excluded from Google's index",

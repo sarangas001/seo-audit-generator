@@ -77,7 +77,7 @@ const formatAuditAsText = (audit, performanceData, customerInfo) => {
   report += `Reachable         : ${statusIcon(audit.crawlability.isReachable)}\n`;
   report += `HTTP Status       : ${audit.crawlability.httpStatus}\n`;
   report += `Indexable         : ${statusIcon(audit.crawlability.isIndexable)}\n`;
-  report += `Robots Blocking   : ${statusIcon(!audit.crawlability.robotsBlockingAll)} (${audit.crawlability.robotsBlockingAll ? "BLOCKING" : "OK"})\n`;
+  report += `Robots Blocking   : ${statusIcon(!(audit.crawlability.robotsBlockingAll || audit.crawlability.robotsAccessBlocked))} (${(audit.crawlability.robotsBlockingAll || audit.crawlability.robotsAccessBlocked) ? "BLOCKING" : "OK"})\n`;
   report += `Noindex Tag       : ${audit.crawlability.hasNoindex ? "🔴 YES — page excluded from index" : "✅ Not found"}\n`;
   if (audit.crawlability.issues.length > 0) {
     report += `Issues:\n`;
@@ -98,8 +98,10 @@ const formatAuditAsText = (audit, performanceData, customerInfo) => {
   // Robots.txt
   report += `3. ROBOTS.TXT\n${line}\n`;
   report += `Exists            : ${statusIcon(audit.robotsTxt.exists)}\n`;
+  report += `Accessible        : ${statusIcon(audit.robotsTxt.accessible)}\n`;
   report += `HTTP Status       : ${audit.robotsTxt.status}\n`;
   report += `Has Disallow Rules: ${audit.robotsTxt.hasDisallow ? "Yes" : "None found"}\n`;
+  report += `Access Blocked    : ${audit.robotsTxt.accessBlocked ? "🔴 YES — CRITICAL" : "✅ No"}\n`;
   report += `Blocks All Bots   : ${audit.robotsTxt.blockingAll ? "🔴 YES — CRITICAL" : "✅ No"}\n`;
   report += `Sitemap Referenced: ${statusIcon(audit.robotsTxt.hasSitemapRef)}\n`;
   if (typeof audit.robotsTxt.content === "string" && audit.robotsTxt.content) {
