@@ -104,6 +104,19 @@ const estimateOpportunity = (currentTraffic, keywordCount) => {
   return                                                 { label: "Minimal", description: "Strong traffic base — incremental growth through long-tail keyword targeting" };
 };
 
+/**
+ * Normalize URLs for use with new URL() and axios calls.
+ */
+const normaliseUrl = (url) => {
+  if (typeof url !== "string") return "";
+  const trimmed = url.trim();
+  if (!trimmed) return "";
+  if (!trimmed.startsWith("http://") && !trimmed.startsWith("https://")) {
+    return `https://${trimmed}`;
+  }
+  return trimmed;
+};
+
 // ─────────────────────────────────────────────────────────────────────────────
 //  PRIMARY SOURCE — DataForSEO Labs API
 //  Endpoint: Domain Overview (Live)
@@ -243,9 +256,10 @@ const fetchFromDataForSEO = async (domain, location) => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const estimateFromSignals = async (url, mainKeywords) => {
-  console.log(`[Organic Traffic] No DataForSEO credentials — using signal-based estimation`);
+  console.log(`[Organic Traffic] Using free signal-based estimation`);
 
-  const baseUrl = new URL(url);
+  const normalizedUrl = normaliseUrl(url);
+  const baseUrl = new URL(normalizedUrl);
   const domain  = baseUrl.hostname;
 
   // ── Fetch sitemap to count indexed pages ───────────────────────────────────
@@ -258,7 +272,7 @@ const estimateFromSignals = async (url, mainKeywords) => {
 
   // ── Fetch homepage for SEO signals ─────────────────────────────────────────
   const cheerio  = require("cheerio");
-  const homeRes  = await safeGet(url);
+  const homeRes  = await safeGet(normalizedUrl);
   const $        = homeRes.data ? cheerio.load(homeRes.data) : null;
 
   let hasSchema    = false;
@@ -272,7 +286,7 @@ const estimateFromSignals = async (url, mainKeywords) => {
     hasH1      = $("h1").length === 1;
     $("a[href]").each((_, el) => {
       try {
-        const abs = new URL($(el).attr("href"), url).href;
+        const abs = new URL($(el).attr("href"), normalizedUrl).href;
         if (new URL(abs).hostname === baseUrl.hostname) internalLinks++;
       } catch (_) {}
     });
@@ -319,15 +333,15 @@ const estimateFromSignals = async (url, mainKeywords) => {
     topPages = urlMatches.map((pageUrl) => ({
       url:         pageUrl,
       title:       "",
-      note:        "From sitemap — traffic data unavailable without DataForSEO API",
+      note:        "From sitemap — traffic data estimated from free public signals",
       trafficShare: "N/A",
     }));
   }
 
   return {
-    source:           "Estimated (Signal-Based)",
+    source:           "Estimated (Free Signal-Based)",
     isEstimated:      true,
-    estimationNote:   "This is a signal-based estimate. For precise data, add DataForSEO API credentials (DATAFORSEO_LOGIN + DATAFORSEO_PASSWORD) to your .env file.",
+    estimationNote:   "This is a free signal-based estimate using public SEO signals. No paid API is required.",
     domain,
     monthlyTraffic:   estimatedMid,
     monthlyTrafficRange: `${estimatedMin.toLocaleString()} – ${estimatedMax.toLocaleString()}`,
@@ -348,7 +362,7 @@ const estimateFromSignals = async (url, mainKeywords) => {
     searchVisibility: {
       score: null,
       label: signalScore >= 60 ? "Moderate" : signalScore >= 30 ? "Low" : "Very Low",
-      note:  "Estimated from on-page signals — connect DataForSEO API for precise visibility data",
+      note:  "Estimated from on-page signals and sitemap coverage",
     },
     trafficOpportunity: {
       label:       signalScore >= 60 ? "Medium"  : "High",
@@ -373,25 +387,15 @@ const estimateFromSignals = async (url, mainKeywords) => {
 const runOrganicTraffic = async (url, mainKeywords, location) => {
   console.log(`[Organic Traffic] Starting organic traffic analysis for: ${url}`);
 
-  const domain = new URL(url).hostname;
-  const auth   = getDataForSEOAuth();
-
-  // Try DataForSEO first — fall back to signal estimation if no credentials
-  let result = null;
-
-  if (auth) {
-    result = await fetchFromDataForSEO(domain, location);
-  }
-
-  if (!result) {
-    result = await estimateFromSignals(url, mainKeywords);
-  }
+  const normalizedUrl = normaliseUrl(url);
+  const domain = new URL(normalizedUrl).hostname;
+  const result = await estimateFromSignals(normalizedUrl, mainKeywords);
 
   console.log(`[Organic Traffic] Done — Source: ${result.source} | Traffic: ${result.monthlyTrafficRange} visits/mo | Opportunity: ${result.trafficOpportunity?.label}`);
 
   return {
     ...result,
-    url,
+    url: normalizedUrl,
     mainKeywords,
     location,
     fetchedAt: new Date().toISOString(),
@@ -469,7 +473,7 @@ const formatOrganicTrafficAsText = (trafficData, customerInfo) => {
   if (trafficData.isEstimated) {
     R += `  ⚠️  ESTIMATED DATA — ${trafficData.estimationNote}\n`;
   } else {
-    R += `  ✅ Live data from DataForSEO API\n`;
+    R += `  ✅ Live data from a free source\n`;
   }
   R += `  Domain    : ${trafficData.domain}\n`;
   R += `  Location  : ${trafficData.location || "Not specified"}\n`;
@@ -524,10 +528,7 @@ const formatOrganicTrafficAsText = (trafficData, customerInfo) => {
     R += `    ${boolIcon(sig.internalLinks >= 5)} Internal links (${sig.internalLinks} found)\n`;
     R += `    PageSpeed SEO Score: ${sig.pageSpeedSeoScore}/100\n\n`;
 
-    R += `  ℹ️  To get real traffic data, add these to your .env file:\n`;
-    R += `     DATAFORSEO_LOGIN=your_email\n`;
-    R += `     DATAFORSEO_PASSWORD=your_api_password\n`;
-    R += `     Sign up free: https://app.dataforseo.com/register\n\n`;
+    R += `  ℹ️  This report uses free public signals, so no paid API setup is required.\n\n`;
   }
 
   // ── Top traffic-driving pages ─────────────────────────────────────────────
@@ -546,7 +547,7 @@ const formatOrganicTrafficAsText = (trafficData, customerInfo) => {
     });
   } else {
     R += `  ℹ️  Top pages data not available.\n`;
-    R += `     Add DataForSEO API credentials to retrieve top traffic-driving pages.\n\n`;
+    R += `     Top pages are estimated from the sitemap when available.\n\n`;
   }
 
   // ── Top competitors (DataForSEO only) ─────────────────────────────────────
@@ -567,7 +568,7 @@ const formatOrganicTrafficAsText = (trafficData, customerInfo) => {
   const traffic = trafficData.monthlyTraffic;
 
   if (trafficData.isEstimated) {
-    recs.push("Connect DataForSEO API for accurate traffic data (free trial available)");
+    recs.push("Use Google Search Console for verified traffic data if you need exact clicks and impressions");
   }
   if (traffic !== null && traffic < 1000) {
     recs.push("Traffic is low — prioritise fixing technical SEO issues identified in Service 1");
