@@ -4,6 +4,7 @@ const fs      = require("fs");
 const path    = require("path");
 const technicalSeoAduit = require("../services/TechnicalSeoAudit")
 const {runPerformanceScores} = require("../services/performanceServices");
+const { formatSiteSpeedAsText, runSiteSpeedTest } = require("../services/siteSpeedService");
 require("dotenv").config();
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -453,13 +454,17 @@ const getSEOData = async (req, res) => {
     console.log(`[GrowDigitally] Location : ${location}`);
 
     // ── Run the technical audit ───────────────────────────────────────────────
-    const [auditData, performanceData] = await Promise.all([
+    const [auditData, performanceData, siteSpeedData] = await Promise.all([
       technicalSeoAduit.runTechnicalSEOAudit(websiteUrl, mainKeywords, location),
       runPerformanceScores(websiteUrl),
+      runSiteSpeedTest(websiteUrl),
     ]);
 
+
     // ── Format as readable text ───────────────────────────────────────────────
-    const auditText  = formatAuditAsText(auditData, performanceData, { name, email, whatsAppNum, websiteUrl });
+    let auditText  = formatAuditAsText(auditData, performanceData, { name, email, whatsAppNum, websiteUrl });
+
+    auditText += formatSiteSpeedAsText(siteSpeedData, { name, email, whatsAppNum, websiteUrl });
 
     // ── Save to .txt file ─────────────────────────────────────────────────────
     const { filename, filepath } = saveAuditToFile(auditText, { websiteUrl });
