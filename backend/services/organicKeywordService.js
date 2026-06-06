@@ -163,6 +163,18 @@ const fetchFromDataForSEO = async (domain, location) => {
       }
     );
 
+    if (rankedRes.status !== 200 || !rankedRes.data || rankedRes.data.status_code !== 20000) {
+      const apiMsg = rankedRes.data?.status_message || rankedRes.error || "Unknown error";
+      console.error(`[Organic Keywords] DataForSEO ranked keywords call failed. Status: ${rankedRes.status}, API status_code: ${rankedRes.data?.status_code}, Msg: ${apiMsg}`);
+      return null;
+    }
+
+    if (summaryRes.status !== 200 || !summaryRes.data || summaryRes.data.status_code !== 20000) {
+      const apiMsg = summaryRes.data?.status_message || summaryRes.error || "Unknown error";
+      console.error(`[Organic Keywords] DataForSEO domain overview call failed. Status: ${summaryRes.status}, API status_code: ${summaryRes.data?.status_code}, Msg: ${apiMsg}`);
+      return null;
+    }
+
     // ── Parse ranked keywords ─────────────────────────────────────────────────
     const rankedTask  = rankedRes.data?.tasks?.[0];
     const rankedItems = rankedTask?.result?.[0]?.items || [];

@@ -91,22 +91,25 @@ const fetchHomepageHtml = async (websiteUrl) => {
 };
 
 /**
- * Safe GET request — returns { data, status, headers } or null on failure.
+ * Safe HTTP request helper — supports GET/POST and returns response details or null on failure.
  */
 const safeGet = async (url, options = {}) => {
   try {
-    const res = await axios.get(url, {
+    const { method = "GET", ...otherOpts } = options;
+    const res = await axios({
+      url,
+      method,
       timeout: 15000,
       maxRedirects: 10,
       headers: {
         "User-Agent":
           "Mozilla/5.0 (compatible; GrowDigitallyBot/1.0; +https://growdigitally.lk)",
       },
-      ...options,
+      ...otherOpts,
     });
     return { data: res.data, status: res.status, headers: res.headers, finalUrl: res.request?.res?.responseUrl || url };
   } catch (err) {
-    return { data: null, status: err.response?.status || 0, headers: {}, error: err.message, finalUrl: url };
+    return { data: err.response?.data || null, status: err.response?.status || 0, headers: {}, error: err.message, finalUrl: url };
   }
 };
 

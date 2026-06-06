@@ -181,6 +181,24 @@ const fetchFromDataForSEO = async (domain, location) => {
       }
     );
 
+    if (overviewRes.status !== 200 || !overviewRes.data || overviewRes.data.status_code !== 20000) {
+      const apiMsg = overviewRes.data?.status_message || overviewRes.error || "Unknown error";
+      console.error(`[Organic Traffic] DataForSEO domain overview call failed. Status: ${overviewRes.status}, API status_code: ${overviewRes.data?.status_code}, Msg: ${apiMsg}`);
+      return null;
+    }
+
+    if (rankedPagesRes.status !== 200 || !rankedPagesRes.data || rankedPagesRes.data.status_code !== 20000) {
+      const apiMsg = rankedPagesRes.data?.status_message || rankedPagesRes.error || "Unknown error";
+      console.error(`[Organic Traffic] DataForSEO ranked pages call failed. Status: ${rankedPagesRes.status}, API status_code: ${rankedPagesRes.data?.status_code}, Msg: ${apiMsg}`);
+      return null;
+    }
+
+    if (competitorRes.status !== 200 || !competitorRes.data || competitorRes.data.status_code !== 20000) {
+      const apiMsg = competitorRes.data?.status_message || competitorRes.error || "Unknown error";
+      console.error(`[Organic Traffic] DataForSEO competitors call failed. Status: ${competitorRes.status}, API status_code: ${competitorRes.data?.status_code}, Msg: ${apiMsg}`);
+      return null;
+    }
+
     // ── Parse overview result ───────────────────────────────────────────────
     const overviewTask  = overviewRes.data?.tasks?.[0];
     const overviewItem  = overviewTask?.result?.[0]?.items?.[0] || null;
@@ -389,7 +407,13 @@ const runOrganicTraffic = async (url, mainKeywords, location) => {
 
   const normalizedUrl = normaliseUrl(url);
   const domain = new URL(normalizedUrl).hostname;
-  const result = await estimateFromSignals(normalizedUrl, mainKeywords);
+  
+  // Try DataForSEO first
+  let result = await fetchFromDataForSEO(domain, location);
+
+  if (!result) {
+    result = await estimateFromSignals(normalizedUrl, mainKeywords);
+  }
 
   console.log(`[Organic Traffic] Done — Source: ${result.source} | Traffic: ${result.monthlyTrafficRange} visits/mo | Opportunity: ${result.trafficOpportunity?.label}`);
 

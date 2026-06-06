@@ -158,6 +158,24 @@ const fetchFromDataForSEO = async (domain) => {
       }
     );
 
+    if (summaryRes.status !== 200 || !summaryRes.data || summaryRes.data.status_code !== 20000) {
+      const apiMsg = summaryRes.data?.status_message || summaryRes.error || "Unknown error";
+      console.error(`[Backlinks] DataForSEO summary call failed. Status: ${summaryRes.status}, API status_code: ${summaryRes.data?.status_code}, Msg: ${apiMsg}`);
+      return null;
+    }
+
+    if (backlinksRes.status !== 200 || !backlinksRes.data || backlinksRes.data.status_code !== 20000) {
+      const apiMsg = backlinksRes.data?.status_message || backlinksRes.error || "Unknown error";
+      console.error(`[Backlinks] DataForSEO backlinks list call failed. Status: ${backlinksRes.status}, API status_code: ${backlinksRes.data?.status_code}, Msg: ${apiMsg}`);
+      return null;
+    }
+
+    if (referringRes.status !== 200 || !referringRes.data || referringRes.data.status_code !== 20000) {
+      const apiMsg = referringRes.data?.status_message || referringRes.error || "Unknown error";
+      console.error(`[Backlinks] DataForSEO referring domains call failed. Status: ${referringRes.status}, API status_code: ${referringRes.data?.status_code}, Msg: ${apiMsg}`);
+      return null;
+    }
+
     // ── Parse summary ───────────────────────────────────────────────────────
     const summaryItem = summaryRes.data?.tasks?.[0]?.result?.[0] || null;
 
@@ -399,18 +417,23 @@ const runBacklinksOverview = async (url, mainKeywords) => {
 
   const normalizedUrl = normaliseUrl(url);
   const domain = new URL(normalizedUrl).hostname;
-  let result   = await estimateFromSignals(normalizedUrl);
+  
+  // Try DataForSEO first
+  let result = await fetchFromDataForSEO(domain);
 
-  const oprData = await fetchOpenPageRank(domain);
-  if (oprData) {
-    result.domainAuthority = {
-      score:   oprData.domainScore,
-      openPageRank: oprData.openPageRank,
-      label:   oprData.label + " (OpenPageRank)",
-      tier:    oprData.tier,
-      note:    "Enhanced with free OpenPageRank data",
-    };
-    result.source = "OpenPageRank + Signal-Based";
+  if (!result) {
+    result = await estimateFromSignals(normalizedUrl);
+    const oprData = await fetchOpenPageRank(domain);
+    if (oprData) {
+      result.domainAuthority = {
+        score:   oprData.domainScore,
+        openPageRank: oprData.openPageRank,
+        label:   oprData.label + " (OpenPageRank)",
+        tier:    oprData.tier,
+        note:    "Enhanced with free OpenPageRank data",
+      };
+      result.source = "OpenPageRank + Signal-Based";
+    }
   }
 
   console.log(`[Backlinks] Done — Source: ${result.source} | DA: ${result.domainAuthority?.score ?? "N/A"} | Backlinks: ${result.totalBacklinks ?? "N/A"} | Spam: ${result.spamScore?.score ?? "N/A"}%`);
