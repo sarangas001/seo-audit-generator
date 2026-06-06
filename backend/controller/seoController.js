@@ -9,6 +9,8 @@ const { runOnPageSEO, formatOnPageAsText } = require("../services/onPageService"
 const { runOrganicTraffic, formatOrganicTrafficAsText } = require("../services/organicTrafficService");
 const { runBacklinksOverview, formatBacklinksAsText } = require("../services/backLinkService");
 const { runOrganicKeywords, formatOrganicKeywordsAsText } = require("../services/organicKeywordService");
+const { runCompetitorAnalysis, formatCompetitorAsText } = require("../services/CompetitorService");
+const {saveAuditToFile} = require("../services/saveAuditToFile")
 require("dotenv").config();
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -419,24 +421,6 @@ const formatAuditAsText = (audit, performanceData, customerInfo) => {
 //  SAVE TO .TXT FILE
 // ─────────────────────────────────────────────────────────────────────────────
 
-const saveAuditToFile = (auditText, customerInfo) => {
-  // Create reports/ directory if it doesn't exist
-  const reportsDir = path.join(__dirname, "..", "reports");
-  if (!fs.existsSync(reportsDir)) {
-    fs.mkdirSync(reportsDir, { recursive: true });
-  }
-
-  // Safe filename: domain_timestamp.txt
-  const safeDomain   = customerInfo.websiteUrl.replace(/https?:\/\//, "").replace(/[^a-zA-Z0-9]/g, "_").substring(0, 50);
-  const timestamp    = new Date().toISOString().replace(/[:.]/g, "-").substring(0, 19);
-  const filename     = `seo_audit_${safeDomain}_${timestamp}.txt`;
-  const filepath     = path.join(reportsDir, filename);
-
-  fs.writeFileSync(filepath, auditText, "utf-8");
-  console.log(`[SEO Audit] Report saved to: ${filepath}`);
-
-  return { filename, filepath };
-};
 
 const getSEOData = async (req, res) => {
   try {
@@ -458,7 +442,7 @@ const getSEOData = async (req, res) => {
     console.log(`[GrowDigitally] Location : ${location}`);
 
     // ── Run the technical audit ───────────────────────────────────────────────
-    const [auditData, performanceData, siteSpeedData, onPageData, organicTrafficData, backlinksData, organicKeywordsData] = await Promise.all([
+    const [auditData, performanceData, siteSpeedData, onPageData, organicTrafficData, backlinksData, organicKeywordsData, competitorData] = await Promise.all([
       technicalSeoAduit.runTechnicalSEOAudit(websiteUrl, mainKeywords, location),
       runPerformanceScores(websiteUrl),
       runSiteSpeedTest(websiteUrl),
@@ -466,6 +450,7 @@ const getSEOData = async (req, res) => {
       runOrganicTraffic(websiteUrl, mainKeywords, location),
       runBacklinksOverview(websiteUrl, mainKeywords),
       runOrganicKeywords(websiteUrl, mainKeywords, location),
+      runCompetitorAnalysis(websiteUrl, mainKeywords, location)
     ]);
 
 
@@ -475,7 +460,8 @@ const getSEOData = async (req, res) => {
                    + formatOnPageAsText(onPageData, { name, email, whatsAppNum, websiteUrl })
                    + formatOrganicTrafficAsText(organicTrafficData, { name, email, whatsAppNum, websiteUrl }) 
                    + formatBacklinksAsText(backlinksData, { name, email, whatsAppNum, websiteUrl })
-                   + formatOrganicKeywordsAsText(organicKeywordsData, { name, email, whatsAppNum, websiteUrl });
+                   + formatOrganicKeywordsAsText(organicKeywordsData, { name, email, whatsAppNum, websiteUrl })
+                   + formatCompetitorAsText(competitorData, { name, email, whatsAppNum, websiteUrl });
 
     // ── Save to .txt file ─────────────────────────────────────────────────────
     const { filename, filepath } = saveAuditToFile(auditText, { websiteUrl });
