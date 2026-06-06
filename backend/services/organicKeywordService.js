@@ -2,119 +2,101 @@
 //  services/organicKeywordsService.js
 //  GrowDigitally — Organic Keywords Service
 //
-//  Free APIs used:
+//  APIs used:
 //
-//  PRIMARY — DataForSEO Labs API (free trial, no credit card required)
-//    Sign up : https://app.dataforseo.com/register
-//    Docs    : https://docs.dataforseo.com/v3/dataforseo_labs/
+//  PRIMARY — Serper.dev Google Search API (free tier: 2,500 searches/month)
+//    Sign up : https://serper.dev (no credit card required)
+//    Docs    : https://serper.dev/api-reference
 //    Add to .env:
-//      DATAFORSEO_LOGIN=your_login_email
-//      DATAFORSEO_PASSWORD=your_api_password
+//      SERPER_API_KEY=your_api_key
 //
-//  FALLBACK — Google Search Suggestions API (free, no key needed)
-//    Uses Google Autocomplete endpoint to estimate keywords the domain
-//    might be targeting. Not position data, but useful keyword signals.
+//  FALLBACK — Google Autocomplete API (free, no key needed)
+//    Used automatically when SERPER_API_KEY is not set.
+//    Provides keyword suggestions without position data.
 //
 //  Shows:
-//    • Total organic keywords
-//    • Top ranking keywords
-//    • Search volume per keyword
-//    • Current position
+//    • Total organic keywords found
+//    • Top ranking keywords (with real Google positions)
+//    • Current position (1–100)
 //    • Ranking page URL
-//    • Keyword difficulty (when available)
+//    • Keyword intent classification
+//    • Quick win opportunities (positions 11–20)
 //
 //  Exports:
-//    runOrganicKeywords(url, mainKeywords, location)  →  structured result 
+//    runOrganicKeywords(url, mainKeywords, location)  →  structured result
 // ─────────────────────────────────────────────────────────────────────────────
 
 require("dotenv").config();
+const axios = require("axios");
 const { safeGet } = require("./TechnicalSeoAudit");
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  HELPERS
 // ─────────────────────────────────────────────────────────────────────────────
 
-/** Build Base64 auth header for DataForSEO */
-const getDataForSEOAuth = () => {
-  const login    = process.env.DATAFORSEO_LOGIN    || "";
-  const password = process.env.DATAFORSEO_PASSWORD || "";
-  if (!login || !password) return null;
-  return "Basic " + Buffer.from(`${login}:${password}`).toString("base64");
-};
-
-/** Get DataForSEO location code from location string */
-const getLocationCode = (location) => {
-  if (!location) return 2840;
+/** Map location string to Serper.dev gl (country) code */
+const getSerperCountry = (location) => {
+  if (!location) return "us";
   const loc = location.toLowerCase();
   const map = {
-    "sri lanka":              2144,
-    "india":                  2356,
-    "united states":          2840,
-    "uk":                     2826,
-    "united kingdom":         2826,
-    "australia":              2036,
-    "canada":                 2124,
-    "singapore":              2702,
-    "uae":                    2784,
-    "united arab emirates":   2784,
-    "pakistan":               2586,
-    "bangladesh":             2050,
-    "malaysia":               2458,
-    "south africa":           2710,
+    "sri lanka":            "lk",
+    "india":                "in",
+    "united states":        "us",
+    "uk":                   "gb",
+    "united kingdom":       "gb",
+    "australia":            "au",
+    "canada":               "ca",
+    "singapore":            "sg",
+    "uae":                  "ae",
+    "united arab emirates": "ae",
+    "pakistan":             "pk",
+    "bangladesh":           "bd",
+    "malaysia":             "my",
+    "south africa":         "za",
   };
   for (const [key, code] of Object.entries(map)) {
     if (loc.includes(key)) return code;
   }
-  return 2840;
+  return "us";
 };
 
-/**
- * Classify keyword position into a SERP tier label
- */
+/** Classify keyword position into a SERP tier label */
 const classifyPosition = (position) => {
   if (!position) return { label: "Not Ranking", tier: "none" };
-  if (position === 1)        return { label: "Position 1 🏆",   tier: "top"    };
-  if (position <= 3)         return { label: "Top 3",           tier: "top"    };
-  if (position <= 10)        return { label: "Page 1",          tier: "page1"  };
-  if (position <= 20)        return { label: "Page 2",          tier: "page2"  };
-  if (position <= 50)        return { label: "Pages 3–5",       tier: "low"    };
-  return                            { label: "Page 5+",         tier: "deep"   };
+  if (position === 1)        return { label: "Position 1 🏆",   tier: "top"   };
+  if (position <= 3)         return { label: "Top 3",           tier: "top"   };
+  if (position <= 10)        return { label: "Page 1",          tier: "page1" };
+  if (position <= 20)        return { label: "Page 2",          tier: "page2" };
+  if (position <= 50)        return { label: "Pages 3–5",       tier: "low"   };
+  return                            { label: "Page 5+",         tier: "deep"  };
 };
 
-/**
- * Classify keyword difficulty (0–100)
- */
+/** Classify keyword difficulty (0–100) */
 const classifyDifficulty = (kd) => {
   if (kd === null || kd === undefined) return { label: "Unknown", tier: "unknown" };
-  if (kd >= 80) return { label: "Very Hard",   tier: "hard"   };
-  if (kd >= 60) return { label: "Hard",        tier: "hard"   };
-  if (kd >= 40) return { label: "Medium",      tier: "medium" };
-  if (kd >= 20) return { label: "Easy",        tier: "easy"   };
-  return               { label: "Very Easy",   tier: "easy"   };
+  if (kd >= 80) return { label: "Very Hard", tier: "hard"   };
+  if (kd >= 60) return { label: "Hard",      tier: "hard"   };
+  if (kd >= 40) return { label: "Medium",    tier: "medium" };
+  if (kd >= 20) return { label: "Easy",      tier: "easy"   };
+  return               { label: "Very Easy", tier: "easy"   };
 };
 
-/**
- * Classify search volume into a tier
- */
+/** Classify search volume into a tier */
 const classifyVolume = (volume) => {
   if (!volume) return { label: "No Data", tier: "unknown" };
-  if (volume >= 10000) return { label: "Very High",  tier: "high"   };
-  if (volume >= 1000)  return { label: "High",       tier: "high"   };
-  if (volume >= 100)   return { label: "Medium",     tier: "medium" };
-  if (volume >= 10)    return { label: "Low",        tier: "low"    };
-  return                      { label: "Very Low",   tier: "low"    };
+  if (volume >= 10000) return { label: "Very High", tier: "high"   };
+  if (volume >= 1000)  return { label: "High",      tier: "high"   };
+  if (volume >= 100)   return { label: "Medium",    tier: "medium" };
+  if (volume >= 10)    return { label: "Low",        tier: "low"   };
+  return                      { label: "Very Low",   tier: "low"   };
 };
 
-/**
- * Classify keyword intent from its text
- */
+/** Classify keyword intent from its text */
 const classifyIntent = (keyword) => {
   const kw = (keyword || "").toLowerCase();
-
   const transactional = ["buy", "price", "order", "shop", "cheap", "deal", "discount", "hire", "service", "quote", "cost", "booking", "book"];
   const informational = ["how", "what", "why", "when", "where", "guide", "tutorial", "tips", "learn", "explain", "meaning"];
   const navigational  = ["login", "sign in", "website", "official", "contact", "near me", "location", "address", "phone"];
-
   if (transactional.some((w) => kw.includes(w))) return "Transactional";
   if (navigational.some((w) => kw.includes(w)))  return "Navigational";
   if (informational.some((w) => kw.includes(w))) return "Informational";
@@ -122,120 +104,181 @@ const classifyIntent = (keyword) => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  PRIMARY SOURCE — DataForSEO Labs
-//  Ranked Keywords for a domain (organic positions)
+//  PRIMARY SOURCE — Serper.dev Google Search API
+//  Searches each user keyword on Google and checks if the domain ranks.
+//  Also searches "site:domain" to discover all indexed pages.
 // ─────────────────────────────────────────────────────────────────────────────
 
-const fetchFromDataForSEO = async (domain, location) => {
-  const auth = getDataForSEOAuth();
-  if (!auth) return null;
+const fetchFromSerper = async (domain, mainKeywords, location) => {
+  const apiKey = process.env.SERPER_API_KEY || "";
 
-  const locationCode = getLocationCode(location);
-  console.log(`[Organic Keywords] Fetching DataForSEO ranked keywords for: ${domain}`);
-
-  try {
-    // ── Ranked keywords ─────────────────────────────────────────────────────
-    const rankedRes = await safeGet(
-      "https://api.dataforseo.com/v3/dataforseo_labs/google/ranked_keywords/live",
-      {
-        method: "POST",
-        headers: { "Authorization": auth, "Content-Type": "application/json" },
-        data: JSON.stringify([{
-          target:         domain,
-          location_code:  locationCode,
-          language_code:  "en",
-          limit:          50,
-          order_by:       ["keyword_data.keyword_info.search_volume,desc"],
-          filters:        [
-            "ranked_serp_element.serp_item.rank_absolute", "<=", 100
-          ],
-        }]),
-      }
-    );
-
-    // ── Domain summary for total keywords count ──────────────────────────────
-    const summaryRes = await safeGet(
-      "https://api.dataforseo.com/v3/dataforseo_labs/google/domain_whois_overview/live",
-      {
-        method: "POST",
-        headers: { "Authorization": auth, "Content-Type": "application/json" },
-        data: JSON.stringify([{ target: domain }]),
-      }
-    );
-
-    if (rankedRes.status !== 200 || !rankedRes.data || rankedRes.data.status_code !== 20000) {
-      const apiMsg = rankedRes.data?.status_message || rankedRes.error || "Unknown error";
-      console.error(`[Organic Keywords] DataForSEO ranked keywords call failed. Status: ${rankedRes.status}, API status_code: ${rankedRes.data?.status_code}, Msg: ${apiMsg}`);
-      return null;
-    }
-
-    if (summaryRes.status !== 200 || !summaryRes.data || summaryRes.data.status_code !== 20000) {
-      const apiMsg = summaryRes.data?.status_message || summaryRes.error || "Unknown error";
-      console.error(`[Organic Keywords] DataForSEO domain overview call failed. Status: ${summaryRes.status}, API status_code: ${summaryRes.data?.status_code}, Msg: ${apiMsg}`);
-      return null;
-    }
-
-    // ── Parse ranked keywords ─────────────────────────────────────────────────
-    const rankedTask  = rankedRes.data?.tasks?.[0];
-    const rankedItems = rankedTask?.result?.[0]?.items || [];
-    const totalCount  = rankedTask?.result?.[0]?.total_count || rankedItems.length;
-
-    const keywords = rankedItems.map((item) => {
-      const kwData   = item.keyword_data || {};
-      const kwInfo   = kwData.keyword_info || {};
-      const serpItem = item.ranked_serp_element?.serp_item || {};
-      const position = serpItem.rank_absolute || null;
-
-      return {
-        keyword:         kwData.keyword             || "",
-        searchVolume:    kwInfo.search_volume        ?? null,
-        volumeLabel:     classifyVolume(kwInfo.search_volume).label,
-        currentPosition: position,
-        positionLabel:   classifyPosition(position).label,
-        positionTier:    classifyPosition(position).tier,
-        rankingUrl:      serpItem.url               || item.url || "",
-        keywordDifficulty: kwData.keyword_properties?.keyword_difficulty ?? null,
-        difficultyLabel: classifyDifficulty(kwData.keyword_properties?.keyword_difficulty).label,
-        cpc:             kwInfo.cpc                 ?? null,
-        competition:     kwInfo.competition         ?? null,
-        intent:          classifyIntent(kwData.keyword || ""),
-        trend:           kwInfo.monthly_searches
-          ? kwInfo.monthly_searches.slice(-3).map((m) => m.search_volume)
-          : [],
-      };
-    });
-
-    // ── Parse domain summary ──────────────────────────────────────────────────
-    const summaryItem    = summaryRes.data?.tasks?.[0]?.result?.[0]?.items?.[0] || null;
-    const totalOrganic   = summaryItem?.metrics?.organic?.count ?? totalCount;
-    const pos1Count      = summaryItem?.metrics?.organic?.pos_1    ?? keywords.filter((k) => k.currentPosition === 1).length;
-    const page1Count     = summaryItem?.metrics?.organic?.pos_2_3  + summaryItem?.metrics?.organic?.pos_4_10 ?? keywords.filter((k) => k.positionTier === "page1").length;
-
-    // ── Separate into groups ──────────────────────────────────────────────────
-    const top3Keywords    = keywords.filter((k) => k.currentPosition && k.currentPosition <= 3);
-    const page1Keywords   = keywords.filter((k) => k.currentPosition && k.currentPosition <= 10);
-    const page2Keywords   = keywords.filter((k) => k.currentPosition && k.currentPosition > 10 && k.currentPosition <= 20);
-    const quickWins       = keywords.filter((k) => k.currentPosition && k.currentPosition >= 11 && k.currentPosition <= 20);
-
-    return {
-      source:           "DataForSEO",
-      domain,
-      totalOrganicKeywords: totalOrganic,
-      pos1Count,
-      page1Count:       page1Keywords.length,
-      page2Count:       page2Keywords.length,
-      quickWinsCount:   quickWins.length,
-      keywords,
-      top3Keywords,
-      page1Keywords,
-      quickWins,
-      totalRetrieved:   keywords.length,
-    };
-
-  } catch (err) {
-    console.error(`[Organic Keywords] DataForSEO error: ${err.message}`);
+  if (!apiKey || apiKey === "your_serper_api_key_here") {
+    console.log("[Organic Keywords] No Serper API key — using Google Autocomplete fallback");
     return null;
   }
+
+  const gl = getSerperCountry(location);
+  const keywordList = (mainKeywords || "")
+    .split(",")
+    .map((k) => k.trim())
+    .filter(Boolean);
+
+  if (keywordList.length === 0) {
+    console.log("[Organic Keywords] No main keywords provided for Serper search");
+    return null;
+  }
+
+  console.log(`[Organic Keywords] Fetching Serper.dev rankings for domain: ${domain}`);
+
+  const serperPost = async (query, num = 10) => {
+    try {
+      const res = await axios.post(
+        "https://google.serper.dev/search",
+        { q: query, gl, hl: "en", num },
+        {
+          headers: {
+            "X-API-KEY":    apiKey,
+            "Content-Type": "application/json",
+          },
+          timeout: 15000,
+        }
+      );
+      return res.data;
+    } catch (err) {
+      const status = err.response?.status;
+      const msg    = err.response?.data?.message || err.message;
+      console.error(`[Organic Keywords] Serper error for "${query}": HTTP ${status} — ${msg}`);
+      return null;
+    }
+  };
+
+  const foundKeywords = [];
+  const seenKeywords  = new Set();
+
+  // ── Step 1: Check each user-provided keyword for domain position ────────────
+  for (const kw of keywordList.slice(0, 8)) {
+    const data = await serperPost(kw, 10);
+    if (!data || !Array.isArray(data.organic)) continue;
+
+    const organic = data.organic;
+
+    // Check if domain appears in top-10 results
+    const match = organic.find((item) => {
+      try {
+        return new URL(item.link).hostname.replace("www.", "") === domain.replace("www.", "");
+      } catch (_) { return false; }
+    });
+
+    if (match && !seenKeywords.has(kw)) {
+      seenKeywords.add(kw);
+      const pos = match.position;
+      foundKeywords.push({
+        keyword:           kw,
+        searchVolume:      null,            // Serper doesn't provide volume
+        volumeLabel:       "N/A",
+        currentPosition:   pos,
+        positionLabel:     classifyPosition(pos).label,
+        positionTier:      classifyPosition(pos).tier,
+        rankingUrl:        match.link || "",
+        keywordDifficulty: null,
+        difficultyLabel:   "N/A",
+        cpc:               null,
+        competition:       null,
+        intent:            classifyIntent(kw),
+        snippet:           match.snippet || "",
+        trend:             [],
+      });
+    } else if (!seenKeywords.has(kw)) {
+      // Domain not in top 10 for this keyword — record as unranked
+      seenKeywords.add(kw);
+      foundKeywords.push({
+        keyword:           kw,
+        searchVolume:      null,
+        volumeLabel:       "N/A",
+        currentPosition:   null,
+        positionLabel:     "Not in Top 10",
+        positionTier:      "none",
+        rankingUrl:        "",
+        keywordDifficulty: null,
+        difficultyLabel:   "N/A",
+        cpc:               null,
+        competition:       null,
+        intent:            classifyIntent(kw),
+        snippet:           "",
+        trend:             [],
+      });
+    }
+  }
+
+  // ── Step 2: Discover additional keywords where domain ranks ──────────────────
+  // Search "site:domain" to find indexed pages, then build keyword list from them
+  const siteData = await serperPost(`site:${domain}`, 10);
+  const indexedCount = siteData?.searchInformation?.totalResults
+    ? parseInt(String(siteData.searchInformation.totalResults).replace(/,/g, ""), 10) || 0
+    : 0;
+
+  // Try a few branded keyword variations to find additional rankings
+  const brandedSearches = [
+    domain.replace("www.", "").split(".")[0],         // e.g. "growdigitally"
+    `${domain.replace("www.", "").split(".")[0]} services`,
+    `${domain.replace("www.", "").split(".")[0]} reviews`,
+  ];
+
+  for (const bkw of brandedSearches.slice(0, 2)) {
+    if (seenKeywords.has(bkw)) continue;
+    const data = await serperPost(bkw, 10);
+    if (!data || !Array.isArray(data.organic)) continue;
+
+    const match = data.organic.find((item) => {
+      try {
+        return new URL(item.link).hostname.replace("www.", "") === domain.replace("www.", "");
+      } catch (_) { return false; }
+    });
+
+    if (match) {
+      seenKeywords.add(bkw);
+      const pos = match.position;
+      foundKeywords.push({
+        keyword:           bkw,
+        searchVolume:      null,
+        volumeLabel:       "N/A",
+        currentPosition:   pos,
+        positionLabel:     classifyPosition(pos).label,
+        positionTier:      classifyPosition(pos).tier,
+        rankingUrl:        match.link || "",
+        keywordDifficulty: null,
+        difficultyLabel:   "N/A",
+        cpc:               null,
+        competition:       null,
+        intent:            classifyIntent(bkw),
+        snippet:           match.snippet || "",
+        trend:             [],
+      });
+    }
+  }
+
+  // ── Step 3: Build summary counts ─────────────────────────────────────────────
+  const rankedKeywords  = foundKeywords.filter((k) => k.currentPosition !== null);
+  const top3Keywords    = rankedKeywords.filter((k) => k.currentPosition <= 3);
+  const page1Keywords   = rankedKeywords.filter((k) => k.currentPosition <= 10);
+  const page2Keywords   = rankedKeywords.filter((k) => k.currentPosition > 10 && k.currentPosition <= 20);
+  const quickWins       = rankedKeywords.filter((k) => k.currentPosition >= 11 && k.currentPosition <= 20);
+
+  return {
+    source:               "Serper.dev (Google Search API)",
+    domain,
+    totalOrganicKeywords: indexedCount || rankedKeywords.length || null,
+    indexedPages:         indexedCount,
+    pos1Count:            rankedKeywords.filter((k) => k.currentPosition === 1).length,
+    page1Count:           page1Keywords.length,
+    page2Count:           page2Keywords.length,
+    quickWinsCount:       quickWins.length,
+    keywords:             foundKeywords,
+    top3Keywords,
+    page1Keywords,
+    quickWins,
+    totalRetrieved:       foundKeywords.length,
+  };
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -245,48 +288,45 @@ const fetchFromDataForSEO = async (domain, location) => {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const fetchFromGoogleSuggestions = async (mainKeywords, location) => {
-  console.log(`[Organic Keywords] No DataForSEO credentials — using Google Autocomplete fallback`);
+  console.log("[Organic Keywords] Using Google Autocomplete fallback");
 
   if (!mainKeywords) {
     return {
-      source:        "Google Autocomplete (Fallback)",
-      isEstimated:   true,
-      error:         "No main keywords provided — cannot generate keyword suggestions",
-      keywords:      [],
+      source:               "Google Autocomplete (Fallback)",
+      isEstimated:          true,
+      error:                "No main keywords provided — cannot generate keyword suggestions",
+      keywords:             [],
       totalOrganicKeywords: null,
     };
   }
 
-  // Parse keywords
-  const keywordList = mainKeywords.split(",").map((k) => k.trim()).filter(Boolean);
+  const keywordList   = mainKeywords.split(",").map((k) => k.trim()).filter(Boolean);
   const allSuggestions = [];
 
-  for (const kw of keywordList.slice(0, 3)) {  // limit to first 3 seeds
+  for (const kw of keywordList.slice(0, 3)) {
     try {
-      // Google Autocomplete free endpoint
       const res = await safeGet(
         `https://suggestqueries.google.com/complete/search?client=firefox&q=${encodeURIComponent(kw)}`
       );
-
       if (res.data && Array.isArray(res.data) && res.data[1]) {
         const suggestions = res.data[1].slice(0, 10);
         suggestions.forEach((suggestion) => {
           if (!allSuggestions.find((s) => s.keyword === suggestion)) {
             allSuggestions.push({
-              keyword:         suggestion,
-              searchVolume:    null,
-              volumeLabel:     "N/A — API required",
-              currentPosition: null,
-              positionLabel:   "Unknown — API required",
-              positionTier:    "unknown",
-              rankingUrl:      "N/A",
+              keyword:           suggestion,
+              searchVolume:      null,
+              volumeLabel:       "N/A — API required",
+              currentPosition:   null,
+              positionLabel:     "Unknown — API required",
+              positionTier:      "unknown",
+              rankingUrl:        "N/A",
               keywordDifficulty: null,
-              difficultyLabel: "N/A — API required",
-              cpc:             null,
-              competition:     null,
-              intent:          classifyIntent(suggestion),
-              isSuggestion:    true,
-              seedKeyword:     kw,
+              difficultyLabel:   "N/A — API required",
+              cpc:               null,
+              competition:       null,
+              intent:            classifyIntent(suggestion),
+              isSuggestion:      true,
+              seedKeyword:       kw,
             });
           }
         });
@@ -299,7 +339,7 @@ const fetchFromGoogleSuggestions = async (mainKeywords, location) => {
   return {
     source:               "Google Autocomplete (Fallback)",
     isEstimated:          true,
-    estimationNote:       "Position, search volume, and difficulty data require DataForSEO API credentials. Keywords shown are Google suggestions for your seed keywords.",
+    estimationNote:       "Position and volume data require a Serper.dev API key. Keywords shown are Google suggestions for your seed keywords. Sign up free at https://serper.dev",
     domain:               "",
     totalOrganicKeywords: null,
     pos1Count:            null,
@@ -329,10 +369,10 @@ const runOrganicKeywords = async (url, mainKeywords, location) => {
   const domain = new URL(url).hostname;
   let result   = null;
 
-  // Try DataForSEO first
-  result = await fetchFromDataForSEO(domain, location);
+  // Try Serper.dev first
+  result = await fetchFromSerper(domain, mainKeywords, location);
 
-  // Fall back to Google Autocomplete if no credentials
+  // Fall back to Google Autocomplete
   if (!result) {
     result = await fetchFromGoogleSuggestions(mainKeywords, location);
     result.domain = domain;
@@ -351,13 +391,6 @@ const runOrganicKeywords = async (url, mainKeywords, location) => {
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  formatOrganicKeywordsAsText
-//  GrowDigitally — Organic Keywords Report Formatter
-//
-//  Add this function into seoController.js alongside all other formatters.
-//
-//  @param  {object} keywordsData  — result from runOrganicKeywords()
-//  @param  {object} customerInfo  — { name, email, whatsAppNum, websiteUrl }
-//  @returns {string}              — formatted plain-text report section
 // ─────────────────────────────────────────────────────────────────────────────
 
 const formatOrganicKeywordsAsText = (keywordsData, customerInfo) => {
@@ -367,54 +400,24 @@ const formatOrganicKeywordsAsText = (keywordsData, customerInfo) => {
   const LINE  = "─".repeat(70);
   const LINE2 = "═".repeat(70);
 
-  // ── Icon helpers ──────────────────────────────────────────────────────────
   const positionIcon = (tier) => {
-    const map = {
-      top:     "🏆",
-      page1:   "🟢",
-      page2:   "🟡",
-      low:     "🟠",
-      deep:    "🔴",
-      none:    "⚪",
-      unknown: "⚪",
-    };
+    const map = { top: "🏆", page1: "🟢", page2: "🟡", low: "🟠", deep: "🔴", none: "⚪", unknown: "⚪" };
     return map[tier] || "⚪";
   };
 
   const difficultyIcon = (tier) => {
-    const map = {
-      easy:    "🟢",
-      medium:  "🟡",
-      hard:    "🔴",
-      unknown: "⚪",
-    };
-    return map[tier] || "⚪";
-  };
-
-  const volumeIcon = (tier) => {
-    const map = {
-      high:    "🔥",
-      medium:  "🟡",
-      low:     "🔵",
-      unknown: "⚪",
-    };
+    const map = { easy: "🟢", medium: "🟡", hard: "🔴", unknown: "⚪" };
     return map[tier] || "⚪";
   };
 
   const intentIcon = (intent) => {
-    const map = {
-      "Transactional": "💰",
-      "Informational": "📘",
-      "Navigational":  "🧭",
-      "Commercial":    "🛒",
-    };
+    const map = { "Transactional": "💰", "Informational": "📘", "Navigational": "🧭", "Commercial": "🛒" };
     return map[intent] || "🔵";
   };
 
   const countLabel = (val) =>
     val !== null && val !== undefined ? val.toLocaleString() : "N/A";
 
-  // ── Build report string ───────────────────────────────────────────────────
   let R = "";
 
   // ── Header ────────────────────────────────────────────────────────────────
@@ -438,11 +441,13 @@ const formatOrganicKeywordsAsText = (keywordsData, customerInfo) => {
   if (keywordsData.isEstimated) {
     R += `  ⚠️  ESTIMATED DATA — ${keywordsData.estimationNote}\n`;
     R += `\n  To get real keyword ranking data, add to your .env:\n`;
-    R += `    DATAFORSEO_LOGIN=your_email\n`;
-    R += `    DATAFORSEO_PASSWORD=your_api_password\n`;
-    R += `    Sign up free: https://app.dataforseo.com/register\n`;
+    R += `    SERPER_API_KEY=your_key\n`;
+    R += `    Sign up free: https://serper.dev\n`;
   } else {
-    R += `  ✅ Live data from DataForSEO API\n`;
+    R += `  ✅ Live data from Serper.dev (Google Search API)\n`;
+    if (keywordsData.indexedPages) {
+      R += `  📄 Google-indexed pages found: ${keywordsData.indexedPages.toLocaleString()}\n`;
+    }
   }
   R += "\n";
 
@@ -454,9 +459,7 @@ const formatOrganicKeywordsAsText = (keywordsData, customerInfo) => {
     return R;
   }
 
-  // ════════════════════════════════════════
-  //  KEYWORD OVERVIEW SUMMARY
-  // ════════════════════════════════════════
+  // ── Keyword Overview ──────────────────────────────────────────────────────
   R += `KEYWORD OVERVIEW\n${LINE}\n`;
   R += `  Total Organic Keywords   : ${countLabel(keywordsData.totalOrganicKeywords)}\n`;
   R += `  Keywords Retrieved       : ${countLabel(keywordsData.totalRetrieved)}\n`;
@@ -469,38 +472,33 @@ const formatOrganicKeywordsAsText = (keywordsData, customerInfo) => {
   }
   R += "\n";
 
-  // ════════════════════════════════════════
-  //  TOP RANKING KEYWORDS — Full table
-  // ════════════════════════════════════════
+  // ── Top Ranking Keywords ──────────────────────────────────────────────────
   R += `TOP RANKING KEYWORDS\n${LINE}\n`;
 
   if (keywordsData.keywords && keywordsData.keywords.length > 0) {
-    // Table header
     if (!keywordsData.isEstimated) {
-      R += `${"#".padEnd(4)} ${"Keyword".padEnd(35)} ${"Volume".padEnd(10)} ${"Position".padEnd(12)} ${"Difficulty".padEnd(12)} ${"Intent".padEnd(14)}\n`;
+      R += `${"#".padEnd(4)} ${"Keyword".padEnd(35)} ${"Position".padEnd(15)} ${"Intent".padEnd(16)} URL\n`;
       R += `${"-".repeat(90)}\n`;
 
       keywordsData.keywords.slice(0, 30).forEach((kw, i) => {
-        const num      = String(i + 1).padEnd(4);
-        const keyword  = (kw.keyword || "").substring(0, 34).padEnd(35);
-        const vol      = kw.searchVolume !== null ? String(kw.searchVolume.toLocaleString()).padEnd(10) : "N/A".padEnd(10);
-        const pos      = kw.currentPosition !== null ? `#${kw.currentPosition} ${kw.positionLabel}`.substring(0, 11).padEnd(12) : "N/A".padEnd(12);
-        const diff     = kw.keywordDifficulty !== null ? `${kw.keywordDifficulty} ${kw.difficultyLabel}`.substring(0, 11).padEnd(12) : "N/A".padEnd(12);
-        const intent   = (kw.intent || "").padEnd(14);
-        const pIcon    = positionIcon(kw.positionTier);
-        const dIcon    = difficultyIcon(kw.difficultyLabel?.includes("Easy") ? "easy" : kw.difficultyLabel?.includes("Hard") ? "hard" : "medium");
+        const num     = String(i + 1).padEnd(4);
+        const keyword = (kw.keyword || "").substring(0, 34).padEnd(35);
+        const pos     = kw.currentPosition !== null
+          ? `#${kw.currentPosition} ${kw.positionLabel}`.substring(0, 14).padEnd(15)
+          : "Not in Top 10 ".padEnd(15);
+        const intent  = (kw.intent || "").padEnd(16);
+        const pIcon   = positionIcon(kw.positionTier);
+        const url     = kw.rankingUrl ? kw.rankingUrl.substring(0, 40) : "";
 
-        R += `${pIcon} ${num}${keyword}${vol}${pos}${dIcon} ${diff}${intentIcon(kw.intent)} ${intent}\n`;
+        R += `${pIcon} ${num}${keyword}${pos}${intentIcon(kw.intent)} ${intent}${url}\n`;
+        if (kw.snippet) {
+          R += `     Snippet: ${kw.snippet.substring(0, 80)}${kw.snippet.length > 80 ? "..." : ""}\n`;
+        }
       });
 
-      if (keywordsData.keywords.length > 30) {
-        R += `  ... and ${keywordsData.keywords.length - 30} more keywords\n`;
-      }
-
     } else {
-      // Fallback mode — show suggestions without position data
       R += `  ℹ️  Showing Google keyword suggestions for your seed keywords.\n`;
-      R += `  Position and volume data not available without DataForSEO API.\n\n`;
+      R += `  Position data not available without Serper.dev API key.\n\n`;
       R += `${"#".padEnd(4)} ${"Keyword".padEnd(40)} ${"Intent".padEnd(16)} ${"Seed Keyword"}\n`;
       R += `${"-".repeat(75)}\n`;
 
@@ -517,50 +515,36 @@ const formatOrganicKeywordsAsText = (keywordsData, customerInfo) => {
   }
   R += "\n";
 
-  // ════════════════════════════════════════
-  //  TOP 3 KEYWORDS (detailed breakdown)
-  // ════════════════════════════════════════
-  if (keywordsData.top3Keywords && keywordsData.top3Keywords.length > 0) {
+  // ── Top 3 Keywords (detailed) ─────────────────────────────────────────────
+  const top3 = (keywordsData.top3Keywords || []).filter((k) => k.currentPosition !== null);
+  if (top3.length > 0) {
     R += `TOP 3 RANKING KEYWORDS (DETAILED)\n${LINE}\n`;
-    keywordsData.top3Keywords.forEach((kw, i) => {
+    top3.forEach((kw, i) => {
       R += `  ${i + 1}. ${kw.keyword}\n`;
       R += `     Position     : #${kw.currentPosition} — ${kw.positionLabel}\n`;
-      R += `     Search Volume: ${countLabel(kw.searchVolume)}/mo ${kw.searchVolume ? `(${kw.volumeLabel})` : ""}\n`;
       R += `     Ranking URL  : ${kw.rankingUrl || "N/A"}\n`;
-      if (kw.keywordDifficulty !== null) {
-        R += `     Difficulty   : ${kw.keywordDifficulty}/100 (${kw.difficultyLabel})\n`;
+      if (kw.snippet) {
+        R += `     Snippet      : ${kw.snippet.substring(0, 100)}${kw.snippet.length > 100 ? "..." : ""}\n`;
       }
-      if (kw.cpc !== null) R += `     CPC          : $${kw.cpc}\n`;
       R += `     Intent       : ${intentIcon(kw.intent)} ${kw.intent}\n`;
-      if (kw.trend && kw.trend.length > 0) {
-        R += `     Trend (3mo)  : ${kw.trend.join(" → ")}\n`;
-      }
       R += "\n";
     });
   }
 
-  // ════════════════════════════════════════
-  //  QUICK WIN KEYWORDS (positions 11–20)
-  // ════════════════════════════════════════
-  if (keywordsData.quickWins && keywordsData.quickWins.length > 0) {
+  // ── Quick Win Keywords ────────────────────────────────────────────────────
+  const qw = keywordsData.quickWins || [];
+  if (qw.length > 0) {
     R += `QUICK WIN KEYWORDS (Positions 11–20)\n${LINE}\n`;
     R += `  These keywords are on page 2 — a small optimisation push could move them to page 1.\n\n`;
-
-    keywordsData.quickWins.slice(0, 10).forEach((kw, i) => {
+    qw.slice(0, 10).forEach((kw, i) => {
       R += `  ${i + 1}. "${kw.keyword}"\n`;
       R += `     Position     : #${kw.currentPosition}\n`;
-      R += `     Search Volume: ${countLabel(kw.searchVolume)}/mo\n`;
       R += `     Ranking URL  : ${kw.rankingUrl || "N/A"}\n`;
-      if (kw.keywordDifficulty !== null) {
-        R += `     Difficulty   : ${kw.keywordDifficulty}/100 (${kw.difficultyLabel})\n`;
-      }
       R += `     Intent       : ${intentIcon(kw.intent)} ${kw.intent}\n\n`;
     });
   }
 
-  // ════════════════════════════════════════
-  //  KEYWORD INTENT BREAKDOWN
-  // ════════════════════════════════════════
+  // ── Keyword Intent Breakdown ──────────────────────────────────────────────
   if (keywordsData.keywords && keywordsData.keywords.length > 0) {
     R += `KEYWORD INTENT BREAKDOWN\n${LINE}\n`;
     const intents = { Transactional: 0, Informational: 0, Navigational: 0, Commercial: 0 };
@@ -575,29 +559,24 @@ const formatOrganicKeywordsAsText = (keywordsData, customerInfo) => {
     R += "\n";
   }
 
-  // ════════════════════════════════════════
-  //  KEYWORD RECOMMENDATIONS
-  // ════════════════════════════════════════
+  // ── Recommendations ───────────────────────────────────────────────────────
   R += `KEYWORD RECOMMENDATIONS\n${LINE}\n`;
   const recs = [];
 
   if (keywordsData.isEstimated) {
-    recs.push("Add DataForSEO API to see real ranking positions for all your keywords");
-  }
-  if (keywordsData.totalOrganicKeywords !== null && keywordsData.totalOrganicKeywords < 50) {
-    recs.push("Very few organic keywords — create more SEO-optimised content pages targeting your main services");
-  }
-  if (keywordsData.quickWins && keywordsData.quickWins.length > 0) {
-    recs.push(`${keywordsData.quickWins.length} keyword(s) are on page 2 — optimise those pages to push them to page 1`);
+    recs.push("Add a free Serper.dev API key to see real Google ranking positions (sign up at https://serper.dev)");
   }
   if (keywordsData.page1Count === 0 && !keywordsData.isEstimated) {
     recs.push("No keywords ranking on page 1 — focus on long-tail, low-competition keywords first");
   }
-  if (keywordsData.keywords?.some((k) => k.intent === "Transactional" && k.currentPosition > 10)) {
-    recs.push("Transactional keywords are ranking below page 1 — improve those pages with stronger CTAs and content");
+  if (qw.length > 0) {
+    recs.push(`${qw.length} keyword(s) are on page 2 — optimise those pages to push them to page 1`);
   }
-  if (keywordsData.keywords?.filter((k) => k.intent === "Informational").length > keywordsData.keywords?.filter((k) => k.intent === "Transactional").length * 2) {
-    recs.push("Keyword profile is heavily informational — add more service/product pages targeting transactional keywords");
+  if (keywordsData.totalOrganicKeywords !== null && keywordsData.totalOrganicKeywords < 50) {
+    recs.push("Very few organic keywords — create more SEO-optimised content targeting your main services");
+  }
+  if (keywordsData.keywords?.some((k) => k.intent === "Transactional" && k.currentPosition > 10)) {
+    recs.push("Transactional keywords are below page 1 — improve those pages with stronger CTAs and content");
   }
   if (recs.length === 0) {
     recs.push("Continue building content around your target keywords and monitor positions monthly");
@@ -615,5 +594,4 @@ const formatOrganicKeywordsAsText = (keywordsData, customerInfo) => {
 };
 
 
-
-module.exports = { runOrganicKeywords , formatOrganicKeywordsAsText };
+module.exports = { runOrganicKeywords, formatOrganicKeywordsAsText };

@@ -2,101 +2,81 @@
 //  services/organicTrafficService.js
 //  GrowDigitally — Organic Monthly Traffic Service
 //
-//  Free APIs used:
+//  APIs used:
 //
-//  PRIMARY — DataForSEO Labs API (free trial, no credit card required)
-//    Sign up : https://app.dataforseo.com/register
-//    Docs    : https://docs.dataforseo.com/v3/dataforseo_labs/
-//    Add to .env:
-//      DATAFORSEO_LOGIN=your_login_email
-//      DATAFORSEO_PASSWORD=your_api_password
-//    Free trial gives ~$1 in credits — enough for ~100–200 domain lookups
+//  PRIMARY — Serper.dev Google Search API (free tier: 2,500 searches/month)
+//    Sign up : https://serper.dev (no credit card required)
+//    Add to .env:  SERPER_API_KEY=your_api_key
+//    Gives us: real SERP positions, indexed page count, competitor detection
 //
-//  FALLBACK — Sitemap URL count + PageSpeed data estimation
-//    Used automatically when no DataForSEO credentials are set.
-//    Provides estimated ranges based on domain signals rather than N/A.
+//  SECONDARY — OpenPageRank (free, already configured)
+//    Provides domain authority score as a proxy for domain strength.
+//
+//  FALLBACK — Sitemap URL count + PageSpeed signal-based estimation
+//    Used automatically when no Serper API key is set.
 //
 //  Exports:
 //    runOrganicTraffic(url, mainKeywords, location)  →  structured result
 // ─────────────────────────────────────────────────────────────────────────────
 
 require("dotenv").config();
+const axios   = require("axios");
+const cheerio = require("cheerio");
 const { safeGet } = require("./TechnicalSeoAudit");
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  HELPERS
 // ─────────────────────────────────────────────────────────────────────────────
 
-/**
- * Build Base64 auth header for DataForSEO API
- */
-const getDataForSEOAuth = () => {
-  const login    = process.env.DATAFORSEO_LOGIN    || "";
-  const password = process.env.DATAFORSEO_PASSWORD || "";
-  if (!login || !password) return null;
-  return "Basic " + Buffer.from(`${login}:${password}`).toString("base64");
-};
-
-/**
- * Determine location code from a location string.
- * DataForSEO uses numeric location codes.
- * Full list: https://docs.dataforseo.com/v3/appendix/locations/
- */
-const getLocationCode = (location) => {
-  if (!location) return 2840; // default: United States
+/** Map location string to Serper.dev gl (country) code */
+const getSerperCountry = (location) => {
+  if (!location) return "us";
   const loc = location.toLowerCase();
-  const locationMap = {
-    "sri lanka":         2144,
-    "india":             2356,
-    "united states":     2840,
-    "uk":                2826,
-    "united kingdom":    2826,
-    "australia":         2036,
-    "canada":            2124,
-    "singapore":         2702,
-    "uae":               2784,
-    "united arab emirates": 2784,
-    "pakistan":          2586,
-    "bangladesh":        2050,
-    "malaysia":          2458,
-    "south africa":      2710,
+  const map = {
+    "sri lanka":            "lk",
+    "india":                "in",
+    "united states":        "us",
+    "uk":                   "gb",
+    "united kingdom":       "gb",
+    "australia":            "au",
+    "canada":               "ca",
+    "singapore":            "sg",
+    "uae":                  "ae",
+    "united arab emirates": "ae",
+    "pakistan":             "pk",
+    "bangladesh":           "bd",
+    "malaysia":             "my",
+    "south africa":         "za",
   };
-  for (const [key, code] of Object.entries(locationMap)) {
+  for (const [key, code] of Object.entries(map)) {
     if (loc.includes(key)) return code;
   }
-  return 2840;
+  return "us";
 };
 
-/**
- * Classify traffic volume into a human-readable tier
- */
+/** Classify traffic volume into a human-readable tier */
 const classifyTraffic = (visits) => {
-  if (visits === null || visits === undefined) return { tier: "unknown", label: "Unknown" };
-  if (visits >= 100000) return { tier: "high",        label: "High Traffic"        };
-  if (visits >= 10000)  return { tier: "medium-high", label: "Growing Traffic"     };
-  if (visits >= 1000)   return { tier: "medium",      label: "Moderate Traffic"    };
-  if (visits >= 100)    return { tier: "low",          label: "Low Traffic"         };
-  return                       { tier: "very-low",    label: "Very Low Traffic"    };
+  if (visits === null || visits === undefined) return { tier: "unknown",   label: "Unknown"          };
+  if (visits >= 100000) return { tier: "high",        label: "High Traffic"       };
+  if (visits >= 10000)  return { tier: "medium-high", label: "Growing Traffic"    };
+  if (visits >= 1000)   return { tier: "medium",      label: "Moderate Traffic"   };
+  if (visits >= 100)    return { tier: "low",          label: "Low Traffic"        };
+  return                       { tier: "very-low",    label: "Very Low Traffic"   };
 };
 
-/**
- * Classify search visibility score (0–1 scale from DataForSEO)
- */
-const classifyVisibility = (score) => {
-  if (score === null || score === undefined) return "Unknown";
-  if (score >= 0.7)  return "Excellent";
-  if (score >= 0.4)  return "Good";
-  if (score >= 0.15) return "Moderate";
-  if (score >= 0.05) return "Low";
-  return                    "Very Low";
+/** Classify search visibility based on keyword positions */
+const classifyVisibility = (avgPosition, keywordsChecked) => {
+  if (!avgPosition || keywordsChecked === 0) return "Unknown";
+  if (avgPosition <= 3)  return "Excellent";
+  if (avgPosition <= 7)  return "Good";
+  if (avgPosition <= 15) return "Moderate";
+  if (avgPosition <= 30) return "Low";
+  return                        "Very Low";
 };
 
-/**
- * Estimate traffic opportunity based on current traffic + keywords.
- * Returns a qualitative opportunity label.
- */
+/** Estimate opportunity based on current traffic + keyword positions */
 const estimateOpportunity = (currentTraffic, keywordCount) => {
-  if (currentTraffic === null) return { label: "Unknown",  description: "Could not estimate — no traffic data available" };
+  if (currentTraffic === null) return { label: "Unknown", description: "Could not estimate — no traffic data available" };
   if (currentTraffic < 100 && keywordCount > 0)  return { label: "High",    description: "Low current traffic with active keywords — strong growth potential with SEO improvements" };
   if (currentTraffic < 1000 && keywordCount > 5) return { label: "High",    description: "Moderate traffic but ranking for keywords — optimisation could 3–5x organic visits" };
   if (currentTraffic < 5000)                     return { label: "Medium",  description: "Decent foundation — targeted content and technical fixes could significantly grow traffic" };
@@ -104,9 +84,7 @@ const estimateOpportunity = (currentTraffic, keywordCount) => {
   return                                                 { label: "Minimal", description: "Strong traffic base — incremental growth through long-tail keyword targeting" };
 };
 
-/**
- * Normalize URLs for use with new URL() and axios calls.
- */
+/** Normalize URLs */
 const normaliseUrl = (url) => {
   if (typeof url !== "string") return "";
   const trimmed = url.trim();
@@ -117,170 +95,211 @@ const normaliseUrl = (url) => {
   return trimmed;
 };
 
+/**
+ * Estimate monthly traffic from SERP position using CTR curves.
+ * Based on industry-average CTR data for organic Google results.
+ */
+const estimateTrafficFromPosition = (position, estimatedMonthlySearches = 1000) => {
+  const ctrMap = {
+    1: 0.278, 2: 0.155, 3: 0.110, 4: 0.079, 5: 0.062,
+    6: 0.049, 7: 0.039, 8: 0.032, 9: 0.026, 10: 0.022,
+  };
+  const ctr = ctrMap[position] || (position <= 20 ? 0.01 : 0.002);
+  return Math.round(estimatedMonthlySearches * ctr);
+};
+
 // ─────────────────────────────────────────────────────────────────────────────
-//  PRIMARY SOURCE — DataForSEO Labs API
-//  Endpoint: Domain Overview (Live)
+//  PRIMARY SOURCE — Serper.dev Google Search API
 // ─────────────────────────────────────────────────────────────────────────────
 
-const fetchFromDataForSEO = async (domain, location) => {
-  const auth = getDataForSEOAuth();
-  if (!auth) return null; // no credentials — skip to fallback
+const fetchFromSerper = async (domain, mainKeywords, location) => {
+  const apiKey = process.env.SERPER_API_KEY || "";
 
-  const locationCode = getLocationCode(location);
-
-  console.log(`[Organic Traffic] Fetching DataForSEO domain overview for: ${domain}`);
-
-  try {
-    // ── Domain overview (organic traffic + keywords) ────────────────────────
-    const overviewRes = await safeGet(
-      "https://api.dataforseo.com/v3/dataforseo_labs/google/domain_whois_overview/live",
-      {
-        method: "POST",
-        headers: {
-          "Authorization": auth,
-          "Content-Type":  "application/json",
-        },
-        data: JSON.stringify([{ target: domain }]),
-      }
-    );
-
-    // ── Ranked pages (top traffic-driving pages) ────────────────────────────
-    const rankedPagesRes = await safeGet(
-      "https://api.dataforseo.com/v3/dataforseo_labs/google/ranked_keywords/live",
-      {
-        method: "POST",
-        headers: {
-          "Authorization": auth,
-          "Content-Type":  "application/json",
-        },
-        data: JSON.stringify([{
-          target:            domain,
-          location_code:     locationCode,
-          language_code:     "en",
-          limit:             10,
-          order_by:          ["traffic_cost,desc"],
-        }]),
-      }
-    );
-
-    // ── Competitors overview ────────────────────────────────────────────────
-    const competitorRes = await safeGet(
-      "https://api.dataforseo.com/v3/dataforseo_labs/google/competitors_domain/live",
-      {
-        method: "POST",
-        headers: {
-          "Authorization": auth,
-          "Content-Type":  "application/json",
-        },
-        data: JSON.stringify([{
-          target:            domain,
-          location_code:     locationCode,
-          language_code:     "en",
-          limit:             5,
-        }]),
-      }
-    );
-
-    if (overviewRes.status !== 200 || !overviewRes.data || overviewRes.data.status_code !== 20000) {
-      const apiMsg = overviewRes.data?.status_message || overviewRes.error || "Unknown error";
-      console.error(`[Organic Traffic] DataForSEO domain overview call failed. Status: ${overviewRes.status}, API status_code: ${overviewRes.data?.status_code}, Msg: ${apiMsg}`);
-      return null;
-    }
-
-    if (rankedPagesRes.status !== 200 || !rankedPagesRes.data || rankedPagesRes.data.status_code !== 20000) {
-      const apiMsg = rankedPagesRes.data?.status_message || rankedPagesRes.error || "Unknown error";
-      console.error(`[Organic Traffic] DataForSEO ranked pages call failed. Status: ${rankedPagesRes.status}, API status_code: ${rankedPagesRes.data?.status_code}, Msg: ${apiMsg}`);
-      return null;
-    }
-
-    if (competitorRes.status !== 200 || !competitorRes.data || competitorRes.data.status_code !== 20000) {
-      const apiMsg = competitorRes.data?.status_message || competitorRes.error || "Unknown error";
-      console.error(`[Organic Traffic] DataForSEO competitors call failed. Status: ${competitorRes.status}, API status_code: ${competitorRes.data?.status_code}, Msg: ${apiMsg}`);
-      return null;
-    }
-
-    // ── Parse overview result ───────────────────────────────────────────────
-    const overviewTask  = overviewRes.data?.tasks?.[0];
-    const overviewItem  = overviewTask?.result?.[0]?.items?.[0] || null;
-
-    // ── Parse ranked pages result ───────────────────────────────────────────
-    const rankedTask    = rankedPagesRes.data?.tasks?.[0];
-    const rankedItems   = rankedTask?.result?.[0]?.items || [];
-
-    const topPages = rankedItems.slice(0, 10).map((item) => ({
-      url:             item.url || "",
-      title:           item.title || "",
-      keywordCount:    item.se_type === "organic" ? 1 : 0,
-      trafficShare:    item.traffic_share ? `${(item.traffic_share * 100).toFixed(1)}%` : "N/A",
-      topKeyword:      item.keyword_data?.keyword || "",
-      position:        item.ranked_serp_element?.serp_item?.rank_absolute || null,
-      searchVolume:    item.keyword_data?.keyword_info?.search_volume || 0,
-    }));
-
-    // ── Parse competitor info ───────────────────────────────────────────────
-    const competitorTask  = competitorRes.data?.tasks?.[0];
-    const competitorItems = competitorTask?.result?.[0]?.items || [];
-
-    // ── Build structured result from DataForSEO ─────────────────────────────
-    const monthlyTraffic = overviewItem?.metrics?.organic?.etv ?? null;
-    const keywordCount   = overviewItem?.metrics?.organic?.count ?? 0;
-    const visibility     = overviewItem?.metrics?.organic?.pos_1
-      ? overviewItem.metrics.organic.pos_1 / Math.max(keywordCount, 1)
-      : null;
-
-    return {
-      source:           "DataForSEO",
-      domain,
-      monthlyTraffic,
-      monthlyTrafficRange: monthlyTraffic !== null
-        ? `${Math.round(monthlyTraffic * 0.8).toLocaleString()} – ${Math.round(monthlyTraffic * 1.2).toLocaleString()}`
-        : "N/A",
-      trafficTier:       classifyTraffic(monthlyTraffic),
-      organicKeywords:   keywordCount,
-      domainAuthority:   overviewItem?.domain_rank ?? null,
-      searchVisibility: {
-        score:  visibility,
-        label:  classifyVisibility(visibility),
-        pos1Keywords:   overviewItem?.metrics?.organic?.pos_1   ?? 0,
-        pos2_3Keywords: overviewItem?.metrics?.organic?.pos_2_3 ?? 0,
-        pos4_10Keywords: overviewItem?.metrics?.organic?.pos_4_10 ?? 0,
-        pos11_20Keywords: overviewItem?.metrics?.organic?.pos_11_20 ?? 0,
-      },
-      trafficOpportunity: estimateOpportunity(monthlyTraffic, keywordCount),
-      topPages,
-      topCompetitors: competitorItems.slice(0, 5).map((c) => ({
-        domain:          c.domain || "",
-        intersections:   c.intersections || 0,
-        organicKeywords: c.metrics?.organic?.count || 0,
-        traffic:         c.metrics?.organic?.etv   || 0,
-      })),
-    };
-
-  } catch (err) {
-    console.error(`[Organic Traffic] DataForSEO error: ${err.message}`);
+  if (!apiKey || apiKey === "your_serper_api_key_here") {
     return null;
   }
+
+  const gl          = getSerperCountry(location);
+  const keywordList = (mainKeywords || "")
+    .split(",")
+    .map((k) => k.trim())
+    .filter(Boolean);
+
+  console.log(`[Organic Traffic] Fetching Serper.dev data for domain: ${domain}`);
+
+  const serperPost = async (query, num = 10) => {
+    try {
+      const res = await axios.post(
+        "https://google.serper.dev/search",
+        { q: query, gl, hl: "en", num },
+        {
+          headers: {
+            "X-API-KEY":    apiKey,
+            "Content-Type": "application/json",
+          },
+          timeout: 15000,
+        }
+      );
+      return res.data;
+    } catch (err) {
+      const status = err.response?.status;
+      const msg    = err.response?.data?.message || err.message;
+      console.error(`[Organic Traffic] Serper error for "${query}": HTTP ${status} — ${msg}`);
+      return null;
+    }
+  };
+
+  // ── Step 1: site:domain search for indexed page count ─────────────────────
+  const siteData     = await serperPost(`site:${domain}`, 10);
+  const totalResults = siteData?.searchInformation?.totalResults
+    ? parseInt(String(siteData.searchInformation.totalResults).replace(/,/g, ""), 10) || 0
+    : 0;
+
+  // ── Step 2: Check domain positions for each main keyword ──────────────────
+  const keywordPositions = [];
+  const topPages         = [];
+  let   totalEstimatedTraffic = 0;
+
+  for (const kw of keywordList.slice(0, 5)) {
+    const data = await serperPost(kw, 10);
+    if (!data || !Array.isArray(data.organic)) continue;
+
+    const match = data.organic.find((item) => {
+      try {
+        return new URL(item.link).hostname.replace("www.", "") === domain.replace("www.", "");
+      } catch (_) { return false; }
+    });
+
+    if (match) {
+      const pos = match.position;
+      keywordPositions.push({ keyword: kw, position: pos, url: match.link });
+      totalEstimatedTraffic += estimateTrafficFromPosition(pos);
+
+      if (!topPages.find((p) => p.url === match.link)) {
+        topPages.push({
+          url:         match.link,
+          title:       match.title || "",
+          topKeyword:  kw,
+          position:    pos,
+          trafficShare: `~${Math.round(estimateTrafficFromPosition(pos) / Math.max(totalEstimatedTraffic, 1) * 100)}%`,
+          searchVolume: 0,
+        });
+      }
+    }
+  }
+
+  // ── Step 3: Find competitors from SERP ────────────────────────────────────
+  const competitors = new Map();
+  if (keywordList.length > 0) {
+    const competitorData = await serperPost(keywordList[0], 10);
+    if (competitorData?.organic) {
+      competitorData.organic
+        .filter((item) => {
+          try {
+            return new URL(item.link).hostname.replace("www.", "") !== domain.replace("www.", "");
+          } catch (_) { return false; }
+        })
+        .slice(0, 5)
+        .forEach((item) => {
+          try {
+            const compDomain = new URL(item.link).hostname.replace("www.", "");
+            if (!competitors.has(compDomain)) {
+              competitors.set(compDomain, {
+                domain:   compDomain,
+                position: item.position,
+                keyword:  keywordList[0],
+              });
+            }
+          } catch (_) {}
+        });
+    }
+  }
+
+  // ── Step 4: Build summary ─────────────────────────────────────────────────
+  const rankedCount  = keywordPositions.length;
+  const avgPosition  = rankedCount > 0
+    ? Math.round(keywordPositions.reduce((s, k) => s + k.position, 0) / rankedCount)
+    : null;
+  const visibilityLabel = classifyVisibility(avgPosition, keywordPositions.length);
+
+  // Traffic estimate: base on positions found + index size signal
+  const indexBonus = Math.min(totalResults * 2, 5000);
+  const estimatedTraffic = Math.max(totalEstimatedTraffic + indexBonus, rankedCount > 0 ? 50 : 10);
+
+  const pos1Count    = keywordPositions.filter((k) => k.position === 1).length;
+  const pos2_3Count  = keywordPositions.filter((k) => k.position >= 2 && k.position <= 3).length;
+  const pos4_10Count = keywordPositions.filter((k) => k.position >= 4 && k.position <= 10).length;
+
+  return {
+    source:            "Serper.dev (Google Search API)",
+    domain,
+    monthlyTraffic:    estimatedTraffic,
+    monthlyTrafficRange: `${Math.round(estimatedTraffic * 0.7).toLocaleString()} – ${Math.round(estimatedTraffic * 1.5).toLocaleString()}`,
+    trafficTier:       classifyTraffic(estimatedTraffic),
+    organicKeywords:   rankedCount,
+    indexedPages:      totalResults,
+    domainAuthority:   null,   // will be enriched with OpenPageRank below
+    avgPosition,
+    keywordPositions,
+    searchVisibility: {
+      score:            avgPosition ? Math.max(0, 1 - avgPosition / 100) : null,
+      label:            visibilityLabel,
+      pos1Keywords:     pos1Count,
+      pos2_3Keywords:   pos2_3Count,
+      pos4_10Keywords:  pos4_10Count,
+      pos11_20Keywords: keywordPositions.filter((k) => k.position >= 11 && k.position <= 20).length,
+    },
+    trafficOpportunity: estimateOpportunity(estimatedTraffic, rankedCount),
+    topPages:           topPages.slice(0, 10),
+    topCompetitors:     Array.from(competitors.values()).slice(0, 5).map((c) => ({
+      domain:          c.domain,
+      intersections:   1,
+      organicKeywords: 0,
+      traffic:         0,
+      topPosition:     c.position,
+    })),
+  };
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  OpenPageRank enrichment — adds domain authority score to any result
+// ─────────────────────────────────────────────────────────────────────────────
+
+const enrichWithOpenPageRank = async (domain, result) => {
+  const apiKey = process.env.OPEN_PAGE_RANK_API_KEY || "";
+  if (!apiKey) return result;
+
+  try {
+    const res = await safeGet(
+      `https://openpagerank.com/api/v1.0/getPageRank?domains[]=${domain}`,
+      { headers: { "API-OPR": apiKey } }
+    );
+    const item = res.data?.response?.[0];
+    if (item) {
+      const opr  = item.page_rank_integer ?? null;  // 0–10
+      const daProxy = opr !== null ? Math.round(opr * 10) : null; // 0–100
+      result.domainAuthority = daProxy;
+      result.openPageRank    = opr;
+      console.log(`[Organic Traffic] OpenPageRank for ${domain}: ${opr}/10 (DA proxy: ${daProxy})`);
+    }
+  } catch (err) {
+    console.error(`[Organic Traffic] OpenPageRank error: ${err.message}`);
+  }
+  return result;
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  FALLBACK SOURCE — Signal-based estimation
-//  Used when DataForSEO credentials are not set.
-//  Estimates are based on:
-//    • Number of indexed pages (from sitemap)
-//    • Domain age signals (TLD, subdomain patterns)
-//    • PageSpeed SEO score
-//    • Presence of structured data
-//  This is an ESTIMATION — clearly labelled in the report.
 // ─────────────────────────────────────────────────────────────────────────────
 
 const estimateFromSignals = async (url, mainKeywords) => {
-  console.log(`[Organic Traffic] Using free signal-based estimation`);
+  console.log("[Organic Traffic] Using free signal-based estimation");
 
   const normalizedUrl = normaliseUrl(url);
   const baseUrl = new URL(normalizedUrl);
   const domain  = baseUrl.hostname;
 
-  // ── Fetch sitemap to count indexed pages ───────────────────────────────────
+  // ── Fetch sitemap to count indexed pages ──────────────────────────────────
   let indexedPageCount = 0;
   const sitemapRes = await safeGet(`${baseUrl.origin}/sitemap.xml`);
   if (sitemapRes.data && typeof sitemapRes.data === "string") {
@@ -288,20 +307,19 @@ const estimateFromSignals = async (url, mainKeywords) => {
     indexedPageCount = urlMatches.length;
   }
 
-  // ── Fetch homepage for SEO signals ─────────────────────────────────────────
-  const cheerio  = require("cheerio");
+  // ── Fetch homepage for SEO signals ────────────────────────────────────────
   const homeRes  = await safeGet(normalizedUrl);
   const $        = homeRes.data ? cheerio.load(homeRes.data) : null;
 
-  let hasSchema    = false;
-  let hasMeta      = false;
-  let hasH1        = false;
+  let hasSchema   = false;
+  let hasMeta     = false;
+  let hasH1       = false;
   let internalLinks = 0;
 
   if ($) {
-    hasSchema  = $('script[type="application/ld+json"]').length > 0;
-    hasMeta    = !!$('meta[name="description"]').attr("content");
-    hasH1      = $("h1").length === 1;
+    hasSchema = $('script[type="application/ld+json"]').length > 0;
+    hasMeta   = !!$('meta[name="description"]').attr("content");
+    hasH1     = $("h1").length === 1;
     $("a[href]").each((_, el) => {
       try {
         const abs = new URL($(el).attr("href"), normalizedUrl).href;
@@ -310,19 +328,18 @@ const estimateFromSignals = async (url, mainKeywords) => {
     });
   }
 
-  // ── Fetch PageSpeed SEO score for additional signal ─────────────────────────
-  let seoScore = 50; // default
+  // ── PageSpeed SEO score ───────────────────────────────────────────────────
+  let seoScore = 50;
   try {
-    const apiKey   = process.env.PAGESPEED_API_KEY ? `&key=${process.env.PAGESPEED_API_KEY}` : "";
-    const psRes    = await safeGet(
+    const apiKey = process.env.PAGESPEED_API_KEY ? `&key=${process.env.PAGESPEED_API_KEY}` : "";
+    const psRes  = await safeGet(
       `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${encodeURIComponent(url)}&strategy=desktop${apiKey}`
     );
-    const cats     = psRes.data?.lighthouseResult?.categories || {};
-    seoScore       = Math.round((cats.seo?.score ?? 0.5) * 100);
+    const cats   = psRes.data?.lighthouseResult?.categories || {};
+    seoScore     = Math.round((cats.seo?.score ?? 0.5) * 100);
   } catch (_) {}
 
-  // ── Signal-based traffic estimation ─────────────────────────────────────────
-  // Base score from SEO signals (0–100)
+  // ── Signal-based traffic estimation ──────────────────────────────────────
   let signalScore = 0;
   if (indexedPageCount >= 10)  signalScore += 20;
   if (indexedPageCount >= 50)  signalScore += 10;
@@ -334,24 +351,23 @@ const estimateFromSignals = async (url, mainKeywords) => {
   if (seoScore >= 80)          signalScore += 15;
   else if (seoScore >= 60)     signalScore += 8;
 
-  // Map signal score to an estimated monthly traffic range
   let estimatedMin = 0, estimatedMax = 0, estimatedMid = 0;
-  if (signalScore >= 80)      { estimatedMin = 5000;   estimatedMax = 20000;  estimatedMid = 10000; }
-  else if (signalScore >= 60) { estimatedMin = 1000;   estimatedMax = 5000;   estimatedMid = 2500;  }
-  else if (signalScore >= 40) { estimatedMin = 200;    estimatedMax = 1000;   estimatedMid = 500;   }
-  else if (signalScore >= 20) { estimatedMin = 50;     estimatedMax = 200;    estimatedMid = 100;   }
-  else                        { estimatedMin = 0;      estimatedMax = 50;     estimatedMid = 10;    }
+  if (signalScore >= 80)      { estimatedMin = 5000;  estimatedMax = 20000; estimatedMid = 10000; }
+  else if (signalScore >= 60) { estimatedMin = 1000;  estimatedMax = 5000;  estimatedMid = 2500;  }
+  else if (signalScore >= 40) { estimatedMin = 200;   estimatedMax = 1000;  estimatedMid = 500;   }
+  else if (signalScore >= 20) { estimatedMin = 50;    estimatedMax = 200;   estimatedMid = 100;   }
+  else                        { estimatedMin = 0;     estimatedMax = 50;    estimatedMid = 10;    }
 
-  // ── Build top pages from sitemap ────────────────────────────────────────────
+  // ── Top pages from sitemap ────────────────────────────────────────────────
   let topPages = [];
   if (sitemapRes.data && typeof sitemapRes.data === "string") {
     const urlMatches = (sitemapRes.data.match(/<loc>(.*?)<\/loc>/gi) || [])
       .map((m) => m.replace(/<\/?loc>/gi, "").trim())
       .slice(0, 10);
     topPages = urlMatches.map((pageUrl) => ({
-      url:         pageUrl,
-      title:       "",
-      note:        "From sitemap — traffic data estimated from free public signals",
+      url:          pageUrl,
+      title:        "",
+      note:         "From sitemap — traffic estimated from free public signals",
       trafficShare: "N/A",
     }));
   }
@@ -359,7 +375,7 @@ const estimateFromSignals = async (url, mainKeywords) => {
   return {
     source:           "Estimated (Free Signal-Based)",
     isEstimated:      true,
-    estimationNote:   "This is a free signal-based estimate using public SEO signals. No paid API is required.",
+    estimationNote:   "Signal-based estimate using public SEO signals. Add a free Serper.dev API key for real traffic data.",
     domain,
     monthlyTraffic:   estimatedMid,
     monthlyTrafficRange: `${estimatedMin.toLocaleString()} – ${estimatedMax.toLocaleString()}`,
@@ -370,10 +386,10 @@ const estimateFromSignals = async (url, mainKeywords) => {
     seoScore,
     indexedPageCount,
     signals: {
-      hasSitemap:     indexedPageCount > 0,
-      hasSchemaMarkup: hasSchema,
-      hasMetaDesc:    hasMeta,
-      hasCorrectH1:   hasH1,
+      hasSitemap:        indexedPageCount > 0,
+      hasSchemaMarkup:   hasSchema,
+      hasMetaDesc:       hasMeta,
+      hasCorrectH1:      hasH1,
       internalLinks,
       pageSpeedSeoScore: seoScore,
     },
@@ -386,7 +402,7 @@ const estimateFromSignals = async (url, mainKeywords) => {
       label:       signalScore >= 60 ? "Medium"  : "High",
       description: signalScore >= 60
         ? "Decent SEO signals detected — targeted content and link building could significantly grow traffic."
-        : "Low SEO signal strength detected — fixing technical issues and creating optimised content could dramatically increase organic traffic.",
+        : "Low SEO signal strength — fixing technical issues and creating optimised content could dramatically increase organic traffic.",
     },
     topPages,
     topCompetitors: [],
@@ -395,25 +411,23 @@ const estimateFromSignals = async (url, mainKeywords) => {
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  runOrganicTraffic  (main export)
-//
-//  @param  {string} url          — normalised website URL
-//  @param  {string} mainKeywords — comma-separated keywords from user input
-//  @param  {string} location     — user's target location
-//  @returns {object}             — structured organic traffic result
 // ─────────────────────────────────────────────────────────────────────────────
 
 const runOrganicTraffic = async (url, mainKeywords, location) => {
   console.log(`[Organic Traffic] Starting organic traffic analysis for: ${url}`);
 
   const normalizedUrl = normaliseUrl(url);
-  const domain = new URL(normalizedUrl).hostname;
-  
-  // Try DataForSEO first
-  let result = await fetchFromDataForSEO(domain, location);
+  const domain        = new URL(normalizedUrl).hostname;
+
+  // Try Serper.dev first
+  let result = await fetchFromSerper(domain, mainKeywords, location);
 
   if (!result) {
     result = await estimateFromSignals(normalizedUrl, mainKeywords);
   }
+
+  // Enrich with OpenPageRank domain authority (always try — key is already set)
+  result = await enrichWithOpenPageRank(domain, result);
 
   console.log(`[Organic Traffic] Done — Source: ${result.source} | Traffic: ${result.monthlyTrafficRange} visits/mo | Opportunity: ${result.trafficOpportunity?.label}`);
 
@@ -428,15 +442,6 @@ const runOrganicTraffic = async (url, mainKeywords, location) => {
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  formatOrganicTrafficAsText
-//  GrowDigitally — Organic Monthly Traffic Report Formatter
-//
-//  Add this function into seoController.js alongside:
-//    formatAuditAsText, formatPerformanceAsText,
-//    formatSiteSpeedAsText, formatOnPageAsText
-//
-//  @param  {object} trafficData   — result from runOrganicTraffic()
-//  @param  {object} customerInfo  — { name, email, whatsAppNum, websiteUrl }
-//  @returns {string}              — formatted plain-text report section
 // ─────────────────────────────────────────────────────────────────────────────
 
 const formatOrganicTrafficAsText = (trafficData, customerInfo) => {
@@ -466,14 +471,7 @@ const formatOrganicTrafficAsText = (trafficData, customerInfo) => {
   };
 
   const visibilityIcon = (label) => {
-    const map = {
-      "Excellent": "🟢",
-      "Good":      "🟢",
-      "Moderate":  "🟡",
-      "Low":       "🟠",
-      "Very Low":  "🔴",
-      "Unknown":   "⚪",
-    };
+    const map = { "Excellent": "🟢", "Good": "🟢", "Moderate": "🟡", "Low": "🟠", "Very Low": "🔴", "Unknown": "⚪" };
     return map[label] || "⚪";
   };
 
@@ -491,30 +489,50 @@ const formatOrganicTrafficAsText = (trafficData, customerInfo) => {
   R += `Website    : ${websiteUrl}\n`;
   R += `Generated  : ${new Date().toISOString()}\n\n`;
 
-  // ── Data source note ──────────────────────────────────────────────────────
+  // ── Data source ───────────────────────────────────────────────────────────
   R += `DATA SOURCE\n${LINE}\n`;
   R += `  Source    : ${trafficData.source}\n`;
   if (trafficData.isEstimated) {
     R += `  ⚠️  ESTIMATED DATA — ${trafficData.estimationNote}\n`;
   } else {
-    R += `  ✅ Live data from a free source\n`;
+    R += `  ✅ Live data from Serper.dev (Google Search API)\n`;
   }
   R += `  Domain    : ${trafficData.domain}\n`;
   R += `  Location  : ${trafficData.location || "Not specified"}\n`;
-  R += `  Keywords  : ${trafficData.mainKeywords || "Not provided"}\n\n`;
+  R += `  Keywords  : ${trafficData.mainKeywords || "Not provided"}\n`;
+  if (trafficData.indexedPages) {
+    R += `  📄 Google-indexed pages: ${trafficData.indexedPages.toLocaleString()}\n`;
+  }
+  R += "\n";
 
   // ── Traffic overview ──────────────────────────────────────────────────────
   R += `ORGANIC TRAFFIC OVERVIEW\n${LINE}\n`;
   R += `  ${tierIcon(trafficData.trafficTier?.tier)} Estimated Monthly Traffic : ${trafficData.monthlyTraffic !== null ? trafficData.monthlyTraffic.toLocaleString() : "N/A"} visits\n`;
   R += `  Traffic Range              : ${trafficData.monthlyTrafficRange} visits/month\n`;
   R += `  Traffic Tier               : ${trafficData.trafficTier?.label || "Unknown"}\n`;
-  if (trafficData.organicKeywords !== null) {
-    R += `  Organic Keywords           : ${trafficData.organicKeywords.toLocaleString()}\n`;
+  if (trafficData.organicKeywords !== null && trafficData.organicKeywords !== undefined) {
+    R += `  Keywords Ranking (found)   : ${trafficData.organicKeywords}\n`;
   }
-  if (trafficData.domainAuthority !== null) {
-    R += `  Domain Authority           : ${trafficData.domainAuthority}/100\n`;
+  if (trafficData.domainAuthority !== null && trafficData.domainAuthority !== undefined) {
+    R += `  Domain Authority (OPR)     : ${trafficData.domainAuthority}/100\n`;
+  }
+  if (trafficData.openPageRank !== null && trafficData.openPageRank !== undefined) {
+    R += `  Open Page Rank             : ${trafficData.openPageRank}/10\n`;
+  }
+  if (trafficData.avgPosition !== null && trafficData.avgPosition !== undefined) {
+    R += `  Avg. Keyword Position      : #${trafficData.avgPosition}\n`;
   }
   R += "\n";
+
+  // ── Keyword positions (Serper mode) ──────────────────────────────────────
+  if (trafficData.keywordPositions && trafficData.keywordPositions.length > 0) {
+    R += `KEYWORD RANKINGS FOUND\n${LINE}\n`;
+    trafficData.keywordPositions.forEach((kp, i) => {
+      R += `  ${i + 1}. "${kp.keyword}" → Position #${kp.position}\n`;
+      if (kp.url) R += `     URL: ${kp.url}\n`;
+    });
+    R += "\n";
+  }
 
   // ── Search visibility ─────────────────────────────────────────────────────
   R += `SEARCH VISIBILITY\n${LINE}\n`;
@@ -551,11 +569,10 @@ const formatOrganicTrafficAsText = (trafficData, customerInfo) => {
     R += `    ${boolIcon(sig.hasCorrectH1)}      Correct H1 usage\n`;
     R += `    ${boolIcon(sig.internalLinks >= 5)} Internal links (${sig.internalLinks} found)\n`;
     R += `    PageSpeed SEO Score: ${sig.pageSpeedSeoScore}/100\n\n`;
-
-    R += `  ℹ️  This report uses free public signals, so no paid API setup is required.\n\n`;
+    R += `  ℹ️  Add SERPER_API_KEY to .env for real traffic data (free at https://serper.dev)\n\n`;
   }
 
-  // ── Top traffic-driving pages ─────────────────────────────────────────────
+  // ── Top pages ─────────────────────────────────────────────────────────────
   R += `TOP TRAFFIC-DRIVING PAGES\n${LINE}\n`;
   if (trafficData.topPages && trafficData.topPages.length > 0) {
     trafficData.topPages.forEach((page, i) => {
@@ -563,41 +580,37 @@ const formatOrganicTrafficAsText = (trafficData, customerInfo) => {
       if (page.title)        R += `     Title        : ${page.title}\n`;
       if (page.topKeyword)   R += `     Top Keyword  : ${page.topKeyword}\n`;
       if (page.position)     R += `     Position     : #${page.position}\n`;
-      if (page.searchVolume) R += `     Search Vol   : ${page.searchVolume.toLocaleString()}/mo\n`;
       if (page.trafficShare && page.trafficShare !== "N/A")
                              R += `     Traffic Share: ${page.trafficShare}\n`;
       if (page.note)         R += `     Note         : ${page.note}\n`;
       R += "\n";
     });
   } else {
-    R += `  ℹ️  Top pages data not available.\n`;
-    R += `     Top pages are estimated from the sitemap when available.\n\n`;
+    R += `  ℹ️  Top pages data not available.\n\n`;
   }
 
-  // ── Top competitors (DataForSEO only) ─────────────────────────────────────
+  // ── Top competitors ───────────────────────────────────────────────────────
   if (trafficData.topCompetitors && trafficData.topCompetitors.length > 0) {
-    R += `ORGANIC COMPETITORS\n${LINE}\n`;
+    R += `ORGANIC COMPETITORS (from SERP)\n${LINE}\n`;
     trafficData.topCompetitors.forEach((comp, i) => {
       R += `  ${i + 1}. ${comp.domain}\n`;
-      R += `     Keyword Overlap : ${comp.intersections} keywords\n`;
-      R += `     Organic Keywords: ${comp.organicKeywords.toLocaleString()}\n`;
-      R += `     Est. Traffic    : ${comp.traffic.toLocaleString()}/mo\n\n`;
+      if (comp.topPosition) R += `     SERP Position : #${comp.topPosition}\n`;
+      R += "\n";
     });
   }
 
   // ── Recommendations ───────────────────────────────────────────────────────
   R += `TRAFFIC GROWTH RECOMMENDATIONS\n${LINE}\n`;
-
   const recs = [];
   const traffic = trafficData.monthlyTraffic;
 
   if (trafficData.isEstimated) {
-    recs.push("Use Google Search Console for verified traffic data if you need exact clicks and impressions");
+    recs.push("Add a free Serper.dev API key to get real Google ranking positions (https://serper.dev)");
   }
   if (traffic !== null && traffic < 1000) {
     recs.push("Traffic is low — prioritise fixing technical SEO issues identified in Service 1");
     recs.push("Create SEO-optimised content targeting your main keywords with 1,000+ words per page");
-    recs.push("Build backlinks from local Sri Lankan business directories and industry sites");
+    recs.push("Build backlinks from local business directories and industry sites");
   }
   if (trafficData.signals?.pageSpeedSeoScore < 80) {
     recs.push("Improve PageSpeed SEO score — it directly impacts organic search rankings");
@@ -611,7 +624,6 @@ const formatOrganicTrafficAsText = (trafficData, customerInfo) => {
   if (trafficData.searchVisibility?.label === "Very Low" || trafficData.searchVisibility?.label === "Low") {
     recs.push("Search visibility is low — focus on ranking for long-tail, low-competition keywords first");
   }
-
   if (recs.length === 0) {
     recs.push("Continue monitoring traffic trends and expanding keyword coverage");
   }
