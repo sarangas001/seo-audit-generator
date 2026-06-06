@@ -1,4 +1,38 @@
+import axios from "axios";
+import { useState } from "react";
+
 export default function Hero() {
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [whatsAppNum, setWhatsAppNum] = useState("");
+  const [websiteUrl, setWebsiteUrl] = useState("");
+  const [mainKeywords, setMainKeywords] = useState("");
+  const [location, setLocation] = useState("");
+
+  const sendRequestReport = async (e) => {
+
+     e.preventDefault()
+
+    if(!name || !email || !whatsAppNum || !websiteUrl || !mainKeywords || !location) {
+      return alert("Please fill all the fields");
+    }
+
+    try {
+      const response = await axios.post("http://localhost:3001/api/seo-audit/get", {
+        name,
+        email,
+        whatsAppNum,
+        websiteUrl,
+        mainKeywords,
+        location,
+      });
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  } 
+
   return (
     <div id="hero-section" className="relative min-h-140 bg-[#faf9ff] px-6 py-14 md:px-36 grid grid-cols-1 lg:grid-cols-2 items-center overflow-hidden">
       {/* Geometric Background Pattern */}
@@ -70,13 +104,15 @@ export default function Hero() {
         </p>
 
         {/* Input Form Row */}
-        <form className="w-full max-w-200 mb-6" onSubmit={(e) => e.preventDefault()}>
+        <form className="w-full max-w-200 mb-6" onSubmit={(e) =>{sendRequestReport(e);}}>
           <div className="grid grid-cols-1 gap-3 rounded-2xl border border-[#ddd8f0] bg-white p-3 shadow-[0_8px_24px_rgba(94,44,237,0.08)] md:grid-cols-2">
             <input
               type="text"
               name="name"
               placeholder="Name"
               autoComplete="name"
+              onChange={(e) => setName(e.target.value)}
+              value={name}
               required
               className="h-12 rounded-xl border border-[#e7e2f4] px-4 text-sm text-[#1a1a2e] outline-none transition-colors placeholder:text-[#b0aac4] focus:border-[#5E2CED]"
             />
@@ -85,6 +121,8 @@ export default function Hero() {
               name="email"
               placeholder="Email"
               autoComplete="email"
+              onChange={(e) => setEmail(e.target.value)}
+              value={email}
               required
               className="h-12 rounded-xl border border-[#e7e2f4] px-4 text-sm text-[#1a1a2e] outline-none transition-colors placeholder:text-[#b0aac4] focus:border-[#5E2CED]"
             />
@@ -93,6 +131,8 @@ export default function Hero() {
               name="whatsapp"
               placeholder="WhatsApp number"
               autoComplete="tel"
+              onChange={(e) => setWhatsAppNum(e.target.value)}
+              value={whatsAppNum}
               required
               className="h-12 rounded-xl border border-[#e7e2f4] px-4 text-sm text-[#1a1a2e] outline-none transition-colors placeholder:text-[#b0aac4] focus:border-[#5E2CED]"
             />
@@ -101,6 +141,8 @@ export default function Hero() {
               name="websiteUrl"
               placeholder="Website URL"
               autoComplete="url"
+              onChange={(e) => setWebsiteUrl(e.target.value)}
+              value={websiteUrl}
               required
               className="h-12 rounded-xl border border-[#e7e2f4] px-4 text-sm text-[#1a1a2e] outline-none transition-colors placeholder:text-[#b0aac4] focus:border-[#5E2CED]"
             />
@@ -108,6 +150,8 @@ export default function Hero() {
               type="text"
               name="mainKeywords"
               placeholder="Main Keywords"
+              onChange={(e) => setMainKeywords(e.target.value)}
+              value={mainKeywords}
               required
               className="h-12 rounded-xl border border-[#e7e2f4] px-4 text-sm text-[#1a1a2e] outline-none transition-colors placeholder:text-[#b0aac4] focus:border-[#5E2CED]"
             />
@@ -115,6 +159,8 @@ export default function Hero() {
               type="text"
               name="location"
               defaultValue="Sri Lanka"
+              onChange={(e) => setLocation(e.target.value)}
+              value={location}
               required
               className="h-12 rounded-xl border border-[#e7e2f4] px-4 text-sm text-[#1a1a2e] outline-none transition-colors focus:border-[#5E2CED]"
             />

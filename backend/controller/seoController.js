@@ -424,6 +424,8 @@ const formatAuditAsText = (audit, performanceData, customerInfo) => {
 
 const getSEOData = async (req, res) => {
   try {
+
+    console.log(req.body);
     const { name, email, whatsAppNum, websiteUrl, mainKeywords, location } = req.body;
 
     // ── Validate required fields ─────────────────────────────────────────────

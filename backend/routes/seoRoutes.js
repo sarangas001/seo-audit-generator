@@ -4,6 +4,6 @@ const seoController = require('../controller/seoController');
 
 const router = express.Router();
 
-router.get('/seo', seoController.getSEOData);
+router.post('/get', seoController.getSEOData);
 
 module.exports = router;
