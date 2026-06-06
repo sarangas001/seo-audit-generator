@@ -1,0 +1,807 @@
+══════════════════════════════════════════════════════════════════════
+  GROWDIGITALLY — TECHNICAL SEO AUDIT REPORT
+══════════════════════════════════════════════════════════════════════
+
+CUSTOMER INFORMATION
+──────────────────────────────────────────────────────────────────────
+Name        : saranga
+Email       : saranga@gmail.com
+WhatsApp    : 0763361385
+Generated   : 2026-06-06T05:09:42.493Z
+
+WEBSITE INFORMATION
+──────────────────────────────────────────────────────────────────────
+URL         : https://bcreations.lk/
+Domain      : bcreations.lk
+Keywords    : Best Interior Company
+Location    : Sri Lanka
+HTTPS       : ✅
+Reachable   : ✅ (HTTP 200)
+
+ISSUES SUMMARY
+──────────────────────────────────────────────────────────────────────
+Total Issues Found : 6
+🔴 Critical        : 0
+🟠 High            : 2
+🟡 Medium          : 4
+🔵 Low             : 0
+
+TOP 3 QUICK SEO FIXES
+──────────────────────────────────────────────────────────────────────
+1. [HIGH] [Broken Links]
+   Found 3 broken link(s) (404 or unreachable)
+
+2. [HIGH] [Page Speed]
+   Score is 0/100
+
+3. [MEDIUM] [Meta Title]
+   Meta title is 67 chars (recommended: max 60)
+
+1. CRAWLABILITY & INDEXABILITY
+──────────────────────────────────────────────────────────────────────
+Reachable         : ✅
+HTTP Status       : 200
+Indexable         : ✅
+Robots Blocking   : ✅ (OK)
+Noindex Tag       : ✅ Not found
+
+2. HTTPS & SECURITY
+──────────────────────────────────────────────────────────────────────
+HTTPS Enabled     : ✅
+HTTP → HTTPS Redirect : ✅
+
+3. ROBOTS.TXT
+──────────────────────────────────────────────────────────────────────
+Exists            : ✅
+Accessible        : ✅
+HTTP Status       : 200
+Has Disallow Rules: Yes
+Access Blocked    : ✅ No
+Blocks All Bots   : ✅ No
+Sitemap Referenced: ✅
+
+Content Preview:
+User-agent: *
+Disallow: /wp-content/uploads/wc-logs/
+Disallow: /wp-content/uploads/woocommerce_transient_files/
+Disallow: /wp-content/uploads/woocommerce_uploads/
+Disallow: /*?add-to-cart=
+Disallow: /*?*add-to-cart=
+Disallow: /wp-admin/
+Allow: /wp-admin/admin-ajax.php
+
+# START YOAST BLOCK
+# ---------------------------
+User-agent: *
+Disallow:
+
+User-agent: AdsBot
+Disallow: /
+
+Sitemap: https://bcreations.lk/sitemap_index.xml
+# ---------------------------
+# END YOAST BLOCK
+
+4. XML SITEMAP
+──────────────────────────────────────────────────────────────────────
+URL               : https://bcreations.lk/sitemap_index.xml
+Exists            : ✅
+HTTP Status       : 200
+URLs in Sitemap   : 7
+In Robots.txt     : ✅
+Sample URLs:
+  • https://bcreations.lk/post-sitemap.xml
+  • https://bcreations.lk/page-sitemap.xml
+  • https://bcreations.lk/testimonial-sitemap.xml
+  • https://bcreations.lk/portfolio-sitemap.xml
+  • https://bcreations.lk/category-sitemap.xml
+
+5. META TITLE
+──────────────────────────────────────────────────────────────────────
+Content           : "Best Interior Designers in Sri Lanka | Bcreations Interior Designer"
+Length            : 67 chars ⚠️ Needs fix
+Keyword Present   : ❌
+  🟡 TOO LONG: Meta title is 67 chars (recommended: max 60)
+  🟡 KEYWORD MISSING: Main keyword not found in title
+
+6. META DESCRIPTION
+──────────────────────────────────────────────────────────────────────
+Content           : "Discover top-rated Interior Designers in Sri Lanka. Elevate your space with innovative Interior design tailored to your ..."
+Length            : 137 chars ✅ Good
+Keyword Present   : ❌
+  🟡 KEYWORD MISSING: Main keyword not found in meta description
+
+7. CANONICAL TAGS
+──────────────────────────────────────────────────────────────────────
+Canonical URL     : https://bcreations.lk/
+Self-Referencing  : ✅ Yes
+
+8. VIEWPORT / MOBILE USABILITY
+──────────────────────────────────────────────────────────────────────
+Viewport Tag      : width=device-width, initial-scale=1
+Mobile Ready      : ✅
+
+9. HEADING STRUCTURE
+──────────────────────────────────────────────────────────────────────
+H1 Count          : 1 ✅
+H1 Content        : "<img src="https://bcreations.lk/wp-content/uploads/2022/12/logo-update-4.png" srcset="https://bcreations.lk/wp-content/uploads/2022/12/logo-update-4.png" alt="Best Interior Designer in Sri lanka" data-eio="l">"
+H2 Count          : 29
+H3 Count          : 15
+H2 Samples        :
+  • "Discover top-rated Interior Designer in Sri Lanka"
+  • "We find the perfect synergy between your soul, senses & space."
+  • "We keep it simple yet sophisticated."
+
+10. IMAGE ALT TEXT
+──────────────────────────────────────────────────────────────────────
+Total Images      : 61
+Missing Alt Text  : 0 ✅
+
+11. SCHEMA MARKUP
+──────────────────────────────────────────────────────────────────────
+Schema Present    : ✅
+Schema Types      : Unknown
+
+12. INTERNAL LINKING
+──────────────────────────────────────────────────────────────────────
+Total Links Found : 69
+Internal Links    : 69
+External Links    : 0
+Internal Link Samples:
+  • https://bcreations.lk/ ("<img src="https://bcreations.lk/wp-conte")
+  • https://bcreations.lk/ ("Home")
+  • https://bcreations.lk/interior-design-company-in-sri-lanka/ ("Who we are")
+  • https://bcreations.lk/interior-designer-services/ ("Services")
+  • https://bcreations.lk/interior-design-portfolio-in-sri-lanka/ ("Our Projects")
+
+13. CONTENT
+──────────────────────────────────────────────────────────────────────
+Word Count        : ~6123 words
+Thin Content      : ✅ No
+
+14. OPEN GRAPH TAGS
+──────────────────────────────────────────────────────────────────────
+OG Title          : Best Interior Designers in Sri Lanka | Bcreations Interior Designer
+OG Description    : Discover top-rated Interior Designers in Sri Lanka. Elevate your space with inno...
+OG Image          : https://bcreations.lk/wp-content/uploads/2023/02/11-bcreations-interiordesigners-bcreationsinteriordesigners-Architecture-creativedesigning-minimalspaces-constructionsite-materiality-warepeoplework-interior-1-40.webp
+
+15. BROKEN LINKS & REDIRECTS
+──────────────────────────────────────────────────────────────────────
+Links Checked     : 20
+Broken Links      : 3 🔴
+Redirects Found   : 0
+Broken Link URLs:
+  🔴 [0] https://bcreations.lk/
+  🔴 [0] https://bcreations.lk/interior-designer-services/
+  🔴 [0] https://bcreations.lk/contact-us/
+  🟠 BROKEN LINKS: Found 3 broken link(s) (404 or unreachable)
+
+16. GOOGLE PAGESPEED INSIGHTS
+──────────────────────────────────────────────────────────────────────
+📱 MOBILE Scores:
+  Performance    : 73/100
+  Accessibility  : 0/100
+  Best Practices : 0/100
+  SEO            : 0/100
+  Core Web Vitals:
+    LCP (Largest Contentful Paint) : 7.0 s
+    FCP (First Contentful Paint)   : 1.3 s
+    TBT (Total Blocking Time)      : 170 ms
+    CLS (Cumulative Layout Shift)  : 0
+    Speed Index                    : 3.3 s
+    Time to Interactive            : 11.3 s
+Issues:
+  🟡 MEDIUM MOBILE PERFORMANCE: Score is 73/100 — room to improve
+  🟠 LOW MOBILE SEO SCORE: Score is 0/100
+
+ALL ISSUES BY PRIORITY
+══════════════════════════════════════════════════════════════════════
+
+🔴 CRITICAL ISSUES (0)
+──────────────────────────────────────────────────────────────────────
+  None found ✅
+
+🟠 HIGH ISSUES (2)
+──────────────────────────────────────────────────────────────────────
+  1. [Broken Links] BROKEN LINKS: Found 3 broken link(s) (404 or unreachable)
+  2. [Page Speed] LOW MOBILE SEO SCORE: Score is 0/100
+
+🟡 MEDIUM ISSUES (4)
+──────────────────────────────────────────────────────────────────────
+  1. [Meta Title] TOO LONG: Meta title is 67 chars (recommended: max 60)
+  2. [Meta Title] KEYWORD MISSING: Main keyword not found in title
+  3. [Meta Description] KEYWORD MISSING: Main keyword not found in meta description
+  4. [Page Speed] MEDIUM MOBILE PERFORMANCE: Score is 73/100 — room to improve
+
+🔵 LOW ISSUES (0)
+──────────────────────────────────────────────────────────────────────
+  None found ✅
+
+
+══════════════════════════════════════════════════════════════════════
+  SERVICE 2 — WEBSITE PERFORMANCE SCORES
+══════════════════════════════════════════════════════════════════════
+
+CUSTOMER INFORMATION
+──────────────────────────────────────────────────────────────────────
+Name       : saranga
+Email      : saranga@gmail.com
+WhatsApp   : 0763361385
+Website    : https://bcreations.lk/
+Generated  : 2026-06-06T05:10:45.959Z
+
+SCORE OVERVIEW
+──────────────────────────────────────────────────────────────────────
+Area                     Mobile                   Desktop
+--------------------------------------------------------------------
+Performance              Error                    76/100 (Needs Improvement)
+Accessibility            Error                    0/100 (Poor)
+Best Practices           Error                    0/100 (Poor)
+SEO                      Error                    0/100 (Poor)
+
+📱 MOBILE
+──────────────────────────────────────────────────────────────────────
+  ❌ Could not fetch data: Request failed with status code 400
+
+🖥️  DESKTOP — SCORES
+──────────────────────────────────────────────────────────────────────
+  🟡 Performance             76/100  — Needs Improvement
+  🔴 Accessibility            0/100  — Poor
+  🔴 Best Practices           0/100  — Poor
+  🔴 SEO                      0/100  — Poor
+
+🖥️  DESKTOP — CORE WEB VITALS
+──────────────────────────────────────────────────────────────────────
+  ✅ Largest Contentful Paint         1.3 s
+  ✅ First Contentful Paint           0.4 s
+  🟡 Total Blocking Time              440 ms
+  ✅ Cumulative Layout Shift          0
+  ✅ Speed Index                      1.5 s
+  ✅ Time to Interactive              2.7 s
+  🟡 Max Potential FID                170 ms
+
+🖥️  DESKTOP — EXPERIENCE LABELS
+──────────────────────────────────────────────────────────────────────
+  Loading Speed      : Fast
+  Interactivity      : Smooth
+  Visual Stability   : Stable
+  Overall Experience : Needs Improvement
+
+🖥️  DESKTOP — OPPORTUNITIES (Potential Time Savings)
+──────────────────────────────────────────────────────────────────────
+  1. Reduce unused JavaScript
+     Potential saving : ~400ms  |  Current: Est savings of 729 KiB
+     Note: Reduce unused JavaScript and defer loading scripts until they are required to decrease bytes consumed by network activit...
+
+🖥️  DESKTOP — DIAGNOSTICS
+──────────────────────────────────────────────────────────────────────
+  1. Render-blocking requests  (Est savings of 150 ms)
+     Requests are blocking the page's initial render, which may delay LCP.  can move these network requests out of the critic...
+  2. Legacy JavaScript  (Est savings of 11 KiB)
+     Polyfills and transforms enable older browsers to use new JavaScript features. However, many aren't necessary for modern...
+
+  ✅ Passed Audits: 33
+
+══════════════════════════════════════════════════════════════════════
+  END OF SERVICE 2 — WEBSITE PERFORMANCE SCORES
+══════════════════════════════════════════════════════════════════════
+══════════════════════════════════════════════════════════════════════
+  END OF TECHNICAL SEO AUDIT — GrowDigitally
+  Generated: 6/6/2026, 10:40:45 AM
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  SERVICE 3 — SITE SPEED TEST
+══════════════════════════════════════════════════════════════════════
+
+CUSTOMER INFORMATION
+──────────────────────────────────────────────────────────────────────
+Name       : saranga
+Email      : saranga@gmail.com
+WhatsApp   : 0763361385
+Website    : https://bcreations.lk/
+Generated  : 2026-06-06T05:10:45.971Z
+
+SPEED SUMMARY
+──────────────────────────────────────────────────────────────────────
+                             Mobile               Desktop
+------------------------------------------------------------------
+Performance Score            32                   76
+Speed Grade                  F                    C
+Loading Speed                Slow                 Moderate
+Interactivity                Sluggish             Smooth
+Visual Stability             Unstable             Stable
+
+USER-FRIENDLY EXPERIENCE LABELS
+──────────────────────────────────────────────────────────────────────
+  Loading Speed      : Slow
+  Interactivity      : Sluggish
+  Visual Stability   : Unstable
+  Mobile Experience  : Slow
+  Desktop Experience : Moderate
+
+📱 MOBILE — SPEED OVERVIEW
+──────────────────────────────────────────────────────────────────────
+  ⚠️  Estimated from free public signals
+  Note: PageSpeed was unavailable, so this is a free signal-based estimate from the homepage HTML.
+
+  Performance Score : 32/100
+  Speed Grade       : 🔴 F
+  Speed Label       : Slow
+
+📱 MOBILE — SPEED METRICS
+──────────────────────────────────────────────────────────────────────
+Metric                           Value                Rating
+------------------------------------------------------------------
+🔴 Load Time (Speed Index)          Estimated (274KB HTML, 61 imgs, 56 scripts) Slow
+🔴 Largest Contentful Paint (LCP)   Estimated (274KB HTML, 61 imgs, 56 scripts) Slow
+🔴 First Contentful Paint (FCP)     Estimated (274KB HTML, 61 imgs, 56 scripts) Slow
+🔴 Total Blocking Time (TBT)        Estimated (274KB HTML, 61 imgs, 56 scripts) Sluggish
+🔴 Cumulative Layout Shift (CLS)    Estimated (274KB HTML, 61 imgs, 56 scripts) Unstable
+🔴 Time to Interactive (TTI)        Estimated (274KB HTML, 61 imgs, 56 scripts) Sluggish
+
+📱 MOBILE — VITAL COUNTS
+──────────────────────────────────────────────────────────────────────
+  ✅ Passing : 0 / 6
+  🟡 Warning : 2 / 6
+  🔴 Failing : 6 / 6
+
+📱 MOBILE — EXPERIENCE LABELS
+──────────────────────────────────────────────────────────────────────
+  Loading Speed   : Slow
+  Interactivity   : Sluggish
+  Visual Stability: Unstable
+  Mobile Experience : Slow
+
+📱 MOBILE — SPEED ISSUES
+──────────────────────────────────────────────────────────────────────
+  🟠 Estimated page complexity is high (274KB HTML, 56 scripts, 61 images)
+
+🖥️  DESKTOP — SPEED OVERVIEW
+──────────────────────────────────────────────────────────────────────
+  Performance Score : 76/100
+  Speed Grade       : 🟡 C
+  Speed Label       : Moderate
+
+🖥️  DESKTOP — SPEED METRICS
+──────────────────────────────────────────────────────────────────────
+Metric                           Value                Rating
+------------------------------------------------------------------
+✅ Load Time (Speed Index)          1.5 s                Good
+✅ Largest Contentful Paint (LCP)   1.3 s                Good
+✅ First Contentful Paint (FCP)     0.4 s                Good
+🟡 Total Blocking Time (TBT)        440 ms               Needs Improvement
+✅ Cumulative Layout Shift (CLS)    0                    Good
+✅ Time to Interactive (TTI)        2.7 s                Good
+
+🖥️  DESKTOP — VITAL COUNTS
+──────────────────────────────────────────────────────────────────────
+  ✅ Passing : 5 / 6
+  🟡 Warning : 1 / 6
+  🔴 Failing : 0 / 6
+
+🖥️  DESKTOP — EXPERIENCE LABELS
+──────────────────────────────────────────────────────────────────────
+  Loading Speed   : Moderate
+  Interactivity   : Smooth
+  Visual Stability: Stable
+  Desktop Experience: Moderate
+
+🖥️  DESKTOP — SPEED ISSUES
+──────────────────────────────────────────────────────────────────────
+  🟡 TBT is 440 ms — consider reducing JavaScript execution time
+
+══════════════════════════════════════════════════════════════════════
+  END OF SERVICE 3 — SITE SPEED TEST
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  SERVICE 4 — ON-PAGE SEO SCORE
+══════════════════════════════════════════════════════════════════════
+
+CUSTOMER INFORMATION
+──────────────────────────────────────────────────────────────────────
+Name       : saranga
+Email      : saranga@gmail.com
+WhatsApp   : 0763361385
+Website    : https://bcreations.lk/
+Generated  : 2026-06-06T05:10:45.972Z
+
+OVERALL ON-PAGE SEO SCORE
+──────────────────────────────────────────────────────────────────────
+  🟡 Score       : 57/100
+  Rating      : Needs Improvement
+  URL         : https://bcreations.lk/
+  Keywords    : Best Interior Company
+  Total Issues: 20
+
+SCORE BREAKDOWN BY CHECK
+──────────────────────────────────────────────────────────────────────
+  🟡 Meta Title Quality               Needs Improvement
+  🟡 Meta Description Quality         Needs Improvement
+  🟡 H1 Usage                         Needs Improvement
+  🟡 Heading Hierarchy                Needs Improvement
+  🟡 Keyword Usage                    Needs Improvement
+  ✅ Content Length                   Good
+  ✅ Internal Links                   Good
+  🟡 Image Optimisation               Acceptable
+  ✅ CTA Presence                     Good
+  🟡 Schema Availability              Acceptable
+  🔴 Keyword Relevance                Poor
+
+1. META TITLE QUALITY
+──────────────────────────────────────────────────────────────────────
+  Content        : "Best Interior Designers in Sri Lanka | Bcreations Interior Designer"
+  Length         : 67 chars ⚠️ Needs fix
+  Keyword Present: ❌
+  Quality        : 🟡 Needs Improvement
+  Issues:
+    🟡 Too long: 67 chars (60 max recommended)
+    🟡 Main keyword not found in title
+
+2. META DESCRIPTION QUALITY
+──────────────────────────────────────────────────────────────────────
+  Content        : "Discover top-rated Interior Designers in Sri Lanka. Elevate your space with innovative Interior design tailored to your ..."
+  Length         : 137 chars ✅ Good (120–160)
+  Keyword Present: ❌
+  Quality        : 🟡 Needs Improvement
+  Issues:
+    🟡 Main keyword not found in meta description
+
+3. H1 USAGE
+──────────────────────────────────────────────────────────────────────
+  H1 Count       : 1 ✅
+  H1 Content     : "<img src="https://bcreations.lk/wp-content/uploads/2022/12/logo-update-4.png" srcset="https://bcreations.lk/wp-content/uploads/2022/12/logo-update-4.png" alt="Best Interior Designer in Sri lanka" data-eio="l">"
+  Keyword in H1  : ❌
+  Quality        : 🟡 Needs Improvement
+  Issues:
+    🟡 Main keyword not found in H1 tag
+    🟡 H1 is very long (>70 chars) — consider shortening
+
+4. HEADING HIERARCHY
+──────────────────────────────────────────────────────────────────────
+  H1 Count       : 1
+  H2 Count       : 29 ✅
+  H3 Count       : 15
+  H4 Count       : 26
+  H2 Samples:
+    • "Discover top-rated Interior Designer in Sri Lanka"
+    • "We find the perfect synergy between your soul, senses & space."
+    • "We keep it simple yet sophisticated."
+    • "Passion Fueled Interior Design Services in Sri Lanka"
+  H3 Samples:
+    • "Creative"
+    • "Punctual"
+    • "Responsible"
+  Quality        : 🟡 Needs Improvement
+  Issues:
+    🟡 Heading level skipped: H2 → H4 (missing H3)
+    🟡 Heading level skipped: H2 → H4 (missing H3)
+    🟡 Heading level skipped: H2 → H4 (missing H3)
+
+5. KEYWORD USAGE
+──────────────────────────────────────────────────────────────────────
+  Keywords       : best interior company
+  Body Count     : 0 occurrences
+  Density        : 0% 🟡 Too Low
+  Locations Found: 0/7
+    In Title       : ❌
+    In Meta Desc   : ❌
+    In H1          : ❌
+    In H2          : ❌
+    In Body        : ❌
+    In First Para  : ❌
+    In Image Alt   : ❌
+  Issues:
+    🟡 Keyword not found in meta title
+    🟡 Keyword not found in meta description
+    🟡 Keyword not found in H1 tag
+    🟡 Keyword not found in body content
+    🟡 Keyword not found in first paragraph — add it early
+    🟡 Keyword density is 0% — too low, use keyword more naturally
+
+6. CONTENT LENGTH
+──────────────────────────────────────────────────────────────────────
+  Word Count     : ~6123 words ✅
+  Char Count     : ~62534 chars
+  Paragraph Count: 83
+  Thin Content   : ✅ No
+  Quality        : ✅ Good
+  Issues         : ✅ None
+
+7. INTERNAL LINKS
+──────────────────────────────────────────────────────────────────────
+  Total Count    : 69 ✅
+  Without Text   : 3
+  Quality        : ✅ Good
+  Samples:
+    • https://bcreations.lk/  ("<img src="https://bcreations.lk/wp-conte")
+    • https://bcreations.lk/  ("Home")
+    • https://bcreations.lk/interior-design-company-in-sri-lanka/  ("Who we are")
+    • https://bcreations.lk/interior-designer-services/  ("Services")
+    • https://bcreations.lk/interior-design-portfolio-in-sri-lanka/  ("Our Projects")
+  Issues:
+    🟡 3 internal link(s) have no anchor text
+
+8. IMAGE OPTIMISATION
+──────────────────────────────────────────────────────────────────────
+  Total Images   : 61
+  Alt Coverage   : 100% ✅
+  Missing Alt    : 0 ✅
+  Keyword in Alt : 0 image(s)
+  Lazy Loading   : 🟡 Not found
+  Quality        : 🟡 Acceptable
+  Issues:
+    🟡 No lazy loading found — add loading='lazy' to images
+    🟡 No images have keyword-relevant alt text
+
+9. CTA PRESENCE
+──────────────────────────────────────────────────────────────────────
+  CTAs Found     : 10 ✅
+  Quality        : ✅ Good
+  CTA Examples:
+    • [element] "Contact us"
+    • [element] "View Our ServicesGet in Touch with Us!"
+    • [element] "View Our Services"
+    • [element] "Get in Touch with Us!"
+    • [element] "View Our Interior Design ProjectsGet in Touch with Us!"
+  Issues         : ✅ None
+
+10. SCHEMA AVAILABILITY
+──────────────────────────────────────────────────────────────────────
+  Schema Present  : ✅
+  JSON-LD Count   : 1
+  Schema Types    : Unknown
+  Microdata       : ❌ Not found
+  Quality         : 🟡 Acceptable
+  Issues          : ✅ None
+
+11. KEYWORD RELEVANCE
+──────────────────────────────────────────────────────────────────────
+  Keywords        : best interior company
+  Title Relevant  : ❌
+  Content Relevant: ❌
+  URL Relevant    : ❌
+  Semantic Score  : 100%
+  Quality         : 🔴 Poor
+  Issues:
+    🟡 Main keyword not in title — page may not appear relevant to search engines
+    🟡 Main keyword not found in body content — low topical relevance
+    🟡 URL does not contain keyword-related terms — consider keyword-rich URL slugs
+
+ALL ON-PAGE ISSUES (20 total)
+──────────────────────────────────────────────────────────────────────
+  1. [metaTitle] Too long: 67 chars (60 max recommended)
+  2. [metaTitle] Main keyword not found in title
+  3. [metaDescription] Main keyword not found in meta description
+  4. [h1Usage] Main keyword not found in H1 tag
+  5. [h1Usage] H1 is very long (>70 chars) — consider shortening
+  6. [headingHierarchy] Heading level skipped: H2 → H4 (missing H3)
+  7. [headingHierarchy] Heading level skipped: H2 → H4 (missing H3)
+  8. [headingHierarchy] Heading level skipped: H2 → H4 (missing H3)
+  9. [keywordUsage] Keyword not found in meta title
+  10. [keywordUsage] Keyword not found in meta description
+  11. [keywordUsage] Keyword not found in H1 tag
+  12. [keywordUsage] Keyword not found in body content
+  13. [keywordUsage] Keyword not found in first paragraph — add it early
+  14. [keywordUsage] Keyword density is 0% — too low, use keyword more naturally
+  15. [internalLinks] 3 internal link(s) have no anchor text
+  16. [imageOptimisation] No lazy loading found — add loading='lazy' to images
+  17. [imageOptimisation] No images have keyword-relevant alt text
+  18. [keywordRelevance] Main keyword not in title — page may not appear relevant to search engines
+  19. [keywordRelevance] Main keyword not found in body content — low topical relevance
+  20. [keywordRelevance] URL does not contain keyword-related terms — consider keyword-rich URL slugs
+
+══════════════════════════════════════════════════════════════════════
+  END OF SERVICE 4 — ON-PAGE SEO SCORE
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  SERVICE 5 — ORGANIC MONTHLY TRAFFIC
+══════════════════════════════════════════════════════════════════════
+
+CUSTOMER INFORMATION
+──────────────────────────────────────────────────────────────────────
+Name       : saranga
+Email      : saranga@gmail.com
+WhatsApp   : 0763361385
+Website    : https://bcreations.lk/
+Generated  : 2026-06-06T05:10:45.974Z
+
+DATA SOURCE
+──────────────────────────────────────────────────────────────────────
+  Source    : Estimated (Free Signal-Based)
+  ⚠️  ESTIMATED DATA — This is a free signal-based estimate using public SEO signals. No paid API is required.
+  Domain    : bcreations.lk
+  Location  : Sri Lanka
+  Keywords  : Best Interior Company
+
+ORGANIC TRAFFIC OVERVIEW
+──────────────────────────────────────────────────────────────────────
+  🟠 Estimated Monthly Traffic : 500 visits
+  Traffic Range              : 200 – 1,000 visits/month
+  Traffic Tier               : Low Traffic
+
+SEARCH VISIBILITY
+──────────────────────────────────────────────────────────────────────
+  🟠 Visibility Level : Low
+  Note: Estimated from on-page signals and sitemap coverage
+
+TRAFFIC OPPORTUNITY
+──────────────────────────────────────────────────────────────────────
+  🔥 Opportunity Level : High
+  Assessment         : Low SEO signal strength detected — fixing technical issues and creating optimised content could dramatically increase organic traffic.
+
+SIGNAL-BASED ESTIMATION DETAILS
+──────────────────────────────────────────────────────────────────────
+  Overall Signal Score       : 45/100
+  PageSpeed SEO Score        : 50/100
+  Indexed Pages (Sitemap)    : 7
+
+  SEO Signals Detected:
+    ✅       XML Sitemap found
+    ✅   Schema markup present
+    ✅       Meta description set
+    ✅      Correct H1 usage
+    ✅ Internal links (69 found)
+    PageSpeed SEO Score: 50/100
+
+  ℹ️  This report uses free public signals, so no paid API setup is required.
+
+TOP TRAFFIC-DRIVING PAGES
+──────────────────────────────────────────────────────────────────────
+  1. https://bcreations.lk/post-sitemap.xml
+     Note         : From sitemap — traffic data estimated from free public signals
+
+  2. https://bcreations.lk/page-sitemap.xml
+     Note         : From sitemap — traffic data estimated from free public signals
+
+  3. https://bcreations.lk/testimonial-sitemap.xml
+     Note         : From sitemap — traffic data estimated from free public signals
+
+  4. https://bcreations.lk/portfolio-sitemap.xml
+     Note         : From sitemap — traffic data estimated from free public signals
+
+  5. https://bcreations.lk/category-sitemap.xml
+     Note         : From sitemap — traffic data estimated from free public signals
+
+  6. https://bcreations.lk/portfolio_category-sitemap.xml
+     Note         : From sitemap — traffic data estimated from free public signals
+
+  7. https://bcreations.lk/author-sitemap.xml
+     Note         : From sitemap — traffic data estimated from free public signals
+
+TRAFFIC GROWTH RECOMMENDATIONS
+──────────────────────────────────────────────────────────────────────
+  1. Use Google Search Console for verified traffic data if you need exact clicks and impressions
+  2. Traffic is low — prioritise fixing technical SEO issues identified in Service 1
+  3. Create SEO-optimised content targeting your main keywords with 1,000+ words per page
+  4. Build backlinks from local Sri Lankan business directories and industry sites
+  5. Improve PageSpeed SEO score — it directly impacts organic search rankings
+  6. Search visibility is low — focus on ranking for long-tail, low-competition keywords first
+
+══════════════════════════════════════════════════════════════════════
+  END OF SERVICE 5 — ORGANIC MONTHLY TRAFFIC
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  SERVICE 7 — BACKLINKS OVERVIEW
+══════════════════════════════════════════════════════════════════════
+
+CUSTOMER INFORMATION
+──────────────────────────────────────────────────────────────────────
+Name       : saranga
+Email      : saranga@gmail.com
+WhatsApp   : 0763361385
+Website    : https://bcreations.lk/
+Generated  : 2026-06-06T05:10:45.975Z
+
+DATA SOURCE
+──────────────────────────────────────────────────────────────────────
+  Source  : OpenPageRank + Signal-Based
+  Domain  : bcreations.lk
+  ⚠️  ESTIMATED DATA
+  Note    : This is a free signal-based estimate using public SEO signals. No paid API is required.
+
+  Optional free enhancement:
+    OPEN_PAGE_RANK_API_KEY=your_key
+    Sign up: https://www.domcop.com/openpagerank/
+
+1. TOTAL BACKLINKS
+──────────────────────────────────────────────────────────────────────
+  Total Backlinks    : 247
+  Quality Level      : Moderate
+  Dofollow Links     : 168
+  Nofollow Links     : 79
+  Dofollow Ratio     : 68%
+
+2. REFERRING DOMAINS
+──────────────────────────────────────────────────────────────────────
+  Referring Domains  : 41
+  Quality Level      : Moderate
+
+3. DOMAIN AUTHORITY / DOMAIN SCORE
+──────────────────────────────────────────────────────────────────────
+  🔴 Score        : 0/100
+  Strength       : Very Weak (OpenPageRank)
+  Open Page Rank : 0/10
+  Note           : Enhanced with free OpenPageRank data
+
+4. SPAM SCORE
+──────────────────────────────────────────────────────────────────────
+  ✅ Spam Score   : 5%
+  Risk Level     : Very Safe (estimated)
+  Toxic Flag     : ✅ No
+  Note           : Estimated from outbound-link patterns and authority signals
+
+5. TOXIC BACKLINK ANALYSIS
+──────────────────────────────────────────────────────────────────────
+  Status         : ⚪ Estimated from free public signals
+  Note           : Spam score is estimated from link patterns and authority signals
+
+6. TOP BACKLINK SOURCES
+──────────────────────────────────────────────────────────────────────
+  ℹ️  Top backlink sources not available.
+     This free estimate does not include individual backlink source lookups.
+
+SIGNAL-BASED ESTIMATION DETAILS
+──────────────────────────────────────────────────────────────────────
+  ✅        HTTPS enabled
+  ✅   robots.txt found
+  ✅     XML sitemap found
+  Internal Links         : 69
+  External Links (outbound): 0
+  Unique Outbound Domains: 0
+
+BACKLINK HEALTH RECOMMENDATIONS
+──────────────────────────────────────────────────────────────────────
+  1. Use Google Search Console for verified backlink exports if you need exact link data
+  2. Domain authority is low — focus on earning backlinks from reputable local websites
+  3. Get listed in Sri Lankan business directories: LankaSearch, FindBiz.lk, YellowPages.lk
+  4. You have backlinks but low domain authority — quality matters more than quantity, focus on authoritative sources
+
+══════════════════════════════════════════════════════════════════════
+  END OF SERVICE 7 — BACKLINKS OVERVIEW
+══════════════════════════════════════════════════════════════════════
+
+══════════════════════════════════════════════════════════════════════
+  SERVICE 6 — ORGANIC KEYWORDS
+══════════════════════════════════════════════════════════════════════
+
+CUSTOMER INFORMATION
+──────────────────────────────────────────────────────────────────────
+Name       : saranga
+Email      : saranga@gmail.com
+WhatsApp   : 0763361385
+Website    : https://bcreations.lk/
+Generated  : 2026-06-06T05:10:45.977Z
+
+DATA SOURCE
+──────────────────────────────────────────────────────────────────────
+  Source    : DataForSEO
+  Domain    : bcreations.lk
+  Location  : Sri Lanka
+  Keywords  : Best Interior Company
+  ✅ Live data from DataForSEO API
+
+KEYWORD OVERVIEW
+──────────────────────────────────────────────────────────────────────
+  Total Organic Keywords   : 0
+  Keywords Retrieved       : 0
+  Ranking #1 (Position 1)  : 0 keywords
+  Ranking Page 1 (Top 10)  : 0 keywords
+  Ranking Page 2 (11–20)   : 0 keywords
+  Quick Win Opportunities  : 0 keywords (pos 11–20)
+
+TOP RANKING KEYWORDS
+──────────────────────────────────────────────────────────────────────
+  ℹ️  No keyword data available.
+
+KEYWORD RECOMMENDATIONS
+──────────────────────────────────────────────────────────────────────
+  1. Very few organic keywords — create more SEO-optimised content pages targeting your main services
+  2. No keywords ranking on page 1 — focus on long-tail, low-competition keywords first
+
+══════════════════════════════════════════════════════════════════════
+  END OF SERVICE 6 — ORGANIC KEYWORDS
+══════════════════════════════════════════════════════════════════════
